@@ -4,47 +4,55 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 
-const CustomerSchema = new mongoose.Schema({
-    firstname: {
-        type: String,
-        required: [true, "Please provide a first name."],
+const CustomerSchema = new mongoose.Schema(
+    {
+        name: {
+            type: String,
+            required: [true, "Please provide a name"],
+            trim: true,
+            max: 64,
+        },
+        email: {
+            type: String,
+            required: [true, "Please provide an email"],
+            lowercase: true,
+            trim: true,
+            unique: true,
+            match: [
+                /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+                "Please provide a valid email",
+            ],
+        },
+        password: {
+            type: String,
+            required: [true, "Please provide a password"],
+            minlength: 8,
+            select: false,
+        },
+        number: {
+            type: String,
+            minlength: 10,
+            match: [
+                /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
+                "Please provide a valid phone number",
+            ],
+        },
+        isVerified: {
+            type: Boolean,
+            default: false,
+        },
+        verificationToken: {
+            type: String,
+        },
+        resetPasswordToken: {
+            type: String,
+        },
+        resetPasswordExpire: {
+            type: Date,
+        },
     },
-    lastname: {
-        type: String,
-        required: [true, "Please provide a last name."],
-    },
-    email: {
-        type: String,
-        required: [true, "Please provide an email."],
-        unique: "true",
-        match: [
-            /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-            "Please provide a valid email.",
-        ],
-    },
-    password: {
-        type: String,
-        required: [true, "Please provide a password."],
-        minlength: 8,
-        select: false,
-    },
-    number: {
-        type: String,
-        required: [true, "Please provide a phone number."],
-        minlength: 10,
-        match: [null, "Please provide a valid phone number."],
-    },
-    resetPasswordToken: {
-        type: String,
-    },
-    resetPasswordExpire: {
-        type: Date,
-    },
-    dateCreated: {
-        type: Date,
-        default: Date.now(),
-    },
-});
+    { timestamps: true }
+);
 
 // Encrypting the password everytime before saving
 CustomerSchema.pre("save", async function (next) {
@@ -57,6 +65,13 @@ CustomerSchema.pre("save", async function (next) {
     this.password = await bcrypt.hash(this.password, salt);
     next();
 });
+
+// Generating an account verification token
+CustomerSchema.methods.getVerificationToken = function () {
+    const verificationToken = crypto.randomBytes(20).toString("hex");
+    this.verificationToken = crypto.createHash("sha256").update(verificationToken).digest("hex");
+    return verificationToken;
+};
 
 // Matching passwords entered by the user with the correct password
 CustomerSchema.methods.matchPasswords = async function (password) {

@@ -5,18 +5,62 @@ const crypto = require("crypto");
 
 exports.register = async (req, res, next) => {
     // Getting info from the request
-    const { firstname, lastname, email, password } = req.body;
+    const { name, email, password } = req.body;
     try {
         //  Creating a new customer
         const customer = await Customer.create({
-            firstname,
-            lastname,
+            name,
             email,
-            number,
             password,
         });
-        // Generating an authentication token
-        return sendToken(customer, 201, res);
+        // Generating a verification token
+        const verificationToken = customer.getVerificationToken();
+        await customer.save();
+
+        // Generating a verification url and message
+        const verifyUrl = `${process.env.SITE_URL}/customer/verify/${verificationToken}`;
+        const message = `
+            <h1>Account Verification</h1>
+            <p>Please go to this link to verify your account</p>
+            <a href=${verifyUrl} clicktracking=off>${verifyUrl}</a>
+        `;
+
+        // Sending the email
+        try {
+            await sendEmail({
+                to: customer.email,
+                subject: "Account Verification Link",
+                text: message,
+            });
+            return res.status(200).json({
+                success: true,
+                data: "Email for account verification has been sent successfully",
+            });
+        } catch (error) {
+            return next(new ErrorResponse("Email couldn't be sent", 500));
+        }
+    } catch (error) {
+        next(error);
+    }
+};
+
+exports.verify = async (req, res, next) => {
+    // Hashing the token
+    const verificationToken = crypto.createHash("sha256").update(req.params.verificationToken).digest("hex");
+    try {
+        // Finding the customer based on the token
+        const customer = await Customer.findOne({ verificationToken });
+        if (!customer) return next(new ErrorResponse("Invalid Verification Token", 400));
+
+        // Verifying the account
+        customer.isVerified = true;
+        customer.verificationToken = undefined;
+        await customer.save();
+
+        return res.status(201).json({
+            success: true,
+            data: "Account verified successfully",
+        });
     } catch (error) {
         next(error);
     }
@@ -41,6 +85,11 @@ exports.login = async (req, res, next) => {
         const isMatched = await customer.matchPasswords(password);
         if (!isMatched) {
             return next(new ErrorResponse("Invalid credentials", 401));
+        }
+
+        // Checking if the account is verified
+        if (!customer.isVerified) {
+            return next(new ErrorResponse("Account has not been verified yet"), 401);
         }
 
         // Success response
@@ -99,7 +148,7 @@ exports.forgotPassword = async (req, res, next) => {
 };
 
 exports.resetPassword = async (req, res, next) => {
-    // Create a token
+    // Hashing the token
     const resetPasswordToken = crypto.createHash("sha256").update(req.params.resetToken).digest("hex");
     try {
         // Finding the customer based on the token
