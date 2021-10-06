@@ -4,20 +4,9 @@ const sendEmail = require("../../utils/sendEmail");
 const crypto = require("crypto");
 
 exports.register = async (req, res, next) => {
-    // Getting info from the request
-    const { name, email, password, address, number, state } = req.body;
-    const website = req.body.website || undefined;
     try {
         //  Creating a new client
-        const client = await Client.create({
-            name,
-            email,
-            password,
-            address,
-            number,
-            state,
-            website,
-        });
+        const client = await Client.create(req.body);
 
         // Generating a verification token
         const verificationToken = client.getVerificationToken();
