@@ -10,14 +10,13 @@ const CustomerSchema = new mongoose.Schema(
             type: String,
             required: [true, "Please provide a name"],
             trim: true,
-            max: 64,
+            maxlength: [64, "Name is too long"],
         },
         email: {
             type: String,
             required: [true, "Please provide an email"],
             lowercase: true,
             trim: true,
-            unique: true,
             match: [
                 /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
                 "Please provide a valid email",
@@ -26,14 +25,13 @@ const CustomerSchema = new mongoose.Schema(
         password: {
             type: String,
             required: [true, "Please provide a password"],
-            minlength: 8,
+            minlength: [8, "Password is too short"],
             select: false,
         },
         number: {
             type: String,
-            minlength: 10,
             match: [
-                /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
+                /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
                 "Please provide a valid phone number",
             ],
         },

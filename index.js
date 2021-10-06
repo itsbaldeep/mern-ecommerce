@@ -11,13 +11,23 @@ mongoose
         useUnifiedTopology: true,
         useNewUrlParser: true,
     })
-    .then(() => console.log("Conntected to the database."))
+    .then(() => console.log("Connected to the database."))
     .catch(console.error);
 
 // Authentication routes
 app.use("/api/auth/customer", require("./routes/auth/customer"));
-// app.use("/api/auth/client", require("./routes/auth/client"));
-// app.use("/api/auth/employee", require("./routes/auth/employee"));
+app.use("/api/auth/client", require("./routes/auth/client"));
+app.use("/api/auth/admin", require("./routes/auth/admin"));
+app.use("/api/auth/employee", require("./routes/auth/employee"));
+
+// Product and Service routes
+app.use("/api/product", require("./routes/product"));
+app.use("/api/service", require("./routes/service"));
+
+// Control Panel routes
+app.use("/api/panel/customer", require("./routes/panel/customer"));
+app.use("/api/panel/client", require("./routes/panel/client"));
+app.use("/api/panel/employee", require("./routes/panel/employee"));
 
 // Middlewares
 app.use(require("./middleware/errorHandler"));
