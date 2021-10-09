@@ -8,7 +8,13 @@ const ClientSchema = new mongoose.Schema(
     {
         name: {
             type: String,
-            required: [true, "Please provide a company/store name"],
+            required: [true, "Please provide your name"],
+            trim: true,
+            maxlength: [64, "Name is too long"],
+        },
+        storeName: {
+            type: String,
+            required: [true, "Please provide a company/store/clinic name"],
             trim: true,
             maxlength: [64, "Name is too long"],
         },
@@ -31,6 +37,9 @@ const ClientSchema = new mongoose.Schema(
         category: {
             type: String,
             required: [true, "Please provide a category"],
+        },
+        imageURL: {
+            type: String,
         },
         email: {
             type: String,
