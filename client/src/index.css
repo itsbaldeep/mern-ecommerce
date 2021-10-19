@@ -5,6 +5,11 @@
   padding: 0;
 }
 
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
 body {
   font-family: "Sora", Arial, "Helvetica Neue", Helvetica, sans-serif;
 }

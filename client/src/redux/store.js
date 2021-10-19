@@ -4,7 +4,21 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 // Reducers
-const reducer = combineReducers({});
+import {
+  allUsersReducer,
+  detailsReducer,
+  forgotPasswordReducer,
+  profileReducer,
+  userReducer,
+} from "./reducers/user";
+
+const reducer = combineReducers({
+  allUsers: allUsersReducer,
+  userDetails: detailsReducer,
+  forgotPassword: forgotPasswordReducer,
+  profile: profileReducer,
+  user: userReducer,
+});
 
 // Creating the store
 const middleware = [thunk];
