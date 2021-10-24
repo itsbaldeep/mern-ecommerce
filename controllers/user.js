@@ -34,7 +34,7 @@ exports.register = async (req, res, next) => {
       return next(new ErrorResponse("There is already an account with this email", 401));
 
     // Creating a new user
-    const user = await User.create({ name, email, password });
+    const user = await User.create(req.body);
 
     // Generating a verification token
     const verificationToken = user.getVerificationToken();
@@ -252,15 +252,11 @@ exports.updateProfile = async (req, res, next) => {
 
   // Updating the user
   try {
-    const user = await User.findByIdAndUpdate(
-      req.user.id,
-      { name: req.body.name },
-      {
-        new: true,
-        runValidators: true,
-        useFindAndModify: false,
-      }
-    );
+    const user = await User.findByIdAndUpdate(req.user.id, req.body, {
+      new: true,
+      runValidators: true,
+      useFindAndModify: false,
+    });
 
     return res.status(200).json({
       success: true,

@@ -1,0 +1,132 @@
+.main-section {
+  position: relative;
+  min-height: 400px;
+  width: 100%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.content-section {
+  background: rgb(233, 233, 233);
+}
+
+.img-container {
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+  padding: 60px;
+  filter: drop-shadow(0 4px 0.3rem black);
+  border-radius: 100%;
+  height: 60px;
+  width: 60px;
+  margin: 0 auto;
+}
+
+.img-container img {
+  height: 60px;
+  width: 60px;
+}
+
+.our-company-section i {
+  font-size: 35px;
+}
+
+.our-company-images img {
+  max-height: 340px;
+  max-width: 80px;
+  height: auto;
+  width: auto;
+}
+
+.donation-adoption-section {
+  text-align: center;
+  background-color: white;
+}
+
+.donation-adoption-section > div {
+  padding: 16px 0;
+}
+
+.donation-section {
+  position: relative;
+}
+
+.donation-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donation-adoption-section img {
+  height: 90px;
+  border-radius: 100%;
+}
+
+.donation-adoption-section .btn {
+  display: block;
+}
+
+.adopt-pet-section img {
+  filter: drop-shadow(0 3px 0.2rem black);
+}
+
+.newsletter {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: rgb(144, 150, 165);
+  border-radius: 50px;
+  margin: 0;
+}
+
+.newsletter-form input[type="email"] {
+  display: inline;
+  width: 100%;
+}
+
+.newsletter-form .btn {
+  display: inline;
+  width: 100%;
+}
+
+.footer-section {
+  background-color: rgb(105, 136, 145);
+}
+
+.footer-img-container {
+  background-color: white;
+  min-width: 160px;
+  border-radius: 10px;
+}
+
+.footer-section ul li {
+  text-decoration: none;
+  list-style: none;
+}
+
+.footer-section ul {
+  padding: 0;
+}
+
+.footer-section a:hover {
+  color: lightgray;
+}
+
+.footer-first i,
+.footer-first p {
+  display: inline;
+}
+
+.quick-links {
+  height: 100%;
+}
+
+.footer-section > div {
+  padding: 16px;
+  border: 1px solid rgb(92, 121, 129);
+}

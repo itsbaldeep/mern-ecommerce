@@ -53,8 +53,8 @@ const RegisterScreen = () => {
       }}
     >
       {({ handleSubmit }) => (
-        <Container style={{ maxWidth: "500px" }}>
-          <h1 className="my-4 text-center">Sign Up With Petohub</h1>
+        <Container className="pt-2" style={{ maxWidth: "500px" }}>
+          <h1 className="my-2 text-center">Sign Up With Petohub</h1>
           <Form noValidate onSubmit={handleSubmit} className="my-2">
             <TextField label="Name" name="name" type="text" placeholder="Full Name" />
             <TextField label="Email" name="email" type="email" placeholder="example@company.com" />

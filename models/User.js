@@ -33,6 +33,11 @@ const UserSchema = new mongoose.Schema(
       maxlength: [64, "Store name is too long"],
       minlength: [3, "Store name is too short"],
     },
+    description: {
+      type: String,
+      maxlength: [1024, "Description is too long"],
+      minlength: [8, "Description is too short"],
+    },
     address: {
       type: String,
       minlength: [8, "Address is too short"],
@@ -47,9 +52,7 @@ const UserSchema = new mongoose.Schema(
         "Please provide a valid website",
       ],
     },
-    category: {
-      type: String,
-    },
+    category: [String],
     imageURL: {
       type: String,
     },
@@ -72,6 +75,7 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       default: "Customer",
+      immutable: true,
     },
     isVerified: {
       type: Boolean,

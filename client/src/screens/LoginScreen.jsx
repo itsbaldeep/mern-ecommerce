@@ -41,8 +41,8 @@ const LoginScreen = () => {
       }}
     >
       {({ handleSubmit }) => (
-        <Container style={{ maxWidth: "500px" }}>
-          <h1 className="my-4">Welcome to Petohub</h1>
+        <Container className="pt-2" style={{ maxWidth: "500px" }}>
+          <h1 className="my-4 text-center">Welcome to Petohub</h1>
           <Form noValidate onSubmit={handleSubmit}>
             <TextField label="Email" name="email" type="email" placeholder="example@gmail.com" />
             <TextField
@@ -62,7 +62,7 @@ const LoginScreen = () => {
             <Form.Group className="pb-2">
               <Form.Text>
                 Forgot password?{" "}
-                <Link to="/resetpassword" className="text-primary">
+                <Link to="/forgotpassword" className="text-primary">
                   Reset here
                 </Link>
               </Form.Text>

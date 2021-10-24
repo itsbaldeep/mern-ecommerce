@@ -1,13 +1,19 @@
 // Dependencies
 import { Formik } from "formik";
-import { Form, Container, Alert } from "react-bootstrap";
+import { Form, Container, Alert, Row, Col } from "react-bootstrap";
 import * as Yup from "yup";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 
 // Componenets
-import { CheckBox, SelectField, TextField, FormButton } from "../components/InputFields";
+import {
+  CheckBox,
+  TextField,
+  FormButton,
+  CheckBoxOptions,
+  SelectField,
+} from "../components/InputFields";
 
 // Actions
 import { register, clearErrors } from "../redux/actions/user";
@@ -17,12 +23,6 @@ const RegisterMemberScreen = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  // Don't let a user with token access this screen
-  useEffect(() => {
-    if (user.isAuthenticated) history.push("/");
-    dispatch(clearErrors());
-  }, [dispatch, history, user.isAuthenticated]);
-
   // Keeping track of form data and step
   const [data, setData] = useState({
     name: "",
@@ -31,7 +31,7 @@ const RegisterMemberScreen = () => {
     confirmPassword: "",
     terms: false,
     storeName: "",
-    category: "",
+    category: [],
     number: "",
     address: "",
     state: "",
@@ -39,8 +39,15 @@ const RegisterMemberScreen = () => {
     pincode: "",
     website: "",
     imageURL: "",
+    role: "Client",
   });
   const [step, setStep] = useState(0);
+
+  // Don't let a user with token access this screen
+  useEffect(() => {
+    if (user.isAuthenticated) history.push("/");
+    dispatch(clearErrors());
+  }, [dispatch, history, user.isAuthenticated]);
 
   // Final submit function
   const submit = (data) => {
@@ -65,7 +72,7 @@ const RegisterMemberScreen = () => {
     <ThirdStep next={nextStep} prev={prevStep} data={data} />,
   ];
   return (
-    <Container style={{ maxWidth: "500px" }}>
+    <Container className="pt-2" style={{ maxWidth: "500px" }}>
       <h1 className="my-4 text-center">Become a member with Petohub</h1>
       <div>{steps[step]}</div>
     </Container>
@@ -120,13 +127,61 @@ export const FirstStep = ({ data, next }) => {
 
 // Second Step
 const secondValidation = Yup.object({
-  storeName: Yup.string().required(),
-  number: Yup.number().required(),
-  address: Yup.string().required(),
-  state: Yup.string().required(),
-  city: Yup.string().required(),
-  pincode: Yup.number().required(),
+  storeName: Yup.string()
+    .min(3, "Business Name must contain atleast 3 characters")
+    .max(64, "Business Name is too long")
+    .required("Please provide a business name"),
+  category: Yup.array().min(1, "Pick atleast one category").of(Yup.string()),
+  number: Yup.number("Please provide a valid number").required("Please provide a phone number"),
+  address: Yup.string()
+    .min(8, "Address is too short")
+    .max(256, "Address is too long")
+    .required("Please provide an address"),
+  state: Yup.string().required("Please provide a state"),
+  city: Yup.string().required("Please provide a city"),
+  pincode: Yup.number().required("Please provide a pincode"),
 });
+
+const categoryOptions = ["Dog", "Cat", "Bird", "Others"];
+const stateOptions = [
+  "Andaman and Nicobar Islands",
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chandigarh",
+  "Chhattisgarh",
+  "Dadra and Nagar Haveli",
+  "Daman and Diu",
+  "Delhi",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jammu and Kashmir",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Lakshadweep",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Puducherry",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+];
+
 const SecondStep = ({ data, prev, next }) => {
   return (
     <Formik
@@ -142,6 +197,7 @@ const SecondStep = ({ data, prev, next }) => {
             type="text"
             placeholder="Enter your business name here"
           />
+          <CheckBoxOptions label="Category" options={categoryOptions} name="category" />
           <TextField label="Phone Number" name="number" type="number" placeholder="9876543210" />
           <TextField
             label="Address"
@@ -149,14 +205,17 @@ const SecondStep = ({ data, prev, next }) => {
             type="text"
             placeholder="Enter your business address here"
           />
-          <TextField label="State" name="state" type="text" placeholder="Enter your state" />
-          <TextField label="City" name="city" type="text" placeholder="Enter your city" />
-          <TextField
-            label="Pincode"
-            name="pincode"
-            type="number"
-            placeholder="Enter your pincode"
-          />
+          <Row>
+            <Col sm={12} md={4}>
+              <TextField label="City" name="city" type="text" placeholder="City" />
+            </Col>
+            <Col sm={12} md={4}>
+              <SelectField label="State" name="state" options={stateOptions} defaultValue="Delhi" />
+            </Col>
+            <Col sm={12} md={4}>
+              <TextField label="Pincode" name="pincode" type="number" placeholder="Zip" />
+            </Col>
+          </Row>
           <FormButton label="Back" variant="dark" onClick={() => prev(values)} />
           <FormButton label="Proceed" variant="dark" type="submit" />
         </Form>
@@ -168,6 +227,10 @@ const SecondStep = ({ data, prev, next }) => {
 // Third Step
 const ThirdStep = ({ data, prev, next }) => {
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(clearErrors());
+  }, [dispatch]);
   return (
     <Formik
       initialValues={data}
@@ -178,14 +241,35 @@ const ThirdStep = ({ data, prev, next }) => {
         <Form noValidate onSubmit={handleSubmit}>
           <h1 className="text-center">Confirm your details</h1>
           <fieldset disabled>
-            <TextField label="Name" name="name" />
-            <TextField label="Email" name="email" />
+            <Row>
+              <Col sm={12} md={6}>
+                <TextField label="Name" name="name" />
+              </Col>
+              <Col sm={12} md={6}>
+                <TextField label="Email" name="email" />
+              </Col>
+            </Row>
             <TextField label="Business Name" name="storeName" />
-            <TextField label="Phone Number" name="number" />
+            <Row>
+              <Col sm={12} md={6}>
+                <TextField label="Phone Number" name="number" />
+              </Col>
+              <Col sm={12} md={6}>
+                <TextField label="Category" name="category" value={values.category.join(", ")} />
+              </Col>
+            </Row>
             <TextField label="Address" name="address" />
-            <TextField label="City" name="city" />
-            <TextField label="State" name="state" />
-            <TextField label="Pincode" name="pincode" />
+            <Row>
+              <Col sm={12} md={4}>
+                <TextField label="City" name="city" />
+              </Col>
+              <Col sm={12} md={4}>
+                <TextField label="State" name="state" />
+              </Col>
+              <Col sm={12} md={4}>
+                <TextField label="Pincode" name="pincode" />
+              </Col>
+            </Row>
           </fieldset>
           {user.error && (
             <Alert className="my-3" variant="danger">

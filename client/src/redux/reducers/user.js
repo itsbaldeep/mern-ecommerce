@@ -104,16 +104,23 @@ export const profileReducer = (state = {}, action) => {
 
     // Success actions
     case actionTypes.UPDATE_PROFILE_SUCCESS:
-    case actionTypes.UPDATE_PASSWORD_SUCCESS:
     case actionTypes.EDIT_USER_SUCCESS:
     case actionTypes.ADD_USER_SUCCESS:
     case actionTypes.DELETE_USER_SUCCESS:
       return {
         ...state,
+        error: null,
         loading: false,
-        isUpdated: action.payload,
+        isUpdatedDetails: true,
       };
 
+    case actionTypes.UPDATE_PASSWORD_SUCCESS:
+      return {
+        ...state,
+        error: null,
+        loading: false,
+        isUpdatedPassword: true,
+      };
     // Fail actions
     case actionTypes.UPDATE_PROFILE_FAIL:
     case actionTypes.UPDATE_PASSWORD_FAIL:
@@ -127,19 +134,25 @@ export const profileReducer = (state = {}, action) => {
       };
 
     // Reset actions
-    case actionTypes.UPDATE_PROFILE_RESET:
     case actionTypes.UPDATE_PASSWORD_RESET:
+      return {
+        ...state,
+        isUpdatedPassword: false,
+      };
+    case actionTypes.UPDATE_PROFILE_RESET:
     case actionTypes.EDIT_USER_RESET:
     case actionTypes.DELETE_USER_RESET:
       return {
         ...state,
-        isUpdated: false,
+        isUpdatedProfile: false,
       };
 
     // Clear errors
     case actionTypes.CLEAR_ERRORS:
       return {
         ...state,
+        isUpdatedProfile: false,
+        isUpdatedPassword: false,
         error: null,
       };
     default:
@@ -163,7 +176,7 @@ export const forgotPasswordReducer = (state = {}, action) => {
       return {
         ...state,
         loading: false,
-        message: action.payload,
+        emailSent: action.payload,
       };
     case actionTypes.RESET_PASSWORD_SUCCESS:
       return {

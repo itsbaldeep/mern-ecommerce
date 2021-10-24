@@ -13,3 +13,11 @@ a {
 body {
   font-family: "Sora", Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
+
+nav {
+  font-size: 18px;
+}
+
+body {
+  margin-top: 70px;
+}

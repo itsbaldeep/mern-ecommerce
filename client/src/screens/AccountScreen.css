@@ -1,0 +1,49 @@
+.profile-screen-container {
+  text-align: center;
+}
+
+.profile-section {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 10px;
+  padding: 15px;
+  margin: 10px 0;
+  border: 2px solid #eee;
+}
+
+.profile-section:hover {
+  cursor: pointer;
+  background-color: #eee;
+}
+
+.profile-section h2 {
+  font-size: 20px;
+}
+
+.profile-section * {
+  margin-bottom: 0 !important;
+}
+
+.profile-section i.fas {
+  font-size: 40px;
+  margin: 0 16px;
+}
+
+/* 
+.profile-section-orders {
+  background-color: red;
+}
+
+.profile-section-appointments {
+  background-color: blue;
+}
+
+.profile-section-account {
+  background-color: green;
+}
+
+.profile-section-cart {
+  background-color: yellow;
+} */
