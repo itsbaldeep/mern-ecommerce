@@ -30,7 +30,7 @@ exports.getProductById = async (req, res, next) => {
 
 exports.addProduct = async (req, res, next) => {
   try {
-    if (req.clientData) req.body.seller = req.clientData._id;
+    if (req.user.role === "Client") req.body.seller = req.user._id;
     const product = await Product.create(req.body);
     await product.save();
     res.status(200).json({
@@ -50,7 +50,7 @@ exports.removeProduct = async (req, res, next) => {
       return next(new ErrorResponse("Product not found", 404));
     }
     // Check if the current user is the seller of that product
-    if (req.clientData && product.seller.toString() != req.clientData._id.toString()) {
+    if (req.user && product.seller.toString() != req.user._id.toString()) {
       return next(new ErrorResponse("Unable to remove product", 404));
     }
     // Delete the product
@@ -73,18 +73,20 @@ exports.editProduct = async (req, res, next) => {
       return next(new ErrorResponse("Product not found", 404));
     }
     // Check if the current user is the seller of that product
-    if (req.clientData && product.seller.toString() != req.clientData._id.toString()) {
+    if (req.user && product.seller.toString() != req.user._id.toString()) {
       return next(new ErrorResponse("Unable to remove product", 404));
     }
     // Updating the product
     const result = await Product.updateOne({ _id: req.params.id }, req.body, {
       runValidators: true,
     });
+    // Returning the updated product
+    const updated = await Product.findById(req.params.id);
     return res.status(200).json({
       success: true,
       message: "Product succesfully updated",
-      data: result,
-      updated: req.body,
+      result,
+      updated,
     });
   } catch (error) {
     next(error);

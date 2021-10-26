@@ -20,16 +20,15 @@ const ProductSchema = new mongoose.Schema(
     },
     category: {
       type: String,
-      enum: ["Food", "Cosmetic", "Accessory", "Other"],
       required: [true, "Please provide a product category"],
     },
     petType: {
-      type: String,
-      enum: ["Dog", "Cat", "Bird", "Fish", "Other"],
+      type: [String],
       required: [true, "Please provide a pet type for this product"],
     },
     breedType: {
       type: String,
+      default: "",
     },
     description: {
       type: String,
@@ -39,20 +38,24 @@ const ProductSchema = new mongoose.Schema(
     },
     weight: {
       type: Number,
+      default: 0,
       min: [1, "Product should have a positive weight"],
     },
     size: {
       type: {
         length: {
           type: Number,
+          default: 0,
           min: [1, "Product length cannot be less than 1 meter"],
         },
         width: {
           type: Number,
+          default: 0,
           min: [1, "Product width cannot be less than 1 meter"],
         },
         height: {
           type: Number,
+          default: 0,
           min: [1, "Product height cannot be less than 1 meter"],
         },
       },
@@ -69,15 +72,18 @@ const ProductSchema = new mongoose.Schema(
     },
     isVeg: {
       type: Boolean,
+      default: false,
     },
     ageRange: {
       type: {
         min: {
           type: Number,
+          default: 0,
           min: [0, "Age must be a positive number"],
         },
         max: {
           type: Number,
+          default: 0,
           min: [0, "Age must be a positive number"],
         },
       },

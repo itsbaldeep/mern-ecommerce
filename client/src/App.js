@@ -15,6 +15,7 @@ import Footer from "./components/Footer.jsx";
 
 // Screens
 import HomeScreen from "./screens/HomeScreen.jsx";
+import ShopScreen from "./screens/shop/ShopScreen.jsx";
 
 // Auth Screens
 import LoginScreen from "./screens/auth/LoginScreen.jsx";
@@ -50,6 +51,9 @@ function App() {
       <Switch>
         {/* Home Route */}
         <Route exact path="/" component={HomeScreen} />
+
+        {/* Main Routes */}
+        <Route path="/shop" component={ShopScreen} />
 
         {/* Auth Routes */}
         <Route exact path="/login" component={LoginScreen} />

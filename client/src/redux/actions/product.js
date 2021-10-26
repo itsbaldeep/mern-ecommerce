@@ -62,9 +62,14 @@ export const removeProduct = (id) => async (dispatch) => {
 export const editProduct = (product, id) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.EDIT_PRODUCT_REQUEST });
-    const { data } = await axios.post(`/api/product/edit/${id}`, product, getConfig());
-    dispatch({ type: actionTypes.EDIT_PRODUCT_SUCCESS, payload: data.product });
+    const { data } = await axios.put(`/api/product/edit/${id}`, product, getConfig());
+    dispatch({ type: actionTypes.EDIT_PRODUCT_SUCCESS, payload: data.updated });
   } catch (error) {
+    console.log(error.response);
     dispatch({ type: actionTypes.EDIT_PRODUCT_FAIL, payload: error.response.data.error });
   }
+};
+
+export const clearErrors = () => async (dispatch) => {
+  dispatch({ type: actionTypes.CLEAR_ERRORS });
 };

@@ -9,59 +9,61 @@ const AccountScreen = () => {
     <Container className="pt-2">
       <h2 className="my-2">Your Account</h2>
       <Row className="mt-4 profile-screen-container">
+        {user.role === "Client" && (
+          <>
+            <Col xs={12} md={6}>
+              <LinkContainer to="/account/products">
+                <div className="profile-section">
+                  <div>
+                    <i className="fas fa-boxes"></i>
+                  </div>
+                  <div>
+                    <h2>YOUR PRODUCTS</h2>
+                    <p>Add, edit or remove your products.</p>
+                  </div>
+                </div>
+              </LinkContainer>
+            </Col>
+            <Col xs={12} md={6}>
+              <LinkContainer to="/account/services">
+                <div className="profile-section">
+                  <div>
+                    <i className="fas fa-hands-helping"></i>
+                  </div>
+                  <div>
+                    <h2>YOUR SERVICES</h2>
+                    <p>Add, edit or remove your services.</p>
+                  </div>
+                </div>
+              </LinkContainer>
+            </Col>
+          </>
+        )}
         <Col xs={12} md={6}>
-          {user.role === "Customer" ? (
-            <LinkContainer to="/account/orders">
-              <div className="profile-section">
-                <div>
-                  <i className="fas fa-box"></i>
-                </div>
-                <div>
-                  <h2>YOUR ORDERS</h2>
-                  <p>Track, return or view your orders.</p>
-                </div>
+          <LinkContainer to="/account/orders">
+            <div className="profile-section">
+              <div>
+                <i className="fas fa-box"></i>
               </div>
-            </LinkContainer>
-          ) : (
-            <LinkContainer to="/account/products">
-              <div className="profile-section">
-                <div>
-                  <i className="fas fa-boxes"></i>
-                </div>
-                <div>
-                  <h2>YOUR PRODUCTS</h2>
-                  <p>Add, edit or remove your products.</p>
-                </div>
+              <div>
+                <h2>YOUR ORDERS</h2>
+                <p>Track, return or view your orders.</p>
               </div>
-            </LinkContainer>
-          )}
+            </div>
+          </LinkContainer>
         </Col>
         <Col xs={12} md={6}>
-          {user.role === "Customer" ? (
-            <LinkContainer to="/account/appointments">
-              <div className="profile-section">
-                <div>
-                  <i className="fas fa-calendar-check"></i>
-                </div>
-                <div>
-                  <h2>YOUR APPOINTMENTS</h2>
-                  <p>View or cancel your appointments.</p>
-                </div>
+          <LinkContainer to="/account/appointments">
+            <div className="profile-section">
+              <div>
+                <i className="fas fa-calendar-check"></i>
               </div>
-            </LinkContainer>
-          ) : (
-            <LinkContainer to="/account/services">
-              <div className="profile-section">
-                <div>
-                  <i className="fas fa-hands-helping"></i>
-                </div>
-                <div>
-                  <h2>YOUR SERVICES</h2>
-                  <p>Add, edit or remove your services.</p>
-                </div>
+              <div>
+                <h2>YOUR APPOINTMENTS</h2>
+                <p>View or cancel your appointments.</p>
               </div>
-            </LinkContainer>
-          )}
+            </div>
+          </LinkContainer>
         </Col>
         <Col xs={12} md={6}>
           <LinkContainer to="/account/profile">
