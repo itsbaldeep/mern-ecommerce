@@ -7,10 +7,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 // Componenets
-import { CheckBox, TextField } from "../components/InputFields";
+import { CheckBox, TextField } from "components/InputFields.jsx";
 
 // Actions
-import { register, clearErrors } from "../redux/actions/user";
+import { register, clearErrors } from "redux/actions/user";
 
 const RegisterScreen = () => {
   const history = useHistory();
@@ -23,8 +23,14 @@ const RegisterScreen = () => {
     dispatch(clearErrors());
   }, [dispatch, history, user.isAuthenticated]);
 
-  // Register form fields validation
-  const validate = Yup.object({
+  const initialValues = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    terms: false,
+  };
+  const validationSchema = Yup.object({
     name: Yup.string()
       .min(3, "Must be atleast 3 characters")
       .max(32, "Must be 32 characters or less")
@@ -38,24 +44,17 @@ const RegisterScreen = () => {
       .required("Re-enter your password"),
     terms: Yup.bool().oneOf([true], "You are required to check this"),
   });
+
   return (
     <Formik
-      initialValues={{
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        terms: false,
-      }}
-      validationSchema={validate}
-      onSubmit={async (values) => {
-        dispatch(register(values));
-      }}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={(values) => dispatch(register(values))}
     >
       {({ handleSubmit }) => (
-        <Container className="pt-2" style={{ maxWidth: "500px" }}>
-          <h1 className="my-2 text-center">Sign Up With Petohub</h1>
-          <Form noValidate onSubmit={handleSubmit} className="my-2">
+        <Container className="my-2" style={{ maxWidth: "500px" }}>
+          <h2 className="py-2 text-center">Sign Up With Petohub</h2>
+          <Form noValidate onSubmit={handleSubmit} className="pb-3">
             <TextField label="Name" name="name" type="text" placeholder="Full Name" />
             <TextField label="Email" name="email" type="email" placeholder="example@company.com" />
             <TextField
@@ -89,7 +88,7 @@ const RegisterScreen = () => {
                 {user.message}
               </Alert>
             )}
-            <Button style={{ width: "100%" }} variant="dark" type="submit">
+            <Button style={{ width: "100%" }} disabled={user.loading} variant="dark" type="submit">
               Create an Account
             </Button>
           </Form>

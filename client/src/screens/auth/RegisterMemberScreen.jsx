@@ -13,10 +13,10 @@ import {
   FormButton,
   CheckBoxOptions,
   SelectField,
-} from "../components/InputFields";
+} from "components/InputFields.jsx";
 
 // Actions
-import { register, clearErrors } from "../redux/actions/user";
+import { register, clearErrors } from "redux/actions/user";
 
 const RegisterMemberScreen = () => {
   const history = useHistory();
@@ -72,8 +72,8 @@ const RegisterMemberScreen = () => {
     <ThirdStep next={nextStep} prev={prevStep} data={data} />,
   ];
   return (
-    <Container className="pt-2" style={{ maxWidth: "500px" }}>
-      <h1 className="my-4 text-center">Become a member with Petohub</h1>
+    <Container style={{ maxWidth: "500px" }}>
+      <h2 className="my-2 text-center">Become a member with Petohub</h2>
       <div>{steps[step]}</div>
     </Container>
   );

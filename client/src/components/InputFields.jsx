@@ -45,9 +45,8 @@ export const CheckBoxOptions = ({ label, options, ...props }) => {
           <Form.Check
             {...field}
             {...props}
-            checked={field.value.includes(opt)}
             className="form-check-inline"
-            key={opt}
+            key={index}
             isValid={meta.touched && !meta.error}
             isInvalid={meta.touched && !!meta.error}
             type="checkbox"
@@ -60,7 +59,7 @@ export const CheckBoxOptions = ({ label, options, ...props }) => {
   );
 };
 
-export const SelectField = ({ label, options, ...props }) => {
+export const SelectField = ({ label, options, defaultValue, ...props }) => {
   const [field, meta] = useField(props);
   const classes = `form-control ${meta.touched && !meta.error ? "is-valid" : ""}`;
   return (

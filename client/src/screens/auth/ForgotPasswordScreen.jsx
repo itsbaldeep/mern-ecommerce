@@ -1,4 +1,4 @@
-// Libraries
+// Dependencies
 import { useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -7,10 +7,10 @@ import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
-import { TextField } from "../components/InputFields";
+import { TextField } from "components/InputFields.jsx";
 
 // Actions
-import { clearErrors, forgotPassword } from "../redux/actions/user";
+import { clearErrors, forgotPassword } from "redux/actions/user";
 
 const ForgotPasswordScreen = () => {
   const history = useHistory();
@@ -23,21 +23,18 @@ const ForgotPasswordScreen = () => {
     if (user.isAuthenticated) history.push("/");
     dispatch(clearErrors());
   }, [dispatch, history, user.isAuthenticated]);
+
   return (
     <Formik
-      initialValues={{
-        email: "",
-      }}
+      initialValues={{ email: "" }}
       validationSchema={Yup.object({
         email: Yup.string().email("Email is invalid").required("Email is required"),
       })}
-      onSubmit={({ email }) => {
-        dispatch(forgotPassword(email));
-      }}
+      onSubmit={({ email }) => dispatch(forgotPassword(email))}
     >
       {({ values, handleSubmit }) => (
         <Container style={{ maxWidth: "500px" }}>
-          <h1 className="my-4">Forgot Password</h1>
+          <h2 className="py-2 text-center">Forgot Password</h2>
           <Form noValidate onSubmit={handleSubmit}>
             <TextField label="Email" name="email" type="email" placeholder="example@gmail.com" />
             {error && (

@@ -1,4 +1,4 @@
-// Libraries
+// Dependencies
 import { useEffect } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
@@ -7,10 +7,10 @@ import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
-import { TextField } from "../components/InputFields";
+import { TextField } from "components/InputFields.jsx";
 
 // Actions
-import { clearErrors, login } from "../redux/actions/user";
+import { clearErrors, login } from "redux/actions/user";
 
 const LoginScreen = () => {
   const history = useHistory();
@@ -23,26 +23,25 @@ const LoginScreen = () => {
     dispatch(clearErrors());
   }, [dispatch, history, user.isAuthenticated]);
 
-  // Login form fields validation
-  const validate = Yup.object({
+  // Initial values and validation schema
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+  const validationSchema = Yup.object({
     email: Yup.string().email("Email is invalid").required("Email is required"),
     password: Yup.string().required("Password is required"),
   });
 
   return (
     <Formik
-      initialValues={{
-        email: "",
-        password: "",
-      }}
-      validationSchema={validate}
-      onSubmit={(values) => {
-        dispatch(login(values.email, values.password));
-      }}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
+      onSubmit={(values) => dispatch(login(values.email, values.password))}
     >
       {({ handleSubmit }) => (
-        <Container className="pt-2" style={{ maxWidth: "500px" }}>
-          <h1 className="my-4 text-center">Welcome to Petohub</h1>
+        <Container className="my-2" style={{ maxWidth: "500px" }}>
+          <h2 className="py-2 text-center">Welcome to Petohub</h2>
           <Form noValidate onSubmit={handleSubmit}>
             <TextField label="Email" name="email" type="email" placeholder="example@gmail.com" />
             <TextField
@@ -72,7 +71,7 @@ const LoginScreen = () => {
                 {user.error}
               </Alert>
             )}
-            <Button style={{ width: "100%" }} variant="dark" type="submit">
+            <Button style={{ width: "100%" }} disabled={user.loading} variant="dark" type="submit">
               Login
             </Button>
           </Form>

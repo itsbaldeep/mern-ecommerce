@@ -16,7 +16,6 @@ const ProductDashboard = () => {
     if (!loading) list = products.filter((product) => product.seller === user._id);
   }, [dispatch]);
 
-  console.log(list);
   return <Container></Container>;
 };
 

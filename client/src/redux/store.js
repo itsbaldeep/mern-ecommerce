@@ -12,12 +12,15 @@ import {
   userReducer,
 } from "./reducers/user";
 
+import { productsReducer } from "./reducers/product";
+
 const reducer = combineReducers({
   allUsers: allUsersReducer,
   userDetails: detailsReducer,
   forgotPassword: forgotPasswordReducer,
   profile: profileReducer,
   user: userReducer,
+  product: productsReducer,
 });
 
 // Creating the store

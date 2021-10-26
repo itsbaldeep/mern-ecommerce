@@ -1,0 +1,18 @@
+.navbar-dark {
+  background-color: var(--navbar-color) !important;
+}
+
+.navbar-brand {
+  padding: 0;
+  height: 50px;
+  background-color: white !important;
+  border-radius: 15px;
+}
+
+.navbar-brand:hover {
+  background-color: whitesmoke !important;
+}
+
+a.dropdown-item.active {
+  background-color: var(--navbar-color) !important;
+}

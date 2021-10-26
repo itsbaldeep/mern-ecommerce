@@ -1,22 +1,22 @@
+// Dependencies
 import { useEffect } from "react";
 import { Form, Button, Container, Alert } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-
 import { Formik } from "formik";
 import * as Yup from "yup";
 
-import { TextField } from "../components/InputFields";
+// Components
+import { TextField } from "components/InputFields.jsx";
 
-import { clearErrors, resetPassword } from "../redux/actions/user";
+// Actions
+import { clearErrors, resetPassword } from "redux/actions/user";
 
 const ResetPasswordScreen = ({ match }) => {
   const dispatch = useDispatch();
   const { error, success } = useSelector((state) => state.forgotPassword);
 
-  useEffect(() => {
-    dispatch(clearErrors());
-  }, [dispatch]);
+  useEffect(() => dispatch(clearErrors()), [dispatch]);
 
   return (
     <Formik
@@ -32,13 +32,11 @@ const ResetPasswordScreen = ({ match }) => {
           .oneOf([Yup.ref("password"), null], "Passwords must match")
           .required("Re-enter your password"),
       })}
-      onSubmit={({ password }) => {
-        dispatch(resetPassword(match.params.resetToken, password));
-      }}
+      onSubmit={({ password }) => dispatch(resetPassword(match.params.resetToken, password))}
     >
       {({ handleSubmit }) => (
         <Container style={{ maxWidth: "500px" }}>
-          <h1 className="my-4">Reset Password</h1>
+          <h2 className="py-2">Reset Password</h2>
           <Form noValidate onSubmit={handleSubmit}>
             <TextField
               label="New Password"

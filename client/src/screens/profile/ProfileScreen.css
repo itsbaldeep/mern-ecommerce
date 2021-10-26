@@ -1,0 +1,13 @@
+.profile-sidebar > div > a.active {
+  background-color: var(--navbar-color) !important;
+}
+
+.profile-sidebar > div > a {
+  color: black;
+}
+
+.profile-sidebar > div > a:hover {
+  color: white;
+  background-color: var(--navbar-color) !important;
+  opacity: 0.8;
+}

@@ -25,8 +25,8 @@ const HomeScreen = () => {
         ></div>
         <Container>
           <div>
-            <h1 class="display-5 mt-2">Love and treat pets like royalty</h1>
-            <p class="lead">
+            <h1 className="display-5 mt-2">Love and treat pets like royalty</h1>
+            <p className="lead">
               Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum non, tenetur iure
               sequi iste amet dolores quibusdam reprehenderit. Maxime, non?
             </p>
@@ -34,8 +34,8 @@ const HomeScreen = () => {
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, laborum et
               voluptatum atque sed maxime recusandae voluptate at iure tempora.
             </p>
-            <p class="lead mb-2">
-              <a class="btn btn-light btn-lg" href="#" role="button">
+            <p className="lead mb-2">
+              <a className="btn btn-light btn-lg" href="/directories" role="button">
                 Get Started
               </a>
             </p>
@@ -131,7 +131,7 @@ const HomeScreen = () => {
               }}
             >
               <h3 className="text-light">Donate and support us</h3>
-              <a className="btn btn-dark btn-md" href="#" role="button">
+              <a className="btn btn-dark btn-md" href="/donate" role="button">
                 Donate now
               </a>
             </Col>
@@ -139,25 +139,19 @@ const HomeScreen = () => {
               <img src="assets/images/adopt-cat.jpg" alt="" />
               <h4 className="my-4">Adopt a Cat</h4>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-              <a href="#" className="btn btn-dark btn-md">
-                See the cats
-              </a>
+              <button className="btn btn-dark btn-md">See the cats</button>
             </Col>
             <Col md={3} sm={6} xs={12} className="adopt-pet-section px-2">
               <img src="assets/images/adopt-dog.jpg" alt="" />
               <h4 className="my-4">Adopt a Dog</h4>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-              <a href="#" className="btn btn-dark btn-md">
-                See the dogs
-              </a>
+              <button className="btn btn-dark btn-md">See the dogs</button>
             </Col>
             <Col md={3} sm={6} xs={12} className="adopt-pet-section px-2">
               <img src="assets/images/adopt-others.jpg" alt="" />
               <h4 className="my-4">Other Pets</h4>
               <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
-              <a href="#" className="btn btn-dark btn-md">
-                See the pets
-              </a>
+              <button className="btn btn-dark btn-md">See the pets</button>
             </Col>
           </Row>
           <Row>
@@ -168,7 +162,7 @@ const HomeScreen = () => {
               <Col xs={12} md={6}>
                 <form className="newsletter-form">
                   <input type="email" className="form-control" placeholder="Enter your email" />
-                  <button className="btn btn-dark" type="submit">
+                  <button className="btn btn-dark my-2" type="submit">
                     Subscribe
                   </button>
                 </form>
@@ -176,7 +170,7 @@ const HomeScreen = () => {
             </Row>
           </Row>
         </Container>
-        <Row className="footer-section text-center text-light">
+        <Row className="footer-section text-center text-light pt-3">
           <Col md={3} sm={6} xs={12} className="footer-first">
             <div className="footer-img-container">
               <img src="assets/logo/Petohub-Logo-Wide.png" alt="" width="160px" />
@@ -238,7 +232,7 @@ const HomeScreen = () => {
               </ul>
             </div>
           </Col>
-          <Col md={3} sm={6} xs={12}>
+          <Col md={3} sm={6} xs={12} className="pb-2">
             <h4>Catch us on Social Media</h4>
             <div className="social-links">
               <div className="facebook">
@@ -261,9 +255,6 @@ const HomeScreen = () => {
               </div>
             </div>
           </Col>
-          <div className="py-2">
-            <p>Copyright &copy; 2021 Petohub. All rights reserved</p>
-          </div>
         </Row>
       </section>
     </main>

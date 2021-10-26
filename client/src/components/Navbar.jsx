@@ -1,6 +1,5 @@
 // Libraries
 import { Nav, Navbar, Container, NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import "./Navbar.css";
@@ -13,14 +12,7 @@ const PetohubNavbar = () => {
   const user = useSelector((state) => state.user);
 
   return (
-    <Navbar
-      fixed="top"
-      collapseOnSelect
-      expand="lg"
-      variant="light"
-      bg="light"
-      style={{ minHeight: "70px" }}
-    >
+    <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark">
       <Container fluid>
         <LinkContainer exact to="/">
           <Navbar.Brand>
@@ -53,7 +45,7 @@ const PetohubNavbar = () => {
           </Nav>
           {user.isAuthenticated ? (
             <Nav>
-              <NavDropdown className="nav-light" title={user.user.name}>
+              <NavDropdown className="nav-dark" title={user.user.name}>
                 <LinkContainer to="/account">
                   <NavDropdown.Item>Account</NavDropdown.Item>
                 </LinkContainer>

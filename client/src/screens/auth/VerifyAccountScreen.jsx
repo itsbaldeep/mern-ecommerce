@@ -1,16 +1,17 @@
+// Dependencies
 import { useEffect } from "react";
 import { Nav, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { verify } from "../redux/actions/user";
+
+// Actions
+import { verify } from "redux/actions/user";
 
 const VerifyAccountScreen = ({ match }) => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
-  useEffect(() => {
-    dispatch(verify(match.params.verifyToken));
-  }, [dispatch, match.params.verifyToken]);
+  useEffect(() => dispatch(verify(match.params.verifyToken)), [dispatch, match.params.verifyToken]);
 
   return (
     <Container

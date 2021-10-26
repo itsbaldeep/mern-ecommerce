@@ -9,7 +9,7 @@
 }
 
 .content-section {
-  background: rgb(233, 233, 233);
+  background: var(--content-color);
 }
 
 .img-container {
@@ -95,7 +95,7 @@
 }
 
 .footer-section {
-  background-color: rgb(105, 136, 145);
+  background-color: var(--footer-color);
 }
 
 .footer-img-container {
@@ -126,7 +126,15 @@
   height: 100%;
 }
 
-.footer-section > div {
-  padding: 16px;
-  border: 1px solid rgb(92, 121, 129);
+.social-links a,
+.social-links p {
+  display: inline;
+}
+
+.footer-sentence {
+  border-top: 1px solid lightgray;
+}
+
+.footer-sentence p {
+  margin: 0;
 }

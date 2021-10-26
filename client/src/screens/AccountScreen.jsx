@@ -1,41 +1,71 @@
 import { Container, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { useSelector } from "react-redux";
 import "./AccountScreen.css";
 
 const AccountScreen = () => {
+  const { user } = useSelector((state) => state.user);
   return (
     <Container className="pt-2">
-      <h1 className="my-2">Your Profile</h1>
+      <h2 className="my-2">Your Account</h2>
       <Row className="mt-4 profile-screen-container">
         <Col xs={12} md={6}>
-          <LinkContainer to="/account/orders">
-            <div className="profile-section profile-section-orders">
-              <div>
-                <i className="fas fa-box"></i>
+          {user.role === "Customer" ? (
+            <LinkContainer to="/account/orders">
+              <div className="profile-section">
+                <div>
+                  <i className="fas fa-box"></i>
+                </div>
+                <div>
+                  <h2>YOUR ORDERS</h2>
+                  <p>Track, return or view your orders.</p>
+                </div>
               </div>
-              <div>
-                <h2>YOUR ORDERS</h2>
-                <p>Track, return or view your orders.</p>
+            </LinkContainer>
+          ) : (
+            <LinkContainer to="/account/products">
+              <div className="profile-section">
+                <div>
+                  <i className="fas fa-boxes"></i>
+                </div>
+                <div>
+                  <h2>YOUR PRODUCTS</h2>
+                  <p>Add, edit or remove your products.</p>
+                </div>
               </div>
-            </div>
-          </LinkContainer>
+            </LinkContainer>
+          )}
         </Col>
         <Col xs={12} md={6}>
-          <LinkContainer to="/account/appointments">
-            <div className="profile-section profile-section-appointments">
-              <div>
-                <i className="fas fa-calendar-check"></i>
+          {user.role === "Customer" ? (
+            <LinkContainer to="/account/appointments">
+              <div className="profile-section">
+                <div>
+                  <i className="fas fa-calendar-check"></i>
+                </div>
+                <div>
+                  <h2>YOUR APPOINTMENTS</h2>
+                  <p>View or cancel your appointments.</p>
+                </div>
               </div>
-              <div>
-                <h2>YOUR APPOINTMENTS</h2>
-                <p>View or cancel your appointments.</p>
+            </LinkContainer>
+          ) : (
+            <LinkContainer to="/account/services">
+              <div className="profile-section">
+                <div>
+                  <i className="fas fa-hands-helping"></i>
+                </div>
+                <div>
+                  <h2>YOUR SERVICES</h2>
+                  <p>Add, edit or remove your services.</p>
+                </div>
               </div>
-            </div>
-          </LinkContainer>
+            </LinkContainer>
+          )}
         </Col>
         <Col xs={12} md={6}>
           <LinkContainer to="/account/profile">
-            <div className="profile-section profile-section-account">
+            <div className="profile-section">
               <div>
                 <i className="fas fa-user-circle"></i>
               </div>
@@ -48,7 +78,7 @@ const AccountScreen = () => {
         </Col>
         <Col xs={12} md={6}>
           <LinkContainer to="/account/cart">
-            <div className="profile-section profile-section-cart">
+            <div className="profile-section">
               <div>
                 <i className="fas fa-shopping-cart"></i>
               </div>

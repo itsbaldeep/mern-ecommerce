@@ -1,5 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Sora&display=swap");
 
+:root {
+  --navbar-color: rgb(185, 79, 148);
+  --content-color: rgb(233, 233, 233);
+  --footer-color: rgb(105, 136, 145);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -10,14 +16,21 @@ a {
   color: inherit;
 }
 
+html {
+  position: relative;
+  min-height: 100%;
+}
+
 body {
   font-family: "Sora", Arial, "Helvetica Neue", Helvetica, sans-serif;
-}
-
-nav {
-  font-size: 18px;
+  margin-bottom: 30px; /* Margin bottom by footer height */
 }
 
 body {
-  margin-top: 70px;
+  margin-top: 66px; /* Margin top by navbar height */
+}
+
+.btn-dark {
+  background-color: var(--navbar-color) !important;
+  border: none;
 }
