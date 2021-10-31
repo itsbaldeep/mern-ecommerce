@@ -27,12 +27,11 @@ const HomeScreen = () => {
           <div>
             <h1 className="display-5 mt-2">Love and treat pets like royalty</h1>
             <p className="lead">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dolorum non, tenetur iure
-              sequi iste amet dolores quibusdam reprehenderit. Maxime, non?
+              Welcome to Petohub. Best place for pet lovers, made by pet lovers
             </p>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur, laborum et
-              voluptatum atque sed maxime recusandae voluptate at iure tempora.
+              Provide love and care to pets by becoming a part of the Petohub community. Discover
+              what's the best way to care for your pets.
             </p>
             <p className="lead mb-2">
               <a className="btn btn-light btn-lg" href="/directories" role="button">
@@ -50,40 +49,47 @@ const HomeScreen = () => {
                 <img src="assets/images/cats-gradient.png" alt="" />
               </div>
               <h3 className="my-3">Pet Training</h3>
-              <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, tenetur quaerat</p>
+              <p>
+                Find a trainer specially suited for your type of pet and book an appointment right
+                at your convenience.
+              </p>
             </Col>
             <Col xs={12} sm={6} md={3}>
               <div className="img-container">
                 <img src="assets/images/supplement-gradient.png" alt="" />
               </div>
               <h3 className="my-3">Pet Grooming</h3>
-              <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, tenetur quaerat</p>
+              <p>
+                Make your pet shine with the special grooming services provided by top rated
+                specialists.
+              </p>
             </Col>
             <Col xs={12} sm={6} md={3}>
               <div className="img-container">
                 <img src="assets/images/shampoo-gradient.png" alt="" />
               </div>
               <h3 className="my-3">Care Service</h3>
-              <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, tenetur quaerat</p>
+              <p>Get all rounded care from certified professional from all over the city.</p>
             </Col>
             <Col xs={12} sm={6} md={3}>
               <div className="img-container">
                 <img src="assets/images/house-pet-gradient.png" alt="" />
               </div>
               <h3 className="my-3">Pet Adoption</h3>
-              <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. At, tenetur quaerat</p>
+              <p>Give homeless pets a home by adopting a pet and contributing to the society.</p>
             </Col>
           </Row>
           <Row className="mb-5">
             <Col xs={12} md={6} className="our-company-section">
               <h3>Our Company</h3>
               <p>
-                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Nam maxime alias eius.
-                Aliquid, cum exercitationem.
+                We provide specialised and personalised care catered for your and your pet's needs
+                in a fast and reliable manner.
               </p>
               <p>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quam assumenda quia
-                molestias! Corrupti, consequatur hic?
+                You can choose from various top brands and professionals to give your pets the care
+                they deserve. Our company aims to make sure that your pet is taken care of in the
+                best possible way.
               </p>
               <Row className="text-center mt-2">
                 <Col xs={12} sm={6}>
@@ -95,7 +101,7 @@ const HomeScreen = () => {
                   <i className="fas fa-phone"></i>
                   <h5 className="my-3">Our Contact</h5>
                   <p>
-                    (+91) 9999999999 <br /> petohubofficial@gmail.com
+                    (+91) 7011923045 <br /> petohubofficial@gmail.com
                   </p>
                 </Col>
               </Row>
@@ -126,8 +132,9 @@ const HomeScreen = () => {
               style={{
                 backgroundImage: 'url("assets/images/donation-section-image.jpg")',
                 backgroundSize: "cover",
-                backgroundPosition: "center",
-                height: "300px",
+                backgroundPosition: "center center",
+                backgroundRepeat: "no-repeat",
+                height: "394px",
               }}
             >
               <h3 className="text-light">Donate and support us</h3>
@@ -138,19 +145,28 @@ const HomeScreen = () => {
             <Col md={3} sm={6} xs={12} className="adopt-pet-section px-2">
               <img src="assets/images/adopt-cat.jpg" alt="" />
               <h4 className="my-4">Adopt a Cat</h4>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+              <p>
+                Cats are believed to be the only mammals who don't taste sweetness. Show sweetness
+                to homeless cats by providing them shelter.
+              </p>
               <button className="btn btn-dark btn-md">See the cats</button>
             </Col>
             <Col md={3} sm={6} xs={12} className="adopt-pet-section px-2">
               <img src="assets/images/adopt-dog.jpg" alt="" />
               <h4 className="my-4">Adopt a Dog</h4>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+              <p>
+                Their sense of smell is at least 40x better than ours. Let these dogs smell the
+                scent of home by taking one home
+              </p>
               <button className="btn btn-dark btn-md">See the dogs</button>
             </Col>
             <Col md={3} sm={6} xs={12} className="adopt-pet-section px-2">
               <img src="assets/images/adopt-others.jpg" alt="" />
               <h4 className="my-4">Other Pets</h4>
-              <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+              <p>
+                75% of pet owners celebrate their pet's birthday. A companion is sometimes all you
+                need to enrich your life with positivity.
+              </p>
               <button className="btn btn-dark btn-md">See the pets</button>
             </Col>
           </Row>

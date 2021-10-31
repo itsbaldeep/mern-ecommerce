@@ -9,7 +9,6 @@ import { getProducts } from "redux/actions/product";
 const ShopScreen = () => {
   const dispatch = useDispatch();
   const { loading, products } = useSelector((state) => state.product);
-  const { user } = useSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getProducts());

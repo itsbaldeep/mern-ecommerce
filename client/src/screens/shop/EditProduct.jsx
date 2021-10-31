@@ -12,7 +12,7 @@ const EditProduct = ({ show, onHide, product }) => {
 
   useEffect(() => {
     dispatch(clearErrors());
-  }, []);
+  }, [dispatch]);
 
   const initialValues = {
     ...product,

@@ -13,7 +13,7 @@ const AddProduct = ({ show, onHide }) => {
 
   useEffect(() => {
     dispatch(clearErrors());
-  }, []);
+  }, [dispatch]);
 
   const initialValues = {
     name: "",
