@@ -16,6 +16,9 @@ import Footer from "./components/Footer.jsx";
 // Screens
 import HomeScreen from "./screens/HomeScreen.jsx";
 import ShopScreen from "./screens/shop/ShopScreen.jsx";
+import ServicesScreen from "./screens/services/ServicesScreen.jsx";
+import DirectoriesScreen from "./screens/DirectoriesScreen.jsx";
+import NGOScreen from "./screens/NGOScreen.jsx";
 
 // Auth Screens
 import LoginScreen from "./screens/auth/LoginScreen.jsx";
@@ -54,6 +57,9 @@ function App() {
 
         {/* Main Routes */}
         <Route path="/shop" component={ShopScreen} />
+        <Route path="/services" component={ServicesScreen} />
+        <Route path="/directories" component={DirectoriesScreen} />
+        <Route path="/ngo" component={NGOScreen} />
 
         {/* Auth Routes */}
         <Route exact path="/login" component={LoginScreen} />

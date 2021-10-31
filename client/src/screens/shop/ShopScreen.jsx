@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 
-import Product from "./Product";
+import Product from "./Product.jsx";
 
 import { getProducts } from "redux/actions/product";
 
@@ -19,14 +19,18 @@ const ShopScreen = () => {
     <Container>
       <h2 className="py-2">All Products</h2>
       {loading ? (
-        <h1>Loading</h1>
+        <h3>Loading</h3>
       ) : (
         <Row>
-          {products.map((product) => (
-            <Col sm={12} md={4} key={product._id}>
-              <Product product={product} />
-            </Col>
-          ))}
+          {products.length > 0 ? (
+            products.map((product) => (
+              <Col sm={12} md={4} key={product._id}>
+                <Product product={product} />
+              </Col>
+            ))
+          ) : (
+            <h3>No products to show</h3>
+          )}
         </Row>
       )}
     </Container>

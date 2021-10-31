@@ -16,7 +16,7 @@ const ProductSchema = new mongoose.Schema(
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       required: [true, "Seller ID not found"],
-      ref: "Client",
+      ref: "User",
     },
     category: {
       type: String,
@@ -88,12 +88,12 @@ const ProductSchema = new mongoose.Schema(
         },
       },
     },
-    imageURL: {
-      type: String,
+    imageURLs: {
+      type: [String],
     },
     rating: {
       type: Number,
-      immutable: true,
+      select: false,
     },
     isApproved: {
       type: Boolean,
@@ -102,11 +102,10 @@ const ProductSchema = new mongoose.Schema(
     numOfReviews: {
       type: Number,
       default: 0,
-      immutable: true,
+      select: false,
     },
     reviews: {
       type: [Object],
-      immutable: true,
     },
   },
   { timestamps: true }

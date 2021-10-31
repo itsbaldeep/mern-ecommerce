@@ -4,10 +4,11 @@
   "description": "Petohub's official website",
   "main": "index.js",
   "scripts": {
-    "start": "node .",
+    "start": "node index.js",
     "server": "nodemon",
     "client": "npm run start --prefix client",
-    "dev": "concurrently \"npm run server\" \"cd client && npm start\""
+    "dev": "concurrently \"npm run server\" \"cd client && npm start\"",
+    "heroku-postbuild": "NODE_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "author": "Baldeep Singh",
   "license": "MIT",

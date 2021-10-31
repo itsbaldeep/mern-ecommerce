@@ -1,6 +1,7 @@
 const Product = require("../models/Product");
 const ErrorResponse = require("../utils/errorResponse");
 
+// GET /api/product/
 exports.getProducts = async (req, res, next) => {
   try {
     const products = await Product.find();
@@ -13,6 +14,7 @@ exports.getProducts = async (req, res, next) => {
   }
 };
 
+// GET /api/product/:id
 exports.getProductById = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -28,6 +30,7 @@ exports.getProductById = async (req, res, next) => {
   }
 };
 
+// POST /api/product/add
 exports.addProduct = async (req, res, next) => {
   try {
     if (req.user.role === "Client") req.body.seller = req.user._id;
@@ -42,6 +45,7 @@ exports.addProduct = async (req, res, next) => {
   }
 };
 
+// DEL /api/product/remove/:id
 exports.removeProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -65,6 +69,7 @@ exports.removeProduct = async (req, res, next) => {
   }
 };
 
+// PUT /api/product/edit/:id
 exports.editProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
