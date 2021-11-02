@@ -15,6 +15,12 @@ const getConfig = () => {
   return config;
 };
 
+const getConfigFD = () => {
+  const config = getConfig();
+  config.headers["Content-Type"] = "multipart/form-data";
+  return config;
+};
+
 // POST /api/user/login
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -109,7 +115,13 @@ export const getDetails = () => async (dispatch) => {
 export const updateProfile = (user) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.UPDATE_PROFILE_REQUEST });
-    const { data } = await axios.put("/api/user/updateprofile", user, getConfig());
+    let data;
+    if (!user.file) data = (await axios.put("/api/user/updateprofile", user, getConfig())).data;
+    else {
+      const formData = new FormData();
+      formData.append("file", user.file);
+      data = (await axios.put("/api/user/updateprofile", formData, getConfigFD())).data;
+    }
     dispatch({ type: actionTypes.UPDATE_PROFILE_SUCCESS, payload: data.user });
     dispatch({ type: actionTypes.LOAD_SUCCESS, payload: data.user });
   } catch (error) {

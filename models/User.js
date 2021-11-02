@@ -56,6 +56,14 @@ const UserSchema = new mongoose.Schema(
     imageURL: {
       type: String,
     },
+    username: {
+      type: String,
+    },
+    details: {
+      type: Array,
+      default: [],
+    },
+    features: [String],
     state: {
       type: String,
     },

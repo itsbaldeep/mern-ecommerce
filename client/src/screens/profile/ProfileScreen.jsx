@@ -8,6 +8,7 @@ import ProfileDetails from "./ProfileDetails.jsx";
 import UpdatePassword from "./UpdatePassword.jsx";
 import UpdateCustomerProfile from "./UpdateCustomerProfile.jsx";
 import UpdateClientProfile from "./UpdateClientProfile.jsx";
+import AdditionalDetails from "./AdditionalDetails.jsx";
 
 const ProfileScreen = () => {
   const { user } = useSelector((state) => state.user);
@@ -28,6 +29,9 @@ const ProfileScreen = () => {
               <Nav.Item>
                 <Nav.Link eventKey="third">Update Details</Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="fourth">Additional Details</Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
           <Col sm={9}>
@@ -40,6 +44,9 @@ const ProfileScreen = () => {
               </Tab.Pane>
               <Tab.Pane eventKey="third">
                 {user.role === "Client" ? <UpdateClientProfile /> : <UpdateCustomerProfile />}
+              </Tab.Pane>
+              <Tab.Pane eventKey="fourth">
+                <AdditionalDetails />
               </Tab.Pane>
             </Tab.Content>
           </Col>

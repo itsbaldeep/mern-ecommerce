@@ -33,8 +33,26 @@ exports.register = async (req, res, next) => {
     if (await User.findOne({ email }))
       return next(new ErrorResponse("There is already an account with this email", 401));
 
-    // Creating a new user
-    const user = await User.create(req.body);
+    // Handling client registeration
+    let user;
+    if (req.body.role === "Client") {
+      const { storeName, category, number, address, city, state, pincode } = req.body;
+      if (!storeName || !category || !number || !address || !city || !state || !pincode)
+        return next(new ErrorResponse("Please provide neccessary details", 400));
+      user = await User.create({
+        name,
+        email,
+        password,
+        storeName,
+        category,
+        number,
+        address,
+        city,
+        state,
+        pincode,
+        role,
+      });
+    } else user = await User.create({ name, email, password });
 
     // Generating a verification token
     const verificationToken = user.getVerificationToken();
@@ -245,18 +263,51 @@ exports.updatePassword = async (req, res, next) => {
 
 // PUT /api/user/updateprofile
 exports.updateProfile = async (req, res, next) => {
-  // Checking for the new name in request body
-  if (!req.body.name) {
-    return next(new ErrorResponse("Please provide a name"));
-  }
-
-  // Updating the user
   try {
-    const user = await User.findByIdAndUpdate(req.user.id, req.body, {
-      new: true,
-      runValidators: true,
-      useFindAndModify: false,
-    });
+    let user;
+    if (req.user.role === "Customer") {
+      // Checking for the new name in request body
+      if (!req.body.name) return next(new ErrorResponse("Please provide a name"));
+      user = await User.findByIdAndUpdate(
+        req.user.id,
+        { name: req.body.name },
+        {
+          new: true,
+          runValidators: true,
+          useFindAndModify: false,
+        }
+      );
+    } else if (req.user.role === "Client") {
+      let newData = {};
+      if (req.body.name) newData.name = req.body.name;
+      if (req.body.storeName) newData.storeName = req.body.storeName;
+      if (req.body.category) newData.category = req.body.category;
+      if (req.body.number) newData.number = req.body.number;
+      if (req.body.address) newData.address = req.body.address;
+      if (req.body.city) newData.city = req.body.city;
+      if (req.body.state) newData.state = req.body.state;
+      if (req.body.pincode) newData.pincode = req.body.pincode;
+      if (req.body.details) newData.details = req.body.details;
+      if (req.body.features) newData.features = req.body.features;
+      if (req.body.description) newData.description = req.body.description;
+      if (req.body.website) newData.website = req.body.website;
+      if (req.files) {
+        try {
+          const file = req.files.file;
+          const timestamp = new Date().toISOString();
+          const filename = timestamp.concat(file.name);
+          await file.mv(`client/public/uploads/${filename}`, console.error);
+          newData.imageURL = `/uploads/${filename}`;
+        } catch (error) {
+          return next(new ErrorResponse("File could not be uploaded", 500));
+        }
+      }
+      user = await User.findByIdAndUpdate(req.user.id, newData, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      });
+    }
 
     return res.status(200).json({
       success: true,

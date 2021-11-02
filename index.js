@@ -4,11 +4,15 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+const fileUpload = require("express-fileupload");
 
-// Init express and mongoDB
+// Initializing express and primary middlewares
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(fileUpload());
+
+// Connecting to the database
 mongoose
   .connect(process.env.MONGODB_URI, {
     useUnifiedTopology: true,
@@ -27,7 +31,6 @@ app.use("/api/service", require("./routes/service"));
 // Middlewares
 app.use(require("./middleware/errorHandler"));
 
-app.use("/", express.static(path.join(__dirname, "./client/build")));
 // Serving static frontend
 if (process.env.NODE_ENV === "production") {
   app.use("/", express.static(path.join(__dirname, "./client/build")));

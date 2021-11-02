@@ -37,8 +37,6 @@ const RegisterMemberScreen = () => {
     state: "",
     city: "",
     pincode: "",
-    website: "",
-    imageURL: "",
     role: "Client",
   });
   const [step, setStep] = useState(0);
