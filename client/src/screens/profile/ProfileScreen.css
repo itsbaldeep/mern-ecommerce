@@ -11,3 +11,8 @@
   background-color: var(--navbar-color) !important;
   opacity: 0.8;
 }
+
+.profile-image img {
+  max-height: 200px;
+  max-width: 300px;
+}

@@ -82,7 +82,16 @@ const UpdateClientProfile = () => {
     <Formik
       initialValues={clientProfileChangeData}
       validationSchema={clientProfileChangeValidate}
-      onSubmit={(values) => dispatch(updateProfile(values))}
+      onSubmit={(values) => {
+        // Updating only those fields that have been modified
+        const data = {};
+        for (const value in values) {
+          if (values[value] !== user[value]) {
+            data[value] = values[value];
+          }
+        }
+        dispatch(updateProfile(data));
+      }}
     >
       {({ values, touched, errors, handleSubmit }) => (
         <Form noValidate onSubmit={handleSubmit} className="pb-2">
@@ -183,7 +192,7 @@ const UpdateClientProfile = () => {
               </Form.Group>
             </Col>
           </Row>
-          {profile.isUpdatedDetails && (
+          {profile.isUpdatedProfile && (
             <Alert className="my-3" variant="success">
               Your profile details has been updated successfully
             </Alert>

@@ -281,7 +281,7 @@ exports.updateProfile = async (req, res, next) => {
       let newData = {};
       if (req.body.name) newData.name = req.body.name;
       if (req.body.storeName) newData.storeName = req.body.storeName;
-      if (req.body.category) newData.category = req.body.category;
+      if (req.body.category) newData.category = req.body.category.split(",");
       if (req.body.number) newData.number = req.body.number;
       if (req.body.address) newData.address = req.body.address;
       if (req.body.city) newData.city = req.body.city;
@@ -291,17 +291,8 @@ exports.updateProfile = async (req, res, next) => {
       if (req.body.features) newData.features = req.body.features;
       if (req.body.description) newData.description = req.body.description;
       if (req.body.website) newData.website = req.body.website;
-      if (req.files) {
-        try {
-          const file = req.files.file;
-          const timestamp = new Date().toISOString();
-          const filename = timestamp.concat(file.name);
-          await file.mv(`client/public/uploads/${filename}`, console.error);
-          newData.imageURL = `/uploads/${filename}`;
-        } catch (error) {
-          return next(new ErrorResponse("File could not be uploaded", 500));
-        }
-      }
+      if (req.file) newData.profileImage = `/uploads/${req.file.filename}`;
+
       user = await User.findByIdAndUpdate(req.user.id, newData, {
         new: true,
         runValidators: true,

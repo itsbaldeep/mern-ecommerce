@@ -4,13 +4,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-const fileUpload = require("express-fileupload");
 
 // Initializing express and primary middlewares
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(fileUpload());
 
 // Connecting to the database
 mongoose

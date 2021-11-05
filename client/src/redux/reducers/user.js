@@ -111,7 +111,7 @@ export const profileReducer = (state = {}, action) => {
         ...state,
         error: null,
         loading: false,
-        isUpdatedDetails: true,
+        isUpdatedProfile: true,
       };
 
     case actionTypes.UPDATE_PASSWORD_SUCCESS:

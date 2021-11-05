@@ -5,14 +5,24 @@ const ProfileDetails = () => {
   const { user } = useSelector((state) => state.user);
   return (
     <div>
-      <Form.Group className="mb-3">
-        <Form.Label>Your Name</Form.Label>
-        <Form.Control placeholder={user.name} disabled />
-      </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Label>Your Email</Form.Label>
-        <Form.Control placeholder={user.email} disabled />
-      </Form.Group>
+      <Row>
+        <Col md={6} sm={12}>
+          <div className="mb-3 text-center profile-image">
+            <img src={user.profileImage} alt="" />
+          </div>
+        </Col>
+        <Col md={6} sm={12}>
+          <Form.Group className="mb-3">
+            <Form.Label>Your Name</Form.Label>
+            <Form.Control placeholder={user.name} disabled />
+          </Form.Group>
+          <Form.Group className="mb-3">
+            <Form.Label>Your Email</Form.Label>
+            <Form.Control placeholder={user.email} disabled />
+          </Form.Group>
+        </Col>
+      </Row>
+
       <Form.Group className="mb-3">
         <Form.Label>Account Type</Form.Label>
         <Form.Control placeholder={user.role} disabled />

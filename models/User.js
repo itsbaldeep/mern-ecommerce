@@ -53,8 +53,11 @@ const UserSchema = new mongoose.Schema(
       ],
     },
     category: [String],
-    imageURL: {
+    profileImage: {
       type: String,
+    },
+    images: {
+      type: [String],
     },
     username: {
       type: String,
@@ -114,6 +117,10 @@ UserSchema.pre("save", async function (next) {
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  // Delete the previous image if it's modified
+  if (this.isModified("profileImage")) {
+    // Delete file TODO
+  }
   next();
 });
 

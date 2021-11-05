@@ -115,13 +115,9 @@ export const getDetails = () => async (dispatch) => {
 export const updateProfile = (user) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.UPDATE_PROFILE_REQUEST });
-    let data;
-    if (!user.file) data = (await axios.put("/api/user/updateprofile", user, getConfig())).data;
-    else {
-      const formData = new FormData();
-      formData.append("file", user.file);
-      data = (await axios.put("/api/user/updateprofile", formData, getConfigFD())).data;
-    }
+    const formData = new FormData();
+    for (const key in user) formData.append(key, user[key]);
+    const { data } = await axios.put("/api/user/updateprofile", formData, getConfigFD());
     dispatch({ type: actionTypes.UPDATE_PROFILE_SUCCESS, payload: data.user });
     dispatch({ type: actionTypes.LOAD_SUCCESS, payload: data.user });
   } catch (error) {

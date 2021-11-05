@@ -2,6 +2,14 @@ import { Container, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useSelector } from "react-redux";
 import "./AccountScreen.css";
+import {
+  FaBox,
+  FaBoxes,
+  FaCalendarCheck,
+  FaHandsHelping,
+  FaShoppingCart,
+  FaUserCircle,
+} from "react-icons/fa";
 
 const AccountScreen = () => {
   const { user } = useSelector((state) => state.user);
@@ -15,7 +23,7 @@ const AccountScreen = () => {
               <LinkContainer to="/account/products">
                 <div className="profile-section">
                   <div>
-                    <i className="fas fa-boxes"></i>
+                    <FaBoxes />
                   </div>
                   <div>
                     <h2>YOUR PRODUCTS</h2>
@@ -28,7 +36,7 @@ const AccountScreen = () => {
               <LinkContainer to="/account/services">
                 <div className="profile-section">
                   <div>
-                    <i className="fas fa-hands-helping"></i>
+                    <FaHandsHelping />
                   </div>
                   <div>
                     <h2>YOUR SERVICES</h2>
@@ -43,7 +51,7 @@ const AccountScreen = () => {
           <LinkContainer to="/account/orders">
             <div className="profile-section">
               <div>
-                <i className="fas fa-box"></i>
+                <FaBox />
               </div>
               <div>
                 <h2>YOUR ORDERS</h2>
@@ -56,7 +64,7 @@ const AccountScreen = () => {
           <LinkContainer to="/account/appointments">
             <div className="profile-section">
               <div>
-                <i className="fas fa-calendar-check"></i>
+                <FaCalendarCheck />
               </div>
               <div>
                 <h2>YOUR APPOINTMENTS</h2>
@@ -69,7 +77,7 @@ const AccountScreen = () => {
           <LinkContainer to="/account/profile">
             <div className="profile-section">
               <div>
-                <i className="fas fa-user-circle"></i>
+                <FaUserCircle />
               </div>
               <div>
                 <h2>YOUR PROFILE</h2>
@@ -82,7 +90,7 @@ const AccountScreen = () => {
           <LinkContainer to="/account/cart">
             <div className="profile-section">
               <div>
-                <i className="fas fa-shopping-cart"></i>
+                <FaShoppingCart />
               </div>
               <div>
                 <h2>YOUR SHOPPING CART</h2>

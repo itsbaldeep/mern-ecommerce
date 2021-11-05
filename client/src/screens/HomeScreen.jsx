@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FaBuilding, FaFacebook, FaInstagram, FaPhone, FaTwitter } from "react-icons/fa";
 import "./HomeScreen.css";
 
 const HomeScreen = () => {
@@ -93,12 +94,12 @@ const HomeScreen = () => {
               </p>
               <Row className="text-center mt-2">
                 <Col xs={12} sm={6}>
-                  <i className="fas fa-building"></i>
+                  <FaBuilding />
                   <h5 className="my-3">Our Office</h5>
                   <p>Mukhram Garden, Tilak Nagar, New Delhi, 110018</p>
                 </Col>
                 <Col xs={12} sm={6}>
-                  <i className="fas fa-phone"></i>
+                  <FaPhone />
                   <h5 className="my-3">Our Contact</h5>
                   <p>
                     (+91) 7011923045 <br /> petohubofficial@gmail.com
@@ -253,19 +254,19 @@ const HomeScreen = () => {
             <div className="social-links">
               <div className="facebook">
                 <Link to="/">
-                  <i className="fab fa-facebook"></i>
+                  <FaFacebook />
                   <p> Facebook</p>
                 </Link>
               </div>
               <div className="twitter">
                 <Link to="/">
-                  <i className="fab fa-twitter"></i>
+                  <FaTwitter />
                   <p> Twitter</p>
                 </Link>
               </div>
               <div className="instagram">
                 <Link to="/">
-                  <i className="fab fa-instagram"></i>
+                  <FaInstagram />
                   <p> Instagram</p>
                 </Link>
               </div>

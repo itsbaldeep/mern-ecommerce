@@ -12,11 +12,10 @@ import { updateProfile } from "redux/actions/user";
 
 const UpdateCustomerProfile = () => {
   const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.user);
   const profile = useSelector((state) => state.profile);
 
-  const customerProfileChangeData = {
-    name: "",
-  };
+  const customerProfileChangeData = user;
   const customerProfileChangeValidate = Yup.object({
     name: Yup.string()
       .min(3, "Must be atleast 3 characters")
@@ -28,12 +27,21 @@ const UpdateCustomerProfile = () => {
     <Formik
       initialValues={customerProfileChangeData}
       validationSchema={customerProfileChangeValidate}
-      onSubmit={(values) => dispatch(updateProfile(values))}
+      onSubmit={(values) => {
+        // Updating only those fields that have been modified
+        const data = {};
+        for (const value in values) {
+          if (values[value] !== user[value]) {
+            data[value] = values[value];
+          }
+        }
+        dispatch(updateProfile(data));
+      }}
     >
       {({ handleSubmit }) => (
         <Form noValidate onSubmit={handleSubmit} className="my-2">
           <TextField label="Name" name="name" type="text" placeholder="Enter your new name" />
-          {profile.isUpdatedDetails && (
+          {profile.isUpdatedProfile && (
             <Alert className="my-3" variant="success">
               Your profile details has been updated successfully
             </Alert>

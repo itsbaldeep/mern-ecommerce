@@ -1,6 +1,7 @@
 // Libraries
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 
 // Authentication controller functions
 const {
@@ -20,6 +21,20 @@ const { getUsers, getUserById, addUser, editUser, deleteUser } = require("../con
 // Access control middleware
 const { protect, roles } = require("../middleware/auth");
 
+// Configuring multer
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./client/public/uploads");
+  },
+  filename: (req, file, cb) => {
+    // Renaming the file to avoid name collision
+    const timestamp = new Date().getTime().toString();
+    const filename = timestamp.concat(file.originalname);
+    cb(null, filename);
+  },
+});
+const upload = multer({ storage });
+
 // Authentication routes
 router.route("/register").post(register);
 router.route("/verify/:verificationToken").get(verify);
@@ -30,7 +45,7 @@ router.route("/resetpassword/:resetToken").put(resetPassword);
 // Private routes
 router.route("/me").get(protect, getDetails);
 router.route("/updatepassword").put(protect, updatePassword);
-router.route("/updateprofile").put(protect, updateProfile);
+router.route("/updateprofile").put(protect, upload.single("profileImage"), updateProfile);
 
 // Admin routes
 router.route("/").get(protect, roles("Admin"), getUsers);
