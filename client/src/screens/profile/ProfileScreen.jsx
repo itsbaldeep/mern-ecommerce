@@ -1,6 +1,7 @@
 // Dependencies
 import { Tab, Row, Col, Nav, Container } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import "./ProfileScreen.css";
 
 // Screens
@@ -15,7 +16,16 @@ const ProfileScreen = () => {
 
   return (
     <Container fluid className="profile-container">
-      <h2 className="my-1 pt-3">Your Profile</h2>
+      <div className="d-flex align-items-center justify-content-between my-1 pt-3 text-center">
+        <h2>Your Profile</h2>
+        <p>
+          Account Type: <span>{user.role}</span>
+          <br />
+          <Link to="/" className="btn btn-primary">
+            Become a member
+          </Link>
+        </p>
+      </div>
       <Tab.Container id="profile-tabs" defaultActiveKey="first">
         <Row>
           <Col sm={3}>
@@ -30,7 +40,7 @@ const ProfileScreen = () => {
                 <Nav.Link eventKey="third">Update Details</Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="fourth">Additional Details</Nav.Link>
+                <Nav.Link eventKey="fourth">Update Profile Image</Nav.Link>
               </Nav.Item>
             </Nav>
           </Col>

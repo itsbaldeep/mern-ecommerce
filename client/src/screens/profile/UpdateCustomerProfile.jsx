@@ -46,7 +46,7 @@ const UpdateCustomerProfile = () => {
               Your profile details has been updated successfully
             </Alert>
           )}
-          <Button style={{ width: "100%" }} variant="dark" type="submit">
+          <Button style={{ width: "100%" }} type="submit">
             Update Details
           </Button>
         </Form>

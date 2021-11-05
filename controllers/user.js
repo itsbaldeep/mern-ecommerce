@@ -262,25 +262,28 @@ exports.updatePassword = async (req, res, next) => {
 };
 
 // PUT /api/user/updateprofile
+// upload.single('profileImage')
 exports.updateProfile = async (req, res, next) => {
   try {
     let user;
+    // Controlling customer update profile request
     if (req.user.role === "Customer") {
-      // Checking for the new name in request body
-      if (!req.body.name) return next(new ErrorResponse("Please provide a name"));
-      user = await User.findByIdAndUpdate(
-        req.user.id,
-        { name: req.body.name },
-        {
-          new: true,
-          runValidators: true,
-          useFindAndModify: false,
-        }
-      );
-    } else if (req.user.role === "Client") {
-      let newData = {};
+      const newData = {};
+      if (req.body.name) newData.name = req.body.name;
+      if (req.file) newData.profileImage = `/uploads/${req.file.filename}`;
+
+      user = await User.findByIdAndUpdate(req.user.id, newData, {
+        new: true,
+        runValidators: true,
+        useFindAndModify: false,
+      });
+    }
+    // Controlling client update profile request
+    else if (req.user.role === "Client") {
+      const newData = {};
       if (req.body.name) newData.name = req.body.name;
       if (req.body.storeName) newData.storeName = req.body.storeName;
+      // Category in formdata is in string format instead of array
       if (req.body.category) newData.category = req.body.category.split(",");
       if (req.body.number) newData.number = req.body.number;
       if (req.body.address) newData.address = req.body.address;

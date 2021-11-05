@@ -27,7 +27,7 @@ const AdditionalDetails = () => {
       validationSchema={additionalDataValidate}
       onSubmit={(values) => dispatch(updateProfile(values))}
     >
-      {({ errors, values, touched, handleSubmit, setFieldValue }) => (
+      {({ errors, values, handleSubmit, setFieldValue }) => (
         <Form noValidate onSubmit={handleSubmit} className="my-2">
           <Form.Group className="mb-3">
             <Form.Label>Image</Form.Label>
@@ -53,8 +53,8 @@ const AdditionalDetails = () => {
               Your profile has been updated successfully
             </Alert>
           )}
-          <Button style={{ width: "100%" }} variant="dark" type="submit">
-            Update Profile
+          <Button style={{ width: "100%" }} type="submit">
+            Update Profile Image
           </Button>
         </Form>
       )}

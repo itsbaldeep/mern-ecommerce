@@ -65,7 +65,7 @@ const UpdatePassword = () => {
               Your password has been changed successfully
             </Alert>
           )}
-          <Button style={{ width: "100%" }} variant="dark" type="submit">
+          <Button style={{ width: "100%" }} type="submit">
             Update Password
           </Button>
         </Form>
