@@ -71,8 +71,8 @@ const LoginScreen = () => {
                 {user.error}
               </Alert>
             )}
-            <Button style={{ width: "100%" }} disabled={user.loading} variant="dark" type="submit">
-              Login
+            <Button style={{ width: "100%" }} disabled={user.loading} type="submit">
+              {user.loading ? "Logging In" : "Login"}
             </Button>
           </Form>
         </Container>

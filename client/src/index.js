@@ -1,7 +1,11 @@
-import React from "react";
+// Dependencies
 import ReactDOM from "react-dom";
-import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+
+// Main app component
+import App from "./App";
+
+// CSS files
 import "./custom.scss";
 import "./index.css";
 

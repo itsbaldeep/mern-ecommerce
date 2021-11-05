@@ -88,8 +88,8 @@ const RegisterScreen = () => {
                 {user.message}
               </Alert>
             )}
-            <Button style={{ width: "100%" }} disabled={user.loading} variant="dark" type="submit">
-              Create an Account
+            <Button style={{ width: "100%" }} disabled={user.loading} type="submit">
+              {user.loading ? "Creating your account" : "Create an Account"}
             </Button>
           </Form>
         </Container>

@@ -16,7 +16,7 @@ const ForgotPasswordScreen = () => {
   const history = useHistory();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
-  const { error, emailSent } = useSelector((state) => state.forgotPassword);
+  const { error, emailSent, loading } = useSelector((state) => state.forgotPassword);
 
   // Don't let a user with token access this screen
   useEffect(() => {
@@ -48,8 +48,8 @@ const ForgotPasswordScreen = () => {
                 <b>{values.email}</b>
               </Alert>
             )}
-            <Button style={{ width: "100%" }} variant="dark" type="submit">
-              Send Reset Link
+            <Button style={{ width: "100%" }} disabled={loading} type="submit">
+              {loading ? "Sending..." : "Send Reset Link"}
             </Button>
           </Form>
         </Container>

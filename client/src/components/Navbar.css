@@ -1,18 +1,22 @@
-.navbar-dark {
-  background-color: var(--navbar-color) !important;
-}
-
 .navbar-brand {
-  padding: 0;
-  height: 50px;
-  background-color: white !important;
+  background-color: white;
   border-radius: 15px;
 }
 
 .navbar-brand:hover {
-  background-color: whitesmoke !important;
+  background-color: whitesmoke;
 }
 
-a.dropdown-item.active {
-  background-color: var(--navbar-color) !important;
+.navbar {
+  font-size: 17px;
+}
+
+.navbar-nav a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.navbar-nav svg {
+  display: block;
 }

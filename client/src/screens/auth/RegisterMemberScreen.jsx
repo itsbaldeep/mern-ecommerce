@@ -1,6 +1,6 @@
 // Dependencies
 import { Formik } from "formik";
-import { Form, Container, Alert, Row, Col } from "react-bootstrap";
+import { Form, Container, Alert, Row, Col, Button } from "react-bootstrap";
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -116,7 +116,7 @@ export const FirstStep = ({ data, next }) => {
             placeholder="Confirm your password"
           />
           <CheckBox label="I agree to the terms and conditions and privacy policy" name="terms" />
-          <FormButton label="Proceed" variant="dark" type="submit" />
+          <FormButton label="Proceed" type="submit" />
         </Form>
       )}
     </Formik>
@@ -214,8 +214,8 @@ const SecondStep = ({ data, prev, next }) => {
               <TextField label="Pincode" name="pincode" type="number" placeholder="Zip" />
             </Col>
           </Row>
-          <FormButton label="Back" variant="dark" onClick={() => prev(values)} />
-          <FormButton label="Proceed" variant="dark" type="submit" />
+          <FormButton label="Back" onClick={() => prev(values)} />
+          <FormButton label="Proceed" type="submit" />
         </Form>
       )}
     </Formik>
@@ -237,7 +237,7 @@ const ThirdStep = ({ data, prev, next }) => {
     >
       {({ values, handleSubmit }) => (
         <Form noValidate onSubmit={handleSubmit}>
-          <h1 className="text-center">Confirm your details</h1>
+          <h3 className="text-center">Confirm your details</h3>
           <fieldset disabled>
             <Row>
               <Col sm={12} md={6}>
@@ -279,8 +279,10 @@ const ThirdStep = ({ data, prev, next }) => {
               {user.message}
             </Alert>
           )}
-          <FormButton label="Back" variant="dark" onClick={() => prev(values)} />
-          <FormButton label="Create an account" variant="dark" type="submit" />
+          <FormButton label="Back" onClick={() => prev(values)} />
+          <Button style={{ width: "100%" }} disabled={user.loading} type="submit">
+            {user.loading ? "Creating your account" : "Create an Account"}
+          </Button>
         </Form>
       )}
     </Formik>

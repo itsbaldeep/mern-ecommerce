@@ -1,68 +1,87 @@
 // Libraries
 import { Nav, Navbar, Container, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import "./Navbar.css";
 
 // Actions
 import { logout } from "../redux/actions/user";
-
+import {
+  FaConnectdevelop,
+  FaFirstAid,
+  FaHandsHelping,
+  FaHome,
+  FaMapPin,
+  FaPowerOff,
+  FaRegistered,
+  FaSignInAlt,
+  FaStore,
+  FaStoreAlt,
+  FaUserAlt,
+  FaUserCog,
+  FaUserPlus,
+} from "react-icons/fa";
 const PetohubNavbar = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
 
   return (
-    <Navbar fixed="top" collapseOnSelect expand="lg" variant="dark">
+    <Navbar sticky="top" expand="lg" bg="primary" variant="dark">
       <Container fluid>
         <LinkContainer exact to="/">
           <Navbar.Brand>
-            <img src="/assets/logo/Petohub-Logo-Wide.png" alt="" width="150px" height="50px" />{" "}
+            <img src="/assets/logo/Petohub-Logo-Wide.png" alt="" width="150px" height="50px" />
           </Navbar.Brand>
         </LinkContainer>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="me-auto" navbarScroll>
-            <LinkContainer exact to="/">
-              <Nav.Link>Home</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/shop">
-              <Nav.Link>Shop</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/services">
-              <Nav.Link>Services</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/directories">
-              <Nav.Link>Directories</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/ngo">
-              <Nav.Link>NGOs</Nav.Link>
-            </LinkContainer>
-            {!user.isAuthenticated && (
-              <LinkContainer exact to="/register/member">
-                <Nav.Link>Become a Member</Nav.Link>
-              </LinkContainer>
+          <Nav className="justify-content-end flex-grow-1">
+            <Link exact to="/" className="nav-link">
+              <FaHome /> Home
+            </Link>
+            <Link exact to="/shop" className="nav-link">
+              <FaStore /> Shop
+            </Link>
+            <Link exact to="/services" className="nav-link">
+              <FaFirstAid /> Services
+            </Link>
+            <Link exact to="/directories" className="nav-link">
+              <FaMapPin /> Directories
+            </Link>
+            <Link exact to="/ngo" className="nav-link">
+              <FaHandsHelping /> NGOs
+            </Link>
+            {user.isAuthenticated ? (
+              <NavDropdown
+                title={
+                  <>
+                    <FaUserAlt /> {user.user.name}
+                  </>
+                }
+              >
+                <Link exact to="/account" className="dropdown-item">
+                  <FaUserCog /> Account
+                </Link>
+                <NavDropdown.Divider />
+                <NavDropdown.Item onClick={() => dispatch(logout())}>
+                  <FaPowerOff /> Sign Out
+                </NavDropdown.Item>
+              </NavDropdown>
+            ) : (
+              <>
+                <Link exact to="/register/member" className="nav-link">
+                  <FaConnectdevelop /> Member
+                </Link>
+                <Link exact to="/register" className="nav-link">
+                  <FaUserPlus /> Sign Up
+                </Link>
+                <Link exact to="/login" className="nav-link">
+                  <FaSignInAlt /> Sign In
+                </Link>
+              </>
             )}
           </Nav>
-          {user.isAuthenticated ? (
-            <Nav>
-              <NavDropdown className="nav-dark" title={user.user.name}>
-                <LinkContainer to="/account">
-                  <NavDropdown.Item>Account</NavDropdown.Item>
-                </LinkContainer>
-                <NavDropdown.Divider />
-                <NavDropdown.Item onClick={() => dispatch(logout())}>Sign Out</NavDropdown.Item>
-              </NavDropdown>
-            </Nav>
-          ) : (
-            <Nav>
-              <LinkContainer exact to="/login">
-                <Nav.Link>Sign In</Nav.Link>
-              </LinkContainer>
-              <LinkContainer exact to="/register">
-                <Nav.Link>Sign Up</Nav.Link>
-              </LinkContainer>
-            </Nav>
-          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>

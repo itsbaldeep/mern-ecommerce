@@ -7,6 +7,7 @@
 }
 
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
@@ -23,14 +24,5 @@ html {
 
 body {
   font-family: "Sora", Arial, "Helvetica Neue", Helvetica, sans-serif;
-  margin-bottom: 30px; /* Margin bottom by footer height */
-}
-
-body {
-  margin-top: 66px; /* Margin top by navbar height */
-}
-
-.btn-dark {
-  background-color: var(--navbar-color) !important;
-  border: none;
+  margin-bottom: 30px; /* margin for footer */
 }

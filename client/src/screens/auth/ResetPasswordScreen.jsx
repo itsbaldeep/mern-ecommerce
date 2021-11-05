@@ -14,7 +14,7 @@ import { clearErrors, resetPassword } from "redux/actions/user";
 
 const ResetPasswordScreen = ({ match }) => {
   const dispatch = useDispatch();
-  const { error, success } = useSelector((state) => state.forgotPassword);
+  const { error, success, loading } = useSelector((state) => state.forgotPassword);
 
   useEffect(() => dispatch(clearErrors()), [dispatch]);
 
@@ -64,7 +64,7 @@ const ResetPasswordScreen = ({ match }) => {
                 </Link>
               </Alert>
             )}
-            <Button style={{ width: "100%" }} variant="dark" type="submit">
+            <Button style={{ width: "100%" }} disabled={success} type="submit">
               Reset Password
             </Button>
           </Form>
