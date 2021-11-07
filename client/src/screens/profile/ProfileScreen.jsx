@@ -21,9 +21,11 @@ const ProfileScreen = () => {
         <p>
           Account Type: <span>{user.role}</span>
           <br />
-          <Link to="/" className="btn btn-primary">
-            Become a member
-          </Link>
+          {user.role === "Customer" && (
+            <Link to="/" className="btn btn-primary">
+              Become a member
+            </Link>
+          )}
         </p>
       </div>
       <Tab.Container id="profile-tabs" defaultActiveKey="first">
@@ -39,9 +41,11 @@ const ProfileScreen = () => {
               <Nav.Item>
                 <Nav.Link eventKey="third">Update Details</Nav.Link>
               </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="fourth">Update Profile Image</Nav.Link>
-              </Nav.Item>
+              {user.role === "Client" && (
+                <Nav.Item>
+                  <Nav.Link eventKey="fourth">Directory Profile</Nav.Link>
+                </Nav.Item>
+              )}
             </Nav>
           </Col>
           <Col sm={9}>
@@ -55,9 +59,11 @@ const ProfileScreen = () => {
               <Tab.Pane eventKey="third">
                 {user.role === "Client" ? <UpdateClientProfile /> : <UpdateCustomerProfile />}
               </Tab.Pane>
-              <Tab.Pane eventKey="fourth">
-                <AdditionalDetails />
-              </Tab.Pane>
+              {user.role === "Client" && (
+                <Tab.Pane eventKey="fourth">
+                  <AdditionalDetails />
+                </Tab.Pane>
+              )}
             </Tab.Content>
           </Col>
         </Row>

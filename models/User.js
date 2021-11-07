@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
+const fs = require("fs");
+const path = require("path");
 
 const UserSchema = new mongoose.Schema(
   {
@@ -46,38 +48,76 @@ const UserSchema = new mongoose.Schema(
     website: {
       type: String,
       lowercase: true,
+      default: "",
       trim: true,
       match: [
         /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
         "Please provide a valid website",
       ],
     },
-    category: [String],
+    category: {
+      type: [String],
+      default: [""],
+    },
     profileImage: {
       type: String,
+      set: function (profileImage) {
+        this._previousProfileImage = this.profileImage;
+        return profileImage;
+      },
     },
-    images: {
+    directoryImages: {
       type: [String],
+      set: function (directoryImages) {
+        this._previousDirectoryImages = this.directoryImages;
+        return directoryImages;
+      },
     },
     username: {
       type: String,
     },
     details: {
-      type: Array,
+      type: [
+        {
+          title: {
+            type: String,
+            minlength: [4, "Details title is too short"],
+            maxlength: [12, "Details title is too long"],
+          },
+          content: {
+            type: String,
+            minlength: [4, "Details content is too short"],
+            maxlength: [64, "Details content is too long"],
+          },
+        },
+      ],
       default: [],
     },
-    features: [String],
+    features: {
+      type: [
+        {
+          type: String,
+          minlength: [4, "Feature length is too short"],
+          maxlength: [16, "Feature length is too long"],
+        },
+      ],
+      default: [],
+    },
     state: {
       type: String,
+      default: "",
     },
     city: {
       type: String,
+      default: "",
     },
     pincode: {
       type: String,
+      default: "",
     },
     number: {
       type: String,
+      default: "",
       match: [
         /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
         "Please provide a valid phone number",
@@ -86,7 +126,6 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       default: "Customer",
-      immutable: true,
     },
     isVerified: {
       type: Boolean,
@@ -110,6 +149,16 @@ const UserSchema = new mongoose.Schema(
 
 // Encrypting the password everytime before saving
 UserSchema.pre("save", async function (next) {
+  // Delete the previous image if it's modified
+  if (this.isModified("profileImage")) {
+    const previous = this._previousProfileImage;
+    if (previous) {
+      const previousPath = path.join(__dirname, "..", "client", "public", previous);
+      if (fs.existsSync(previousPath)) {
+        fs.unlink(previousPath, (err) => err && console.error(err));
+      }
+    }
+  }
   // Don't encrypt password again if it's not modified
   if (!this.isModified("password")) {
     next();
@@ -117,10 +166,6 @@ UserSchema.pre("save", async function (next) {
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  // Delete the previous image if it's modified
-  if (this.isModified("profileImage")) {
-    // Delete file TODO
-  }
   next();
 });
 

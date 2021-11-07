@@ -93,8 +93,22 @@ const UpdateClientProfile = () => {
         dispatch(updateProfile(data));
       }}
     >
-      {({ values, touched, errors, handleSubmit }) => (
+      {({ values, setFieldValue, touched, errors, handleSubmit }) => (
         <Form noValidate onSubmit={handleSubmit} className="pb-2">
+          <Form.Group className="mb-3">
+            <Form.Label>Image</Form.Label>
+            <input
+              type="file"
+              name="profileImage"
+              className="form-control"
+              values={values.profileImage}
+              onChange={(e) => setFieldValue("profileImage", e.currentTarget.files[0])}
+              isInvalid={!!errors.profileImage}
+            />
+            <Form.Control.Feedback type="invalid" tooltip>
+              {errors.profileImage}
+            </Form.Control.Feedback>
+          </Form.Group>
           <Form.Group className="mb-3">
             <Form.Label htmlFor="name">Your Name</Form.Label>
             <Field

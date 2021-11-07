@@ -38,9 +38,28 @@ const UpdateCustomerProfile = () => {
         dispatch(updateProfile(data));
       }}
     >
-      {({ handleSubmit }) => (
+      {({ values, setFieldValue, errors, handleSubmit }) => (
         <Form noValidate onSubmit={handleSubmit} className="my-2">
+          <Form.Group className="mb-3">
+            <Form.Label>Image</Form.Label>
+            <input
+              type="file"
+              name="profileImage"
+              className="form-control"
+              values={values.profileImage}
+              onChange={(e) => setFieldValue("profileImage", e.currentTarget.files[0])}
+              isInvalid={!!errors.profileImage}
+            />
+            <Form.Control.Feedback type="invalid" tooltip>
+              {errors.profileImage}
+            </Form.Control.Feedback>
+          </Form.Group>
           <TextField label="Name" name="name" type="text" placeholder="Enter your new name" />
+          {profile.error && (
+            <Alert className="my-3" variant="danger">
+              {profile.error}
+            </Alert>
+          )}
           {profile.isUpdatedProfile && (
             <Alert className="my-3" variant="success">
               Your profile details has been updated successfully

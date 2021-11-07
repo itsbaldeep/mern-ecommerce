@@ -265,42 +265,30 @@ exports.updatePassword = async (req, res, next) => {
 // upload.single('profileImage')
 exports.updateProfile = async (req, res, next) => {
   try {
-    let user;
+    const user = await User.findById(req.user.id);
     // Controlling customer update profile request
     if (req.user.role === "Customer") {
-      const newData = {};
-      if (req.body.name) newData.name = req.body.name;
-      if (req.file) newData.profileImage = `/uploads/${req.file.filename}`;
-
-      user = await User.findByIdAndUpdate(req.user.id, newData, {
-        new: true,
-        runValidators: true,
-        useFindAndModify: false,
-      });
+      if (req.body.name) user.name = req.body.name;
+      if (req.file) user.profileImage = `/uploads/${req.file.filename}`;
+      await user.save();
     }
     // Controlling client update profile request
     else if (req.user.role === "Client") {
-      const newData = {};
-      if (req.body.name) newData.name = req.body.name;
-      if (req.body.storeName) newData.storeName = req.body.storeName;
+      if (req.body.name) user.name = req.body.name;
+      if (req.body.storeName) user.storeName = req.body.storeName;
       // Category in formdata is in string format instead of array
-      if (req.body.category) newData.category = req.body.category.split(",");
-      if (req.body.number) newData.number = req.body.number;
-      if (req.body.address) newData.address = req.body.address;
-      if (req.body.city) newData.city = req.body.city;
-      if (req.body.state) newData.state = req.body.state;
-      if (req.body.pincode) newData.pincode = req.body.pincode;
-      if (req.body.details) newData.details = req.body.details;
-      if (req.body.features) newData.features = req.body.features;
-      if (req.body.description) newData.description = req.body.description;
-      if (req.body.website) newData.website = req.body.website;
-      if (req.file) newData.profileImage = `/uploads/${req.file.filename}`;
-
-      user = await User.findByIdAndUpdate(req.user.id, newData, {
-        new: true,
-        runValidators: true,
-        useFindAndModify: false,
-      });
+      if (req.body.category) user.category = req.body.category.split(",");
+      if (req.body.number) user.number = req.body.number;
+      if (req.body.address) user.address = req.body.address;
+      if (req.body.city) user.city = req.body.city;
+      if (req.body.state) user.state = req.body.state;
+      if (req.body.pincode) user.pincode = req.body.pincode;
+      if (req.body.details) user.details = req.body.details;
+      if (req.body.features) user.features = req.body.features;
+      if (req.body.description) user.description = req.body.description;
+      if (req.body.website) user.website = req.body.website;
+      if (req.file) user.profileImage = `/uploads/${req.file.filename}`;
+      await user.save();
     }
 
     return res.status(200).json({

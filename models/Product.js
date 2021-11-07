@@ -90,6 +90,10 @@ const ProductSchema = new mongoose.Schema(
     },
     imageURLs: {
       type: [String],
+      set: function (imageURLs) {
+        this._previousImageURLs = this.imageURLs;
+        return imageURLs;
+      },
     },
     rating: {
       type: Number,

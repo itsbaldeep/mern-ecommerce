@@ -1,5 +1,4 @@
 import { Form, Row, Col } from "react-bootstrap";
-import { FaUserAlt } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
 const ProfileDetails = () => {
@@ -9,7 +8,10 @@ const ProfileDetails = () => {
       <Row>
         <Col md={6} sm={12} className="d-flex align-items-center justify-content-center">
           <div className="mb-3 text-center profile-image">
-            {user.profileImage ? <img src={user.profileImage} alt="" /> : <FaUserAlt size={100} />}
+            <img
+              src={user.profileImage ? user.profileImage : "/assets/placeholders/user.png"}
+              alt=""
+            />
           </div>
         </Col>
         <Col md={6} sm={12}>
