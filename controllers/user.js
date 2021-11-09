@@ -262,7 +262,6 @@ exports.updatePassword = async (req, res, next) => {
 };
 
 // PUT /api/user/updateprofile
-// upload.single('profileImage')
 exports.updateProfile = async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
@@ -283,12 +282,32 @@ exports.updateProfile = async (req, res, next) => {
       if (req.body.city) user.city = req.body.city;
       if (req.body.state) user.state = req.body.state;
       if (req.body.pincode) user.pincode = req.body.pincode;
-      if (req.body.details) user.details = req.body.details;
-      if (req.body.features) user.features = req.body.features;
+      // Details in formdata is in JSON stringify format instead of array of objects
+      if (req.body.details) user.details = JSON.parse(req.body.details);
+      // Features in formdata is in string format instead of array
+      if (req.body.features) user.features = req.body.features.split(",");
       if (req.body.description) user.description = req.body.description;
       if (req.body.website) user.website = req.body.website;
-      if (req.file) user.profileImage = `/uploads/${req.file.filename}`;
+      // Files contain single profileImage and multiple directoryImages files
+      if (req.files) {
+        console.log("files found: ", req.files);
+        if (req.files.profileImage) {
+          console.log("profile image found: ", req.files.profileImage);
+          user.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
+          console.log("profile image changed: ", req.files.profileImage[0].filename);
+        }
+        // ASSUME: the maximum number of files in request = the number of files user can have at most - the number of files user currently have
+        if (req.files.directoryImages) {
+          const newImages = req.files.directoryImages.map((image) => `/uploads/${image.filename}`);
+          user.directoryImages = user.directoryImages.concat(newImages);
+        }
+      }
+      // Manually changing directory images array to remove some previous ones
+      if (req.body.directoryImages) user.directoryImages = req.body.directoryImages.split(",");
+      if (req.body.directoryImages === "") user.directoryImages = [];
+      console.log("saving user");
       await user.save();
+      console.log("saved");
     }
 
     return res.status(200).json({

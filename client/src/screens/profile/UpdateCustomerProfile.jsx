@@ -35,7 +35,10 @@ const UpdateCustomerProfile = () => {
             data[value] = values[value];
           }
         }
-        dispatch(updateProfile(data));
+        // Converting to FormData
+        const fd = new FormData();
+        for (const key in data) fd.append(key, data[key]);
+        dispatch(updateProfile(fd));
       }}
     >
       {({ values, setFieldValue, errors, handleSubmit }) => (

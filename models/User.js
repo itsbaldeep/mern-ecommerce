@@ -151,11 +151,27 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre("save", async function (next) {
   // Delete the previous image if it's modified
   if (this.isModified("profileImage")) {
+    console.log("profile image modified");
     const previous = this._previousProfileImage;
     if (previous) {
+      console.log("previous image found : ", previous);
       const previousPath = path.join(__dirname, "..", "client", "public", previous);
       if (fs.existsSync(previousPath)) {
         fs.unlink(previousPath, (err) => err && console.error(err));
+        console.log("previous image deleted : ", previousPath);
+      }
+    }
+  }
+  if (this.isModified("directoryImages")) {
+    const previous = this._previousDirectoryImages;
+    // Checking for deleted images
+    if (previous && previous.length > this.directoryImages.length) {
+      const deletedImages = previous.filter((x) => !this.directoryImages.includes(x));
+      for (const image of deletedImages) {
+        const previousPath = path.join(__dirname, "..", "client", "public", image);
+        if (fs.existsSync(previousPath)) {
+          fs.unlink(previousPath, (err) => err && console.error(err));
+        }
       }
     }
   }

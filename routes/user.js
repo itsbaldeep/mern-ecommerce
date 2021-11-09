@@ -35,6 +35,12 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// Update Profile configuration
+const updateProfileUpload = upload.fields([
+  { name: "profileImage", maxCount: 1 },
+  { name: "directoryImages", maxCount: 5 },
+]);
+
 // Authentication routes
 router.route("/register").post(register);
 router.route("/verify/:verificationToken").get(verify);
@@ -45,7 +51,7 @@ router.route("/resetpassword/:resetToken").put(resetPassword);
 // Private routes
 router.route("/me").get(protect, getDetails);
 router.route("/updatepassword").put(protect, updatePassword);
-router.route("/updateprofile").put(protect, upload.single("profileImage"), updateProfile);
+router.route("/updateprofile").put(protect, updateProfileUpload, updateProfile);
 
 // Admin routes
 router.route("/").get(protect, roles("Admin"), getUsers);

@@ -90,7 +90,11 @@ const UpdateClientProfile = () => {
             data[value] = values[value];
           }
         }
-        dispatch(updateProfile(data));
+        // Converting to FormData
+        const fd = new FormData();
+        for (const key in data) fd.append(key, data[key]);
+        // dispatch(updateProfile(fd));
+        fd.forEach((value, key) => console.log(`${key} : ${value}`));
       }}
     >
       {({ values, setFieldValue, touched, errors, handleSubmit }) => (

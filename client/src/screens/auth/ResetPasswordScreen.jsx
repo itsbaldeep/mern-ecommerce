@@ -64,7 +64,7 @@ const ResetPasswordScreen = ({ match }) => {
                 </Link>
               </Alert>
             )}
-            <Button style={{ width: "100%" }} disabled={success} type="submit">
+            <Button style={{ width: "100%" }} disabled={loading || success} type="submit">
               Reset Password
             </Button>
           </Form>
