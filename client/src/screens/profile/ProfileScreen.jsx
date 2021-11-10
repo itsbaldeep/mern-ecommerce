@@ -18,15 +18,18 @@ const ProfileScreen = () => {
     <Container fluid className="profile-container">
       <div className="d-flex align-items-center justify-content-between my-1 pt-3 text-center">
         <h2>Your Profile</h2>
-        <p>
-          Account Type: <span>{user.role}</span>
-          <br />
-          {user.role === "Customer" && (
-            <Link to="/" className="btn btn-primary">
-              Become a member
-            </Link>
-          )}
-        </p>
+        {user.role === "Customer" ? (
+          <Link to="/" className="btn btn-primary">
+            Become a member
+          </Link>
+        ) : (
+          <p>
+            Directory Profile:{" "}
+            <span className="text-primary">
+              {user.isApproved ? "Approved" : "Approval Pending"}
+            </span>
+          </p>
+        )}
       </div>
       <Tab.Container id="profile-tabs" defaultActiveKey="first">
         <Row>

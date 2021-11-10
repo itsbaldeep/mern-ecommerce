@@ -14,11 +14,11 @@ const ProductCard = ({ product }) => {
         <Card.Title>{product.name}</Card.Title>
         <Card.Text>{product.description}</Card.Text>
         <Card.Text className="text-muted">Rs. {product.price}</Card.Text>
-        <Button className="m-2" variant="dark" onClick={showViewDialog}>
-          View
-        </Button>
         <ViewProduct show={viewDialog} onHide={hideViewDialog} product={product} />
       </Card.Body>
+      <Card.Footer className="d-flex justify-content-center align-items-center">
+        <Button onClick={showViewDialog}>View</Button>
+      </Card.Footer>
     </Card>
   );
 };

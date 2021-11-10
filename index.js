@@ -22,6 +22,9 @@ mongoose
 // User routes
 app.use("/api/user", require("./routes/user"));
 
+// Directory routes
+app.use("/api/directory", require("./routes/directory"));
+
 // Product and Service routes
 app.use("/api/product", require("./routes/product"));
 app.use("/api/service", require("./routes/service"));

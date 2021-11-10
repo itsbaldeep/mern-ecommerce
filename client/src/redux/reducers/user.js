@@ -131,6 +131,8 @@ export const profileReducer = (state = {}, action) => {
         ...state,
         loading: false,
         error: action.payload,
+        isUpdatedPassword: false,
+        isUpdatedProfile: false,
       };
 
     // Reset actions

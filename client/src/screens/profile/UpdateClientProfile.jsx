@@ -12,7 +12,16 @@ const UpdateClientProfile = () => {
   const profile = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.user);
 
-  const clientProfileChangeData = user;
+  const clientProfileChangeData = {
+    name: user.name,
+    storeName: user.storeName,
+    category: [...user.category],
+    number: user.number,
+    address: user.address,
+    state: user.state,
+    city: user.city,
+    pincode: user.pincode,
+  };
   const clientProfileChangeValidate = Yup.object({
     name: Yup.string()
       .min(3, "Must be atleast 3 characters")
@@ -86,15 +95,16 @@ const UpdateClientProfile = () => {
         // Updating only those fields that have been modified
         const data = {};
         for (const value in values) {
-          if (values[value] !== user[value]) {
-            data[value] = values[value];
-          }
+          if (values[value] !== user[value]) data[value] = values[value];
         }
+
+        // Fixing category comparision
+        if (values.category.toString() === user.category.toString()) delete data.category;
+
         // Converting to FormData
         const fd = new FormData();
         for (const key in data) fd.append(key, data[key]);
-        // dispatch(updateProfile(fd));
-        fd.forEach((value, key) => console.log(`${key} : ${value}`));
+        dispatch(updateProfile(fd));
       }}
     >
       {({ values, setFieldValue, touched, errors, handleSubmit }) => (

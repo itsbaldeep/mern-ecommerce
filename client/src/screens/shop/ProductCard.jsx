@@ -17,18 +17,20 @@ const ProductCard = ({ product }) => {
       <Card.Body>
         <Card.Title>{product.name}</Card.Title>
         <Card.Text>{product.description}</Card.Text>
-        <Button className="m-2" variant="dark" onClick={showViewDialog}>
+      </Card.Body>
+      <Card.Footer className="d-flex align-items-center justify-content-center">
+        <Button className="mx-1" onClick={showViewDialog}>
           View
         </Button>
         <ViewProduct show={viewDialog} onHide={hideViewDialog} product={product} />
-        <Button className="m-2" variant="success" onClick={showEditDialog}>
+        <Button className="mx-1" variant="success" onClick={showEditDialog}>
           Edit
         </Button>
-        <Button className="m-2" variant="danger">
+        <Button className="mx-1" variant="danger">
           Remove
         </Button>
         <EditProduct show={editDialog} onHide={hideEditDialog} product={product} />
-      </Card.Body>
+      </Card.Footer>
     </Card>
   );
 };

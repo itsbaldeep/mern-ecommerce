@@ -15,7 +15,7 @@ const UpdateCustomerProfile = () => {
   const { user } = useSelector((state) => state.user);
   const profile = useSelector((state) => state.profile);
 
-  const customerProfileChangeData = user;
+  const customerProfileChangeData = { name: user.name, profileImage: null };
   const customerProfileChangeValidate = Yup.object({
     name: Yup.string()
       .min(3, "Must be atleast 3 characters")
@@ -31,10 +31,9 @@ const UpdateCustomerProfile = () => {
         // Updating only those fields that have been modified
         const data = {};
         for (const value in values) {
-          if (values[value] !== user[value]) {
-            data[value] = values[value];
-          }
+          if (values[value] !== user[value]) data[value] = values[value];
         }
+
         // Converting to FormData
         const fd = new FormData();
         for (const key in data) fd.append(key, data[key]);

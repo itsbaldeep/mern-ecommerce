@@ -23,7 +23,7 @@ const ProductDashboard = () => {
   return (
     <Container>
       <h2 className="py-2">Your Products</h2>
-      <Button variant="dark" onClick={showAddDialog} className="mb-3">
+      <Button onClick={showAddDialog} className="mb-3">
         Add a new product
       </Button>
       <AddProduct show={addDialog} onHide={hideAddDialog} />

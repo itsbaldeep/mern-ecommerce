@@ -268,11 +268,59 @@ exports.updateProfile = async (req, res, next) => {
     // Controlling customer update profile request
     if (req.user.role === "Customer") {
       if (req.body.name) user.name = req.body.name;
-      if (req.file) user.profileImage = `/uploads/${req.file.filename}`;
+      if (req.files?.profileImage)
+        user.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
       await user.save();
     }
     // Controlling client update profile request
     else if (req.user.role === "Client") {
+      // Checking for username
+      if (req.body.username) {
+        if (await User.findOne({ username: req.body.username }))
+          return next(new ErrorResponse("Username is already taken. Try another one", 400));
+        const lookups = [
+          "shop",
+          "username",
+          "directory",
+          "directories",
+          "profile",
+          "profiles",
+          "account",
+          "accounts",
+          "ngo",
+          "ngos",
+          "service",
+          "services",
+          "home",
+          "contact",
+          "contactus",
+          "feedback",
+          "help",
+          "terms",
+          "conditions",
+          "donate",
+          "product",
+          "products",
+          "purchase",
+          "sell",
+          "seller",
+          "buyer",
+          "purchases",
+          "tnc",
+          "privacy",
+          "policy",
+          "privacypolicy",
+          "privacy-policy",
+          "terms-and-conditions",
+          "tnc",
+        ];
+        for (const lookup of lookups) {
+          if (req.body.username.toLowerCase().indexOf(lookup) !== -1)
+            return next(new ErrorResponse("Invalid username. Try another one", 400));
+        }
+        user.username = req.body.username;
+        console.log(`usernamed changed to ${req.body.username}`);
+      }
       if (req.body.name) user.name = req.body.name;
       if (req.body.storeName) user.storeName = req.body.storeName;
       // Category in formdata is in string format instead of array
@@ -288,14 +336,11 @@ exports.updateProfile = async (req, res, next) => {
       if (req.body.features) user.features = req.body.features.split(",");
       if (req.body.description) user.description = req.body.description;
       if (req.body.website) user.website = req.body.website;
+      if (req.body.tagline) user.tagline = req.body.tagline;
       // Files contain single profileImage and multiple directoryImages files
       if (req.files) {
-        console.log("files found: ", req.files);
-        if (req.files.profileImage) {
-          console.log("profile image found: ", req.files.profileImage);
+        if (req.files.profileImage)
           user.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
-          console.log("profile image changed: ", req.files.profileImage[0].filename);
-        }
         // ASSUME: the maximum number of files in request = the number of files user can have at most - the number of files user currently have
         if (req.files.directoryImages) {
           const newImages = req.files.directoryImages.map((image) => `/uploads/${image.filename}`);
@@ -305,9 +350,7 @@ exports.updateProfile = async (req, res, next) => {
       // Manually changing directory images array to remove some previous ones
       if (req.body.directoryImages) user.directoryImages = req.body.directoryImages.split(",");
       if (req.body.directoryImages === "") user.directoryImages = [];
-      console.log("saving user");
       await user.save();
-      console.log("saved");
     }
 
     return res.status(200).json({

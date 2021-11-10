@@ -298,7 +298,7 @@ const EditProduct = ({ show, onHide, product }) => {
               <Button variant="danger" onClick={onHide}>
                 Cancel
               </Button>
-              <Button disabled={loading} variant="dark" type="submit">
+              <Button disabled={loading} type="submit">
                 Update
               </Button>
             </Modal.Footer>

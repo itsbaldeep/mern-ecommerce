@@ -14,6 +14,8 @@ import {
 
 import { productsReducer } from "./reducers/product";
 
+import { directoryReducer } from "./reducers/directory";
+
 const reducer = combineReducers({
   allUsers: allUsersReducer,
   userDetails: detailsReducer,
@@ -21,6 +23,7 @@ const reducer = combineReducers({
   profile: profileReducer,
   user: userReducer,
   product: productsReducer,
+  directory: directoryReducer,
 });
 
 // Creating the store

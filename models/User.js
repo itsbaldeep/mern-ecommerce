@@ -38,12 +38,17 @@ const UserSchema = new mongoose.Schema(
     description: {
       type: String,
       maxlength: [1024, "Description is too long"],
-      minlength: [8, "Description is too short"],
+      default: "",
     },
     address: {
       type: String,
       minlength: [8, "Address is too short"],
       maxlength: [256, "Address is too long"],
+    },
+    tagline: {
+      type: String,
+      maxlength: [32, "Tagline is too long"],
+      default: "",
     },
     website: {
       type: String,
@@ -57,7 +62,7 @@ const UserSchema = new mongoose.Schema(
     },
     category: {
       type: [String],
-      default: [""],
+      default: [],
     },
     profileImage: {
       type: String,
@@ -75,6 +80,9 @@ const UserSchema = new mongoose.Schema(
     },
     username: {
       type: String,
+      unique: true,
+      lowercase: true,
+      index: true,
     },
     details: {
       type: [
@@ -131,6 +139,10 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isApproved: {
+      type: Boolean,
+      default: false,
+    },
     verificationToken: {
       type: String,
     },
@@ -151,14 +163,11 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre("save", async function (next) {
   // Delete the previous image if it's modified
   if (this.isModified("profileImage")) {
-    console.log("profile image modified");
     const previous = this._previousProfileImage;
     if (previous) {
-      console.log("previous image found : ", previous);
       const previousPath = path.join(__dirname, "..", "client", "public", previous);
       if (fs.existsSync(previousPath)) {
         fs.unlink(previousPath, (err) => err && console.error(err));
-        console.log("previous image deleted : ", previousPath);
       }
     }
   }

@@ -4,7 +4,7 @@ const ErrorResponse = require("../utils/errorResponse");
 // GET /api/product/
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find({ isApproved: true });
     return res.status(200).json({
       success: true,
       products,
@@ -17,10 +17,8 @@ exports.getProducts = async (req, res, next) => {
 // GET /api/product/:id
 exports.getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
-    if (!product) {
-      return next(new ErrorResponse("Product not found", 404));
-    }
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    if (!product) return next(new ErrorResponse("Product not found", 404));
     return res.status(200).json({
       success: true,
       product,

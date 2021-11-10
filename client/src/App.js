@@ -11,12 +11,15 @@ import PrivateRoute from "./components/PrivateRoute.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 
-// Screens
+// Main Screens
 import HomeScreen from "./screens/HomeScreen.jsx";
 import ShopScreen from "./screens/shop/ShopScreen.jsx";
 import ServicesScreen from "./screens/services/ServicesScreen.jsx";
-import DirectoriesScreen from "./screens/DirectoriesScreen.jsx";
 import NGOScreen from "./screens/NGOScreen.jsx";
+
+// Directory Screens
+import DirectoriesScreen from "./screens/directory/DirectoriesScreen.jsx";
+import DirectoryProfileScreen from "./screens/directory/DirectoryProfileScreen.jsx";
 
 // Auth Screens
 import LoginScreen from "./screens/auth/LoginScreen.jsx";
@@ -56,7 +59,6 @@ function App() {
         {/* Main Routes */}
         <Route path="/shop" component={ShopScreen} />
         <Route path="/services" component={ServicesScreen} />
-        <Route path="/directories" component={DirectoriesScreen} />
         <Route path="/ngo" component={NGOScreen} />
 
         {/* Auth Routes */}
@@ -72,6 +74,10 @@ function App() {
         <PrivateRoute exact path="/account/profile" component={ProfileScreen} />
         <PrivateRoute exact path="/account/products" component={ProductDashboard} />
         <PrivateRoute exact path="/account/services" component={ServicesDashboard} />
+
+        {/* Custom directory URL routes, must be at the end */}
+        <Route path="/directories" component={DirectoriesScreen} />
+        <Route path="/:username" component={DirectoryProfileScreen} />
       </Switch>
       <Footer />
     </Router>

@@ -24,8 +24,20 @@ const AdditionalDetails = () => {
   // Deep copying fields from user state object
   const features = [...user.features];
   const details = JSON.parse(JSON.stringify(user.details));
+  const website = user.website;
+  const tagline = user.tagline;
+  const description = user.description;
+  const username = user.username;
 
-  const additionalData = { features, details, directoryImages: [] };
+  const additionalData = {
+    features,
+    details,
+    directoryImages: [],
+    website,
+    tagline,
+    description,
+    username,
+  };
   const additionalDataValidate = Yup.object({
     features: Yup.array()
       .max(10, "You can only have a maximum of 10 features")
@@ -49,6 +61,13 @@ const AdditionalDetails = () => {
             .max(64, "This description is too long"),
         })
       ),
+    website: Yup.string().matches(
+      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
+      "Please provide a valid website"
+    ),
+    tagline: Yup.string().max(32, "The tagline is too long"),
+    description: Yup.string().max(1024, "The description is too long"),
+    username: Yup.string(),
   });
 
   return (
@@ -58,6 +77,12 @@ const AdditionalDetails = () => {
       onSubmit={async (values, actions) => {
         // Converting to FormData and updating only modified fields
         const fd = new FormData();
+
+        // Plain text fields
+        if (values.description !== user.description) fd.append("description", values.description);
+        if (values.tagline !== user.tagline) fd.append("tagline", values.tagline);
+        if (values.website !== user.website) fd.append("website", values.website);
+        if (values.username !== user.username) fd.append("username", values.username);
 
         // Details
         const detailsJSON = JSON.stringify(values.details);
@@ -73,8 +98,6 @@ const AdditionalDetails = () => {
           for (let i = 0; i < filesLength; i++)
             fd.append("directoryImages", values.directoryImages[i]);
         }
-        // fd.forEach((value, key) => console.log(`${key}: ${value}`));
-        // if (filesLength > 0) console.log(fd.getAll("directoryImages[]"));
         dispatch(updateProfile(fd));
       }}
     >
@@ -85,7 +108,7 @@ const AdditionalDetails = () => {
             {user.directoryImages.length > 0 ? (
               <Row>
                 {user.directoryImages.map((image, index) => (
-                  <Col key={image} md={4} className="my-2">
+                  <Col key={image} md={4} xs={6} className="my-2">
                     <ImageCard image={image} index={index} />
                   </Col>
                 ))}
@@ -114,6 +137,61 @@ const AdditionalDetails = () => {
               <p>You can't upload any more images</p>
             )}
           </Form.Group>
+          <h4>General Details</h4>
+          <Row>
+            <Col md={6} sm={12}>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="description">Description</Form.Label>
+                <Field
+                  name="description"
+                  as="textarea"
+                  rows={10}
+                  className={`form-control ${
+                    touched.description && !!errors.description ? "is-invalid" : ""
+                  }`}
+                />
+                <div className="invalid-feedback">{errors.description}</div>
+              </Form.Group>
+            </Col>
+            <Col md={6} sm={12}>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="tagline">Tagline</Form.Label>
+                <Field
+                  name="tagline"
+                  value={values.tagline}
+                  className={`form-control ${
+                    touched.tagline && !!errors.tagline ? "is-invalid" : ""
+                  }`}
+                />
+                <Form.Control.Feedback type="invalid">{errors.tagline}</Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="website">Website</Form.Label>
+                <Field
+                  name="website"
+                  value={values.website}
+                  className={`form-control ${
+                    touched.website && !!errors.website ? "is-invalid" : ""
+                  }`}
+                />
+                <Form.Control.Feedback type="invalid">{errors.website}</Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="username">Username</Form.Label>
+                <Field
+                  name="username"
+                  value={values.username}
+                  className={`form-control ${
+                    touched.username && !!errors.username ? "is-invalid" : ""
+                  }`}
+                />
+                <Form.Text>
+                  Your website will be https://petohub.com/{values.username || "<username>"}{" "}
+                </Form.Text>
+                <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
+              </Form.Group>
+            </Col>
+          </Row>
           <Form.Group className="mb-3">
             <FieldArray name="features">
               {({ push, remove }) => (
@@ -140,9 +218,12 @@ const AdditionalDetails = () => {
                           <Form.Group>
                             <Field
                               name={`features.${index}`}
-                              isInvalid={touched.features?.[index] && !!errors.features?.[index]}
                               placeholder="Describe your feature briefly"
-                              as={Form.Control}
+                              className={`form-control ${
+                                touched.features?.[index] && !!errors.features?.[index]
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
                             ></Field>
                             <Form.Control.Feedback type="invalid">
                               {typeof errors.features === "object" ? errors.features?.[index] : ""}
@@ -206,15 +287,16 @@ const AdditionalDetails = () => {
                       touched.details[index].content &&
                       !!errors.details[index].content;
                     return (
-                      <Row className="mt-1">
+                      <Row key={index} className="mt-1">
                         <Col md={5}>
                           <Form.Group>
                             <Form.Label>Title</Form.Label>
                             <Field
                               name={title}
-                              isInvalid={containsError || titleError}
                               placeholder="Name of the function"
-                              as={Form.Control}
+                              className={`form-control ${
+                                containsError || titleError ? "is-invalid" : ""
+                              }`}
                             ></Field>
                             <Form.Control.Feedback type="invalid">
                               {typeof errors.details === "object"
@@ -230,7 +312,6 @@ const AdditionalDetails = () => {
                               name={content}
                               as="textarea"
                               rows={1}
-                              isInvalid={contentError}
                               placeholder="Describe the function broadly"
                               className={`form-control ${
                                 containsError || contentError ? "is-invalid" : ""
@@ -247,7 +328,7 @@ const AdditionalDetails = () => {
                           <Form.Group>
                             <button
                               className="btn btn-danger"
-                              onClick={(e, index) => {
+                              onClick={(e) => {
                                 e.preventDefault();
                                 remove(index);
                               }}
