@@ -1,7 +1,6 @@
 // Libraries
 const express = require("express");
 const router = express.Router();
-const multer = require("multer");
 
 // Authentication controller functions
 const {
@@ -21,19 +20,8 @@ const { getUsers, getUserById, addUser, editUser, deleteUser } = require("../con
 // Access control middleware
 const { protect, roles } = require("../middleware/auth");
 
-// Configuring multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./client/public/uploads");
-  },
-  filename: (req, file, cb) => {
-    // Renaming the file to avoid name collision
-    const timestamp = new Date().getTime().toString();
-    const filename = timestamp.concat(file.originalname);
-    cb(null, filename);
-  },
-});
-const upload = multer({ storage });
+// Multer middleware
+const upload = require("../middleware/multer");
 
 // Update Profile configuration
 const updateProfileUpload = upload.fields([
@@ -55,9 +43,9 @@ router.route("/updateprofile").put(protect, updateProfileUpload, updateProfile);
 
 // Admin routes
 router.route("/").get(protect, roles("Admin"), getUsers);
-router.route("/:id").get(protect, roles("Admin"), getUserById);
 router.route("/add").post(protect, roles("Admin"), addUser);
 router.route("/edit/:id").put(protect, roles("Admin"), editUser);
 router.route("/delete/:id").delete(protect, roles("Admin"), deleteUser);
+router.route("/:id").get(protect, roles("Admin"), getUserById);
 
 module.exports = router;

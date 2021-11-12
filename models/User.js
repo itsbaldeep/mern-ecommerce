@@ -159,7 +159,6 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Encrypting the password everytime before saving
 UserSchema.pre("save", async function (next) {
   // Delete the previous image if it's modified
   if (this.isModified("profileImage")) {
@@ -184,6 +183,7 @@ UserSchema.pre("save", async function (next) {
       }
     }
   }
+  // Encrypting the password everytime before saving
   // Don't encrypt password again if it's not modified
   if (!this.isModified("password")) {
     next();

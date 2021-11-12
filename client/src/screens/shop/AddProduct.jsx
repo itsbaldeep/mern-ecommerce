@@ -19,17 +19,22 @@ const AddProduct = ({ show, onHide }) => {
     name: "",
     description: "",
     category: "Others",
-    price: "",
-    countInStock: "",
+    price: 0,
+    countInStock: 0,
     petType: [],
     breedType: "",
     weight: 0,
-    length: 0,
-    height: 0,
-    width: 0,
+    size: {
+      length: 0,
+      height: 0,
+      width: 0,
+    },
     isVeg: false,
-    min: 0,
-    max: 0,
+    ageRange: {
+      min: 0,
+      max: 0,
+    },
+    productImages: null,
   };
 
   const validationSchema = Yup.object({
@@ -51,35 +56,40 @@ const AddProduct = ({ show, onHide }) => {
     petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
     breedType: Yup.string(),
     weight: Yup.number().positive("Weight must be positive"),
-    length: Yup.number().positive("Length must be positive"),
-    height: Yup.number().positive("Height must be positive"),
-    width: Yup.number().positive("Width must be positive"),
+    size: Yup.object({
+      length: Yup.number().positive("Length must be positive"),
+      height: Yup.number().positive("Height must be positive"),
+      width: Yup.number().positive("Width must be positive"),
+    }),
     isVeg: Yup.boolean(),
-    min: Yup.number().min(0, "Minimum age should be atleast 0"),
-    max: Yup.number().min(0, "Maximum age should be atleast 0"),
+    ageRange: Yup.object({
+      min: Yup.number().min(0, "Minimum age should be atleast 0"),
+      max: Yup.number().min(0, "Maximum age should be atleast 0"),
+    }),
   });
 
   const handleProductAdd = (values) => {
-    const product = {
-      ...values,
-      size: {
-        length: values.length,
-        width: values.width,
-        height: values.height,
-      },
-      ageRange: {
-        min: values.min,
-        max: values.max,
-      },
-    };
+    // const product = {
+    //   ...values,
+    //   size: {
+    //     length: values.length,
+    //     width: values.width,
+    //     height: values.height,
+    //   },
+    //   ageRange: {
+    //     min: values.min,
+    //     max: values.max,
+    //   },
+    // };
 
-    delete product.length;
-    delete product.height;
-    delete product.width;
-    delete product.min;
-    delete product.max;
+    // delete product.length;
+    // delete product.height;
+    // delete product.width;
+    // delete product.min;
+    // delete product.max;
 
-    dispatch(addProduct(product));
+    // dispatch(addProduct(product));
+    console.log(values);
   };
 
   const categoryOptions = [
@@ -103,9 +113,25 @@ const AddProduct = ({ show, onHide }) => {
         validationSchema={validationSchema}
         onSubmit={(values) => handleProductAdd(values)}
       >
-        {({ handleSubmit }) => (
+        {({ errors, setErrors, setFieldValue, handleSubmit }) => (
           <Form noValidation onSubmit={handleSubmit}>
             <Modal.Body>
+              <Form.Group className="mb-3">
+                <input
+                  type="file"
+                  name="productImages"
+                  className={`form-control ${!!errors.productImages ? "is-invalid" : ""}`}
+                  multiple
+                  onChange={(e) => {
+                    if (e.currentTarget.files.length > spaceLeft)
+                      return setErrors({
+                        productImages: `You can only upload ${spaceLeft} more images`,
+                      });
+                    setFieldValue("productImages", e.currentTarget.files);
+                  }}
+                />
+                <div className="invalid-feedback">{errors.productImages}</div>
+              </Form.Group>
               <TextField name="name" label="Product Name" placeholder="Enter the product name" />
               <TextField
                 name="description"

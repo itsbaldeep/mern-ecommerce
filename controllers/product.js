@@ -28,11 +28,55 @@ exports.getProductById = async (req, res, next) => {
   }
 };
 
+// GET /api/product/own
+exports.getOwnProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find().where("seller").equals(req.user.id);
+    return res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/product/own/:id
+exports.getOwnProductById = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id).where("seller").equals(req.user.id);
+    if (!product) return next(new ErrorResponse("Product not found", 404));
+    return res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // POST /api/product/add
 exports.addProduct = async (req, res, next) => {
   try {
     if (req.user.role === "Client") req.body.seller = req.user._id;
-    const product = await Product.create(req.body);
+    const product = {
+      name: req.body?.name,
+      category: req.body?.category,
+      petType: req.body?.petType.split(","),
+      breedType: req.body?.breedType,
+      description: req.body?.description,
+      weight: req.body?.weight,
+      size: JSON.parse(req.body?.size),
+      countInStock: req.body?.countInStock,
+      price: req.body?.price,
+      isVeg: req.body?.isVeg,
+      ageRange: JSON.parse(req.body?.ageRange),
+    };
+    if (req.files?.productImages) {
+      const newImages = req.files.productImages.map((image) => `/uploads/${image.filename}`);
+      product.productImages = product.productImages.concat(newImages);
+    }
+    const product = await Product.create(product);
     await product.save();
     res.status(200).json({
       success: true,
@@ -48,18 +92,16 @@ exports.removeProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
     // Check if the product exists
-    if (!product) {
-      return next(new ErrorResponse("Product not found", 404));
-    }
+    if (!product) return next(new ErrorResponse("Product not found", 404));
+
     // Check if the current user is the seller of that product
-    if (req.user && product.seller.toString() != req.user._id.toString()) {
+    if (req.user && product.seller.toString() != req.user._id.toString())
       return next(new ErrorResponse("Unable to remove product", 404));
-    }
+
     // Delete the product
     await product.remove();
     return res.status(200).json({
       success: true,
-      message: "Product succesfully removed",
       product,
     });
   } catch (error) {
@@ -72,24 +114,36 @@ exports.editProduct = async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
     // Check if the product exists
-    if (!product) {
-      return next(new ErrorResponse("Product not found", 404));
-    }
+    if (!product) return next(new ErrorResponse("Product not found", 404));
+
     // Check if the current user is the seller of that product
-    if (req.user && product.seller.toString() != req.user._id.toString()) {
+    if (req.user && product.seller.toString() != req.user._id.toString())
       return next(new ErrorResponse("Unable to remove product", 404));
-    }
+
     // Updating the product
-    const result = await Product.updateOne({ _id: req.params.id }, req.body, {
-      runValidators: true,
-    });
+    if (req.body.name) product.name = req.body.name;
+    if (req.body.category) product.category = req.body.category;
+    if (req.body.petType) product.petType = req.body.petType.split(",");
+    if (req.body.breedType) product.breedType = req.body.breedType;
+    if (req.body.description) product.description = req.body.description;
+    if (req.body.weight) product.weight = req.body.weight;
+    if (req.body.size) product.size = JSON.parse(req.body.size);
+    if (req.body.countInStock) product.countInStock = req.body.countInStock;
+    if (req.body.price) product.price = req.body.price;
+    if (req.body.isVeg) product.isVeg = req.body.isVeg;
+    if (req.body.ageRange) product.ageRange = JSON.parse(req.body.ageRange);
+    if (req.files.productImages) {
+      const newImages = req.files.productImages.map((image) => `/uploads/${image.filename}`);
+      user.productImages = user.productImages.concat(newImages);
+    }
+    if (req.body.productImages) user.productImages = req.body.productImages.split(",");
+    if (req.body.productImages === "") user.productImages = [];
+    await product.save();
+
     // Returning the updated product
-    const updated = await Product.findById(req.params.id);
     return res.status(200).json({
       success: true,
-      message: "Product succesfully updated",
-      result,
-      updated,
+      product,
     });
   } catch (error) {
     next(error);

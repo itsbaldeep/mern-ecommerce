@@ -36,6 +36,28 @@ export const getProduct = (id) => async (dispatch) => {
   }
 };
 
+// GET /api/product/own
+export const getOwnProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_OWN_PRODUCTS_REQUEST });
+    const { data } = await axios.get("/api/product/own", getConfig());
+    dispatch({ type: actionTypes.GET_OWN_PRODUCTS_SUCCESS, payload: data.products });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_OWN_PRODUCTS_FAIL, payload: error.response.data.error });
+  }
+};
+
+// GET /api/product/own/:id
+export const getOwnProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_OWN_PRODUCT_REQUEST });
+    const { data } = await axios.get(`/api/product/own/${id}`, getConfig());
+    dispatch({ type: actionTypes.GET_OWN_PRODUCT_SUCCESS, payload: [data.product] });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_OWN_PRODUCT_FAIL, payload: error.response.data.error });
+  }
+};
+
 // POST /api/product/add
 export const addProduct = (product) => async (dispatch) => {
   try {

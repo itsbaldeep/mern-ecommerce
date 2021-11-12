@@ -88,11 +88,11 @@ const ProductSchema = new mongoose.Schema(
         },
       },
     },
-    imageURLs: {
+    productImages: {
       type: [String],
-      set: function (imageURLs) {
-        this._previousImageURLs = this.imageURLs;
-        return imageURLs;
+      set: function (productImages) {
+        this._previousProductImages = this.productImages;
+        return productImages;
       },
     },
     rating: {
@@ -114,6 +114,23 @@ const ProductSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.pre("save", async function (next) {
+  // Deleting previous images if they are updated or removed
+  if (this.isModified("productImages")) {
+    const previous = this._previousProductImages;
+    // Checking for deleted images
+    if (previous && previous.length > this.productImages.length) {
+      const deletedImages = previous.filter((x) => !this.productImages.includes(x));
+      for (const image of deletedImages) {
+        const previousPath = path.join(__dirname, "..", "client", "public", image);
+        if (fs.existsSync(previousPath)) {
+          fs.unlink(previousPath, (err) => err && console.error(err));
+        }
+      }
+    }
+  }
+});
 
 const Product = mongoose.model("Product", ProductSchema);
 module.exports = Product;

@@ -19,14 +19,14 @@ const ProductCard = ({ product }) => {
         <Card.Text>{product.description}</Card.Text>
       </Card.Body>
       <Card.Footer className="d-flex align-items-center justify-content-center">
-        <Button className="mx-1" onClick={showViewDialog}>
+        <Button className="mx-1" size="sm" onClick={showViewDialog}>
           View
         </Button>
         <ViewProduct show={viewDialog} onHide={hideViewDialog} product={product} />
-        <Button className="mx-1" variant="success" onClick={showEditDialog}>
+        <Button className="mx-1" size="sm" variant="success" onClick={showEditDialog}>
           Edit
         </Button>
-        <Button className="mx-1" variant="danger">
+        <Button className="mx-1" size="sm" variant="danger">
           Remove
         </Button>
         <EditProduct show={editDialog} onHide={hideEditDialog} product={product} />

@@ -41,12 +41,12 @@ function App() {
   // Checking for user token
   const dispatch = useDispatch();
   useEffect(() => {
-    const refetch = () =>
-      localStorage.getItem(process.env.REACT_APP_TOKEN_NAME) && dispatch(loadUser());
-    const listener = window.addEventListener("storage", refetch());
-    return () => {
-      window.removeEventListener("storage", listener);
+    const refetch = () => {
+      localStorage.getItem(process.env.REACT_APP_TOKEN_NAME);
+      dispatch(loadUser());
     };
+    const listener = window.addEventListener("storage", refetch());
+    return () => window.removeEventListener("storage", listener);
   }, [dispatch]);
 
   return (
