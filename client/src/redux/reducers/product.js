@@ -1,6 +1,6 @@
 import * as actionTypes from "../constants/product";
 
-export const productsReducer = (state = { products: [] }, action) => {
+export const productsReducer = (state = { products: [], product: {} }, action) => {
   switch (action.type) {
     case actionTypes.GET_PRODUCTS_REQUEST:
     case actionTypes.GET_OWN_PRODUCTS_REQUEST:
@@ -14,13 +14,18 @@ export const productsReducer = (state = { products: [] }, action) => {
         loading: true,
       };
     case actionTypes.GET_PRODUCTS_SUCCESS:
-    case actionTypes.GET_PRODUCT_SUCCESS:
     case actionTypes.GET_OWN_PRODUCTS_SUCCESS:
-    case actionTypes.GET_OWN_PRODUCT_SUCCESS:
       return {
         ...state,
         loading: false,
         products: action.payload,
+      };
+    case actionTypes.GET_PRODUCT_SUCCESS:
+    case actionTypes.GET_OWN_PRODUCT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        product: action.payload,
       };
     case actionTypes.ADD_PRODUCT_SUCCESS:
       return {
@@ -30,14 +35,16 @@ export const productsReducer = (state = { products: [] }, action) => {
         products: state.products.concat([action.payload]),
       };
     case actionTypes.REMOVE_PRODUCT_SUCCESS:
+      const removeIndex = state.products.findIndex((product) => product._id === action.payload._id);
+      state.products.splice(removeIndex, 1);
       return {
         ...state,
         loading: false,
         success: true,
       };
     case actionTypes.EDIT_PRODUCT_SUCCESS:
-      const index = state.products.findIndex((product) => product._id === action.payload._id);
-      state.products[index] = action.payload;
+      const editIndex = state.products.findIndex((product) => product._id === action.payload._id);
+      state.products[editIndex] = action.payload;
       return {
         ...state,
         loading: false,

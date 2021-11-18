@@ -3,17 +3,31 @@ import { Button, Card } from "react-bootstrap";
 
 import ViewProduct from "./ViewProduct.jsx";
 import EditProduct from "./EditProduct.jsx";
+import RemoveProduct from "./RemoveProduct.jsx";
 
 const ProductCard = ({ product }) => {
   const [viewDialog, setViewDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
+  const [removeDialog, setRemoveDialog] = useState(false);
   const showViewDialog = () => setViewDialog(true);
   const hideViewDialog = () => setViewDialog(false);
   const showEditDialog = () => setEditDialog(true);
   const hideEditDialog = () => setEditDialog(false);
+  const showRemoveDialog = () => setRemoveDialog(true);
+  const hideRemoveDialog = () => setRemoveDialog(false);
+
   return (
-    <Card>
-      <Card.Img variant="top" src="https://via.placeholder.com/286x150" alt="img" />
+    <Card className="my-2">
+      {!product.isApproved && <p className="approved-text">Approval Pending</p>}
+      <div
+        style={{
+          background: `url(${product.productImages[0] || "/assets/placeholders/product.png"})`,
+          height: "250px",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "contain",
+        }}
+      />
       <Card.Body>
         <Card.Title>{product.name}</Card.Title>
         <Card.Text>{product.description}</Card.Text>
@@ -23,13 +37,16 @@ const ProductCard = ({ product }) => {
           View
         </Button>
         <ViewProduct show={viewDialog} onHide={hideViewDialog} product={product} />
+
         <Button className="mx-1" size="sm" variant="success" onClick={showEditDialog}>
           Edit
         </Button>
-        <Button className="mx-1" size="sm" variant="danger">
+        <EditProduct show={editDialog} onHide={hideEditDialog} product={product} />
+
+        <Button className="mx-1" size="sm" variant="danger" onClick={showRemoveDialog}>
           Remove
         </Button>
-        <EditProduct show={editDialog} onHide={hideEditDialog} product={product} />
+        <RemoveProduct show={removeDialog} onHide={hideRemoveDialog} product={product} />
       </Card.Footer>
     </Card>
   );

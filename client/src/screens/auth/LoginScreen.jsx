@@ -40,7 +40,7 @@ const LoginScreen = () => {
       onSubmit={(values) => dispatch(login(values.email, values.password))}
     >
       {({ handleSubmit }) => (
-        <Container className="my-2" style={{ maxWidth: "500px" }}>
+        <Container className="my-2 py-4" style={{ maxWidth: "500px" }}>
           <h2 className="py-2 text-center">Welcome to Petohub</h2>
           <Form noValidate onSubmit={handleSubmit}>
             <TextField label="Email" name="email" type="email" placeholder="example@gmail.com" />

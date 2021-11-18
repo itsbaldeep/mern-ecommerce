@@ -8,6 +8,7 @@ import App from "./App";
 // CSS files
 import "./custom.scss";
 import "./index.css";
+import "swiper/swiper.scss";
 
 // Redux
 import { Provider } from "react-redux";

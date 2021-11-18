@@ -35,11 +35,6 @@ export const RESET_PASSWORD_FAIL = "RESET_PASSWORD_FAIL";
  */
 
 // GET /api/user/me
-export const GET_DETAILS_REQUEST = "GET_DETAILS_REQUEST";
-export const GET_DETAILS_SUCCESS = "GET_DETAILS_SUCCESS";
-export const GET_DETAILS_FAIL = "GET_DETAILS_FAIL";
-
-// GET /api/user/me
 export const LOAD_REQUEST = "LOAD_REQUEST";
 export const LOAD_SUCCESS = "LOAD_SUCCESS";
 export const LOAD_FAIL = "LOAD_FAIL";

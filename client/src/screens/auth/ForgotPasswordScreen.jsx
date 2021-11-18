@@ -33,7 +33,7 @@ const ForgotPasswordScreen = () => {
       onSubmit={({ email }) => dispatch(forgotPassword(email))}
     >
       {({ values, handleSubmit }) => (
-        <Container style={{ maxWidth: "500px" }}>
+        <Container className="py-4" style={{ maxWidth: "500px" }}>
           <h2 className="py-2 text-center">Forgot Password</h2>
           <Form noValidate onSubmit={handleSubmit}>
             <TextField label="Email" name="email" type="email" placeholder="example@gmail.com" />

@@ -11,16 +11,17 @@ const UpdateClientProfile = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.user);
+  const directory = user.directory;
 
   const clientProfileChangeData = {
     name: user.name,
-    storeName: user.storeName,
-    category: [...user.category],
-    number: user.number,
-    address: user.address,
-    state: user.state,
-    city: user.city,
-    pincode: user.pincode,
+    storeName: directory.storeName,
+    category: [...directory.category],
+    number: directory.number,
+    address: directory.address,
+    state: directory.state,
+    city: directory.city,
+    pincode: directory.pincode,
   };
   const clientProfileChangeValidate = Yup.object({
     name: Yup.string()
@@ -95,11 +96,12 @@ const UpdateClientProfile = () => {
         // Updating only those fields that have been modified
         const data = {};
         for (const value in values) {
-          if (values[value] !== user[value]) data[value] = values[value];
+          if (values[value] !== directory[value]) data[value] = values[value];
         }
+        if (values.name !== user.name) data.name = values.name;
 
         // Fixing category comparision
-        if (values.category.toString() === user.category.toString()) delete data.category;
+        if (values.category.toString() === directory.category.toString()) delete data.category;
 
         // Converting to FormData
         const fd = new FormData();

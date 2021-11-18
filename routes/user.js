@@ -12,6 +12,7 @@ const {
   getDetails,
   updatePassword,
   updateProfile,
+  convertClient,
 } = require("../controllers/user");
 
 // Admin controller functions
@@ -40,6 +41,7 @@ router.route("/resetpassword/:resetToken").put(resetPassword);
 router.route("/me").get(protect, getDetails);
 router.route("/updatepassword").put(protect, updatePassword);
 router.route("/updateprofile").put(protect, updateProfileUpload, updateProfile);
+router.route("/convertclient").put(protect, convertClient);
 
 // Admin routes
 router.route("/").get(protect, roles("Admin"), getUsers);

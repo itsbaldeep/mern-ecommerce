@@ -100,17 +100,6 @@ export const loadUser = () => async (dispatch) => {
   }
 };
 
-// GET /api/user/me
-export const getDetails = () => async (dispatch) => {
-  try {
-    dispatch({ type: actionTypes.GET_DETAILS_REQUEST });
-    const { data } = await axios.get("/api/user/me", getConfig());
-    dispatch({ type: actionTypes.GET_DETAILS_SUCCESS, payload: data.user });
-  } catch (error) {
-    dispatch({ type: actionTypes.GET_DETAILS_FAIL, payload: error.response.data.error });
-  }
-};
-
 // PUT /api/user/updateprofile
 export const updateProfile = (user) => async (dispatch) => {
   try {

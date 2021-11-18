@@ -14,6 +14,7 @@ import {
   FaHome,
   FaMapPin,
   FaPowerOff,
+  FaProductHunt,
   FaSignInAlt,
   FaStore,
   FaUserAlt,
@@ -58,8 +59,18 @@ const PetohubNavbar = () => {
                   </>
                 }
               >
+                {user.user.role === "Client" && (
+                  <>
+                    <Link exact to="/account/products" className="dropdown-item">
+                      <FaProductHunt /> Your Products
+                    </Link>
+                    <Link exact to="/account/services" className="dropdown-item">
+                      <FaProductHunt /> Your Services
+                    </Link>
+                  </>
+                )}
                 <Link exact to="/account" className="dropdown-item">
-                  <FaUserCog /> Account
+                  <FaUserCog /> Your Account
                 </Link>
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={() => dispatch(logout())}>

@@ -7,6 +7,8 @@ import { getOwnProducts } from "redux/actions/product";
 import AddProduct from "./AddProduct.jsx";
 import ProductCard from "./ProductCard.jsx";
 
+import "./ProductDashboard.css";
+
 const ProductDashboard = () => {
   const dispatch = useDispatch();
   const { loading, products } = useSelector((state) => state.product);
@@ -28,7 +30,7 @@ const ProductDashboard = () => {
       <AddProduct show={addDialog} onHide={hideAddDialog} />
       {loading ? (
         <h1>Loading</h1>
-      ) : (
+      ) : products.length > 0 ? (
         <Row>
           {products.map((product) => (
             <Col sm={12} md={6} lg={4} key={product._id}>
@@ -36,6 +38,11 @@ const ProductDashboard = () => {
             </Col>
           ))}
         </Row>
+      ) : (
+        <p>
+          You have not added any products yet! <br /> Start by clicking the button above and add
+          your very own product
+        </p>
       )}
     </Container>
   );

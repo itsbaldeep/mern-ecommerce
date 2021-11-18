@@ -7,6 +7,7 @@ const sendEmail = require("../utils/sendEmail");
 
 // Models
 const User = require("../models/User");
+const Directory = require("../models/Directory");
 
 // This function generates a new JWT token
 const sendToken = async (_user, statusCode, res) => {
@@ -25,9 +26,8 @@ exports.register = async (req, res, next) => {
   try {
     // Taking the credentials and verifying
     const { name, email, password } = req.body;
-    if (!name || !email || !password) {
+    if (!name || !email || !password)
       return next(new ErrorResponse("Please provide name, email and password", 400));
-    }
 
     // Checking if the user already exists
     if (await User.findOne({ email }))
@@ -36,23 +36,32 @@ exports.register = async (req, res, next) => {
     // Handling client registeration
     let user;
     if (req.body.role === "Client") {
-      const { storeName, category, number, address, city, state, pincode } = req.body;
-      if (!storeName || !category || !number || !address || !city || !state || !pincode)
-        return next(new ErrorResponse("Please provide neccessary details", 400));
+      // Creating new directory profile
+      const directory = await Directory.create({
+        email,
+        number: req.body?.number,
+        storeName: req.body?.storeName,
+        category: req.body?.category,
+        address: req.body?.address,
+        city: req.body?.city,
+        state: req.body?.state,
+        pincode: req.body?.state,
+      });
+      // Creating new user profile along with directory id
       user = await User.create({
         name,
         email,
         password,
-        storeName,
-        category,
-        number,
-        address,
-        city,
-        state,
-        pincode,
-        role,
+        number: req.body?.number,
+        role: req.body.role,
+        directory: directory._id,
       });
-    } else user = await User.create({ name, email, password });
+      // Adding user object ref to directory object
+      directory.user = user._id;
+      directory.save();
+    }
+    // Customer registration
+    else user = await User.create({ name, email, password });
 
     // Generating a verification token
     const verificationToken = user.getVerificationToken();
@@ -236,11 +245,41 @@ exports.resetPassword = async (req, res, next) => {
 
 // GET /api/user/me
 exports.getDetails = async (req, res, next) => {
-  const user = await User.findById(req.user.id);
+  const user = await User.findById(req.user.id).populate("directory");
   return res.status(200).json({
     success: true,
     user,
   });
+};
+
+// POST /api/user/convertclient
+exports.convertClient = async (req, res, next) => {
+  try {
+    if (req.user.role === "Client")
+      return next(new ErrorResponse("This account is already a client account", 401));
+
+    // Handling directory creation and updating user object
+    const directory = await Directory.create({
+      email: req.user.email,
+      user: req.user._id,
+      number: req.body?.number,
+      storeName: req.body?.storeName,
+      category: req.body?.category,
+      address: req.body?.address,
+      city: req.body?.city,
+      state: req.body?.state,
+      pincode: req.body?.state,
+    });
+
+    // Updating user data and saving
+    req.user.directory = directory._id;
+    req.user.role = "Client";
+    await req.user.save();
+
+    sendToken(req.user, 200, res);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // PUT /api/user/updatepassword
@@ -264,7 +303,7 @@ exports.updatePassword = async (req, res, next) => {
 // PUT /api/user/updateprofile
 exports.updateProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.user.id).populate("directory");
     // Controlling customer update profile request
     if (req.user.role === "Customer") {
       if (req.body.name) user.name = req.body.name;
@@ -274,9 +313,11 @@ exports.updateProfile = async (req, res, next) => {
     }
     // Controlling client update profile request
     else if (req.user.role === "Client") {
+      // Getting the directory profile
+      const directory = user.directory;
       // Checking for username
       if (req.body.username) {
-        if (await User.findOne({ username: req.body.username }))
+        if (await Directory.findOne({ username: req.body.username }))
           return next(new ErrorResponse("Username is already taken. Try another one", 400));
         const lookups = [
           "shop",
@@ -313,6 +354,7 @@ exports.updateProfile = async (req, res, next) => {
           "privacy-policy",
           "terms-and-conditions",
           "tnc",
+          "api",
         ];
         for (const lookup of lookups) {
           if (req.body.username.toLowerCase().indexOf(lookup) !== -1)
@@ -322,21 +364,21 @@ exports.updateProfile = async (req, res, next) => {
         console.log(`usernamed changed to ${req.body.username}`);
       }
       if (req.body.name) user.name = req.body.name;
-      if (req.body.storeName) user.storeName = req.body.storeName;
+      if (req.body.storeName) directory.storeName = req.body.storeName;
       // Category in formdata is in string format instead of array
-      if (req.body.category) user.category = req.body.category.split(",");
-      if (req.body.number) user.number = req.body.number;
-      if (req.body.address) user.address = req.body.address;
-      if (req.body.city) user.city = req.body.city;
-      if (req.body.state) user.state = req.body.state;
-      if (req.body.pincode) user.pincode = req.body.pincode;
+      if (req.body.category) directory.category = req.body.category.split(",");
+      if (req.body.number) directory.number = req.body.number;
+      if (req.body.address) directory.address = req.body.address;
+      if (req.body.city) directory.city = req.body.city;
+      if (req.body.state) directory.state = req.body.state;
+      if (req.body.pincode) directory.pincode = req.body.pincode;
       // Details in formdata is in JSON stringify format instead of array of objects
-      if (req.body.details) user.details = JSON.parse(req.body.details);
+      if (req.body.details) directory.details = JSON.parse(req.body.details);
       // Features in formdata is in string format instead of array
-      if (req.body.features) user.features = req.body.features.split(",");
-      if (req.body.description) user.description = req.body.description;
-      if (req.body.website) user.website = req.body.website;
-      if (req.body.tagline) user.tagline = req.body.tagline;
+      if (req.body.features) directory.features = req.body.features.split(",");
+      if (req.body.description) directory.description = req.body.description;
+      if (req.body.website) directory.website = req.body.website;
+      if (req.body.tagline) directory.tagline = req.body.tagline;
       // Files contain single profileImage and multiple directoryImages files
       if (req.files) {
         if (req.files.profileImage)
@@ -344,13 +386,14 @@ exports.updateProfile = async (req, res, next) => {
         // ASSUME: the maximum number of files in request = the number of files user can have at most - the number of files user currently have
         if (req.files.directoryImages) {
           const newImages = req.files.directoryImages.map((image) => `/uploads/${image.filename}`);
-          user.directoryImages = user.directoryImages.concat(newImages);
+          directory.directoryImages = directory.directoryImages.concat(newImages);
         }
       }
       // Manually changing directory images array to remove some previous ones
-      if (req.body.directoryImages) user.directoryImages = req.body.directoryImages.split(",");
-      if (req.body.directoryImages === "") user.directoryImages = [];
+      if (req.body.directoryImages) directory.directoryImages = req.body.directoryImages.split(",");
+      if (req.body.directoryImages === "") directory.directoryImages = [];
       await user.save();
+      await directory.save();
     }
 
     return res.status(200).json({

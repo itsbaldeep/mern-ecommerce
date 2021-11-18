@@ -52,7 +52,7 @@ const RegisterScreen = () => {
       onSubmit={(values) => dispatch(register(values))}
     >
       {({ handleSubmit }) => (
-        <Container className="my-2" style={{ maxWidth: "500px" }}>
+        <Container className="my-2 py-4" style={{ maxWidth: "500px" }}>
           <h2 className="py-2 text-center">Sign Up With Petohub</h2>
           <Form noValidate onSubmit={handleSubmit} className="pb-3">
             <TextField label="Name" name="name" type="text" placeholder="Full Name" />

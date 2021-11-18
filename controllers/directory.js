@@ -1,9 +1,9 @@
 // Models
-const User = require("../models/User");
+const Directory = require("../models/Directory");
 
 // GET /api/directory
 exports.getDirectories = async (req, res, next) => {
-  const directories = await User.find({ role: "Client", isApproved: true });
+  const directories = await Directory.find({ isApproved: false });
   return res.status(200).json({
     success: true,
     directories,
@@ -12,9 +12,8 @@ exports.getDirectories = async (req, res, next) => {
 
 // GET /api/directory/:username
 exports.getDirectory = async (req, res, next) => {
-  const directory = await User.findOne({
-    role: "Client",
-    isApproved: true,
+  const directory = await Directory.findOne({
+    isApproved: false,
     username: req.params.username,
   });
   return res.status(200).json({

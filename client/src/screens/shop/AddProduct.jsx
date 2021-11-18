@@ -15,6 +15,9 @@ const AddProduct = ({ show, onHide }) => {
     dispatch(clearErrors());
   }, [dispatch]);
 
+  const MAX_IMAGES = 7;
+  const spaceLeft = MAX_IMAGES;
+
   const initialValues = {
     name: "",
     description: "",
@@ -34,7 +37,7 @@ const AddProduct = ({ show, onHide }) => {
       min: 0,
       max: 0,
     },
-    productImages: null,
+    productImages: [],
   };
 
   const validationSchema = Yup.object({
@@ -55,11 +58,11 @@ const AddProduct = ({ show, onHide }) => {
       .required("Please provide a count in stock"),
     petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
     breedType: Yup.string(),
-    weight: Yup.number().positive("Weight must be positive"),
+    weight: Yup.number().min(0, "Weight must be positive"),
     size: Yup.object({
-      length: Yup.number().positive("Length must be positive"),
-      height: Yup.number().positive("Height must be positive"),
-      width: Yup.number().positive("Width must be positive"),
+      length: Yup.number().min(0, "Length must be positive"),
+      height: Yup.number().min(0, "Height must be positive"),
+      width: Yup.number().min(0, "Width must be positive"),
     }),
     isVeg: Yup.boolean(),
     ageRange: Yup.object({
@@ -68,30 +71,6 @@ const AddProduct = ({ show, onHide }) => {
     }),
   });
 
-  const handleProductAdd = (values) => {
-    // const product = {
-    //   ...values,
-    //   size: {
-    //     length: values.length,
-    //     width: values.width,
-    //     height: values.height,
-    //   },
-    //   ageRange: {
-    //     min: values.min,
-    //     max: values.max,
-    //   },
-    // };
-
-    // delete product.length;
-    // delete product.height;
-    // delete product.width;
-    // delete product.min;
-    // delete product.max;
-
-    // dispatch(addProduct(product));
-    console.log(values);
-  };
-
   const categoryOptions = [
     "Food",
     "Cosmetic",
@@ -99,9 +78,9 @@ const AddProduct = ({ show, onHide }) => {
     "Vaccination",
     "Medicine",
     "Clothing",
-    "Other",
+    "Others",
   ];
-  const petTypeOptions = ["Dog", "Cat", "Bird", "Fish", "Other"];
+  const petTypeOptions = ["Dog", "Cat", "Bird", "Fish", "Others"];
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -111,7 +90,21 @@ const AddProduct = ({ show, onHide }) => {
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleProductAdd(values)}
+        onSubmit={(values) => {
+          // Converting to FormData
+          const fd = new FormData();
+          for (const key in values) fd.append(key, values[key]);
+          fd.set("size", JSON.stringify(values.size));
+          fd.set("ageRange", JSON.stringify(values.ageRange));
+          // Images
+          const filesLength = values.productImages.length;
+          if (filesLength > 0) {
+            for (let i = 0; i < filesLength; i++)
+              fd.append("productImages", values.productImages[i]);
+          }
+          // fd.forEach((value, key) => console.log(`${key}: ${value}`));
+          dispatch(addProduct(fd));
+        }}
       >
         {({ errors, setErrors, setFieldValue, handleSubmit }) => (
           <Form noValidation onSubmit={handleSubmit}>
@@ -125,7 +118,7 @@ const AddProduct = ({ show, onHide }) => {
                   onChange={(e) => {
                     if (e.currentTarget.files.length > spaceLeft)
                       return setErrors({
-                        productImages: `You can only upload ${spaceLeft} more images`,
+                        productImages: `You can only upload upto ${spaceLeft} images`,
                       });
                     setFieldValue("productImages", e.currentTarget.files);
                   }}
@@ -175,7 +168,7 @@ const AddProduct = ({ show, onHide }) => {
               <Row>
                 <Col sm={12} md={4}>
                   <TextField
-                    name="length"
+                    name="size.length"
                     type="number"
                     label="Length (in cm)"
                     placeholder="Length"
@@ -183,20 +176,25 @@ const AddProduct = ({ show, onHide }) => {
                 </Col>
                 <Col sm={12} md={4}>
                   <TextField
-                    name="height"
+                    name="size.height"
                     type="number"
                     label="Height (in cm)"
                     placeholder="Height"
                   />
                 </Col>
                 <Col sm={12} md={4}>
-                  <TextField name="width" type="number" label="Width (in cm)" placeholder="Width" />
+                  <TextField
+                    name="size.width"
+                    type="number"
+                    label="Width (in cm)"
+                    placeholder="Width"
+                  />
                 </Col>
               </Row>
               <Row>
                 <Col sm={12} md={6}>
                   <TextField
-                    name="min"
+                    name="ageRange.min"
                     type="number"
                     label="Minimum age (in yrs)"
                     placeholder="Minimum Age"
@@ -204,7 +202,7 @@ const AddProduct = ({ show, onHide }) => {
                 </Col>
                 <Col sm={12} md={6}>
                   <TextField
-                    name="max"
+                    name="ageRange.max"
                     type="number"
                     label="Maximum age (in yrs)"
                     placeholder="Maximum Age"
@@ -228,7 +226,7 @@ const AddProduct = ({ show, onHide }) => {
                 Cancel
               </Button>
               <Button disabled={loading} type="submit">
-                Add
+                {loading ? "Adding" : "Add"}
               </Button>
             </Modal.Footer>
           </Form>

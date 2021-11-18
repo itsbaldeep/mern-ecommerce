@@ -26,7 +26,7 @@ const ProfileScreen = () => {
           <p>
             Directory Profile:{" "}
             <span className="text-primary">
-              {user.isApproved ? "Approved" : "Approval Pending"}
+              {user.directory?.isApproved ? "Approved" : "Approval Pending"}
             </span>
           </p>
         )}

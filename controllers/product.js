@@ -4,7 +4,7 @@ const ErrorResponse = require("../utils/errorResponse");
 // GET /api/product/
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isApproved: true });
+    const products = await Product.find({ isApproved: false });
     return res.status(200).json({
       success: true,
       products,
@@ -17,7 +17,7 @@ exports.getProducts = async (req, res, next) => {
 // GET /api/product/:id
 exports.getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    const product = await Product.findById(req.params.id).where("isApproved").equals(false);
     if (!product) return next(new ErrorResponse("Product not found", 404));
     return res.status(200).json({
       success: true,
@@ -58,8 +58,8 @@ exports.getOwnProductById = async (req, res, next) => {
 // POST /api/product/add
 exports.addProduct = async (req, res, next) => {
   try {
-    if (req.user.role === "Client") req.body.seller = req.user._id;
-    const product = {
+    const product = await Product.create({
+      seller: req.user.role === "Client" ? req.user._id : null,
       name: req.body?.name,
       category: req.body?.category,
       petType: req.body?.petType.split(","),
@@ -71,12 +71,11 @@ exports.addProduct = async (req, res, next) => {
       price: req.body?.price,
       isVeg: req.body?.isVeg,
       ageRange: JSON.parse(req.body?.ageRange),
-    };
-    if (req.files?.productImages) {
-      const newImages = req.files.productImages.map((image) => `/uploads/${image.filename}`);
+    });
+    if (req?.files) {
+      const newImages = req.files.map((image) => `/uploads/${image.filename}`);
       product.productImages = product.productImages.concat(newImages);
     }
-    const product = await Product.create(product);
     await product.save();
     res.status(200).json({
       success: true,
@@ -132,12 +131,12 @@ exports.editProduct = async (req, res, next) => {
     if (req.body.price) product.price = req.body.price;
     if (req.body.isVeg) product.isVeg = req.body.isVeg;
     if (req.body.ageRange) product.ageRange = JSON.parse(req.body.ageRange);
-    if (req.files.productImages) {
-      const newImages = req.files.productImages.map((image) => `/uploads/${image.filename}`);
-      user.productImages = user.productImages.concat(newImages);
+    if (req.files) {
+      const newImages = req.files.map((image) => `/uploads/${image.filename}`);
+      product.productImages = product.productImages.concat(newImages);
     }
-    if (req.body.productImages) user.productImages = req.body.productImages.split(",");
-    if (req.body.productImages === "") user.productImages = [];
+    if (req.body.productImages) product.productImages = req.body.productImages.split(",");
+    if (req.body.productImages === "") product.productImages = [];
     await product.save();
 
     // Returning the updated product

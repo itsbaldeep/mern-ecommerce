@@ -1,0 +1,12 @@
+.card {
+  position: relative;
+}
+
+.approved-text {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 6px;
+  color: white;
+  background-color: tomato;
+}

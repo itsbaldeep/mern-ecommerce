@@ -6,7 +6,6 @@ import { composeWithDevTools } from "redux-devtools-extension";
 // Reducers
 import {
   allUsersReducer,
-  detailsReducer,
   forgotPasswordReducer,
   profileReducer,
   userReducer,
@@ -18,7 +17,6 @@ import { directoryReducer } from "./reducers/directory";
 
 const reducer = combineReducers({
   allUsers: allUsersReducer,
-  userDetails: detailsReducer,
   forgotPassword: forgotPasswordReducer,
   profile: profileReducer,
   user: userReducer,

@@ -70,7 +70,7 @@ const RegisterMemberScreen = () => {
     <ThirdStep next={nextStep} prev={prevStep} data={data} />,
   ];
   return (
-    <Container style={{ maxWidth: "500px" }}>
+    <Container style={{ maxWidth: "500px" }} className="my-2 py-4">
       <h2 className="my-2 text-center">Become a member with Petohub</h2>
       <div>{steps[step]}</div>
     </Container>

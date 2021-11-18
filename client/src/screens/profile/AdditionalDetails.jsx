@@ -13,21 +13,22 @@ const AdditionalDetails = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.user);
+  const directory = user.directory;
 
   useEffect(() => {
     dispatch(clearErrors());
   }, [dispatch]);
 
   const MAX_IMAGES = 5;
-  const spaceLeft = MAX_IMAGES - user.directoryImages.length;
+  const spaceLeft = MAX_IMAGES - directory.directoryImages.length;
 
-  // Deep copying fields from user state object
-  const features = [...user.features];
-  const details = JSON.parse(JSON.stringify(user.details));
-  const website = user.website;
-  const tagline = user.tagline;
-  const description = user.description;
-  const username = user.username;
+  // Deep copying fields from directory state object
+  const features = [...directory.features];
+  const details = JSON.parse(JSON.stringify(directory.details));
+  const website = directory.website;
+  const tagline = directory.tagline;
+  const description = directory.description;
+  const username = directory.username;
 
   const additionalData = {
     features,
@@ -79,17 +80,18 @@ const AdditionalDetails = () => {
         const fd = new FormData();
 
         // Plain text fields
-        if (values.description !== user.description) fd.append("description", values.description);
-        if (values.tagline !== user.tagline) fd.append("tagline", values.tagline);
-        if (values.website !== user.website) fd.append("website", values.website);
-        if (values.username !== user.username) fd.append("username", values.username);
+        if (values.description !== directory.description)
+          fd.append("description", values.description);
+        if (values.tagline !== directory.tagline) fd.append("tagline", values.tagline);
+        if (values.website !== directory.website) fd.append("website", values.website);
+        if (values.username !== directory.username) fd.append("username", values.username);
 
         // Details
         const detailsJSON = JSON.stringify(values.details);
-        if (detailsJSON !== JSON.stringify(user.details)) fd.append("details", detailsJSON);
+        if (detailsJSON !== JSON.stringify(directory.details)) fd.append("details", detailsJSON);
 
         // Features
-        if (values.features.toString() !== user.features.toString())
+        if (values.features.toString() !== directory.features.toString())
           fd.append("features", values.features);
 
         // Images
@@ -105,9 +107,9 @@ const AdditionalDetails = () => {
         <Form noValidate onSubmit={handleSubmit} className="my-2">
           <Form.Group className="mb-3">
             <h4>Images</h4>
-            {user.directoryImages.length > 0 ? (
+            {directory.directoryImages.length > 0 ? (
               <Row>
-                {user.directoryImages.map((image, index) => (
+                {directory.directoryImages.map((image, index) => (
                   <Col key={image} md={4} xs={6} className="my-2">
                     <ImageCard image={image} index={index} />
                   </Col>
@@ -373,6 +375,8 @@ const AdditionalDetails = () => {
 const ImageCard = ({ image, index }) => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
+  const directory = user.directory;
+
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -396,7 +400,7 @@ const ImageCard = ({ image, index }) => {
             <Button
               variant="danger"
               onClick={(e) => {
-                const directoryImages = [...user.directoryImages];
+                const directoryImages = [...directory.directoryImages];
                 directoryImages.splice(index, 1);
                 const fd = new FormData();
                 fd.append("directoryImages", directoryImages);

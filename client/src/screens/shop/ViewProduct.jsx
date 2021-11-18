@@ -1,4 +1,4 @@
-import { Button, Modal } from "react-bootstrap";
+import { Button, Modal, Row, Col } from "react-bootstrap";
 
 const ViewProduct = ({ show, onHide, product }) => {
   return (
@@ -7,6 +7,22 @@ const ViewProduct = ({ show, onHide, product }) => {
         <Modal.Title>{product.name}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
+        <p>Images</p>
+        {product.productImages.length > 0 ? (
+          <Row>
+            {product.productImages.map((image, index, array) => (
+              <Col
+                key={image}
+                xs={6}
+                className="my-2 d-flex align-items-center justify-content-center"
+              >
+                <img src={image} width="175px" alt="" />
+              </Col>
+            ))}
+          </Row>
+        ) : (
+          <p>You have no images!</p>
+        )}
         <p>
           Description: <span className="text-muted">{product.description}</span>
         </p>

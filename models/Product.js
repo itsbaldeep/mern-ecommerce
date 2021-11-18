@@ -1,14 +1,16 @@
 // Dependencies
 const mongoose = require("mongoose");
+const path = require("path");
+const fs = require("fs");
 
 const ProductSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      minlength: [5, "Product name is too short"],
       required: [true, "Please provie a product name"],
-      trim: true,
+      minlength: [5, "Product name is too short"],
       maxlength: [32, "Product name is too long"],
+      trim: true,
     },
     alias: {
       type: [String],
@@ -24,7 +26,7 @@ const ProductSchema = new mongoose.Schema(
     },
     petType: {
       type: [String],
-      required: [true, "Please provide a pet type for this product"],
+      min: [1, "Please provide atleast one pet type for this product"],
     },
     breedType: {
       type: String,
@@ -32,33 +34,32 @@ const ProductSchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      minlength: [8, "Description is too short"],
       required: [true, "Please provide a product description"],
+      minlength: [8, "Description is too short"],
       maxlength: [1024, "Description is too long"],
     },
     weight: {
       type: Number,
       default: 0,
-      min: [1, "Product should have a positive weight"],
+      min: [0, "Product should have a positive weight"],
     },
     size: {
-      type: {
-        length: {
-          type: Number,
-          default: 0,
-          min: [1, "Product length cannot be less than 1 meter"],
-        },
-        width: {
-          type: Number,
-          default: 0,
-          min: [1, "Product width cannot be less than 1 meter"],
-        },
-        height: {
-          type: Number,
-          default: 0,
-          min: [1, "Product height cannot be less than 1 meter"],
-        },
+      length: {
+        type: Number,
+        default: 0,
+        min: [0, "Product length cannot be less than 0 meter"],
       },
+      width: {
+        type: Number,
+        default: 0,
+        min: [0, "Product width cannot be less than 0 meter"],
+      },
+      height: {
+        type: Number,
+        default: 0,
+        min: [0, "Product height cannot be less than 0 meter"],
+      },
+      _id: false,
     },
     countInStock: {
       type: Number,
@@ -75,18 +76,17 @@ const ProductSchema = new mongoose.Schema(
       default: false,
     },
     ageRange: {
-      type: {
-        min: {
-          type: Number,
-          default: 0,
-          min: [0, "Age must be a positive number"],
-        },
-        max: {
-          type: Number,
-          default: 0,
-          min: [0, "Age must be a positive number"],
-        },
+      min: {
+        type: Number,
+        default: 0,
+        min: [0, "Age must be a positive number"],
       },
+      max: {
+        type: Number,
+        default: 0,
+        min: [0, "Age must be a positive number"],
+      },
+      _id: false,
     },
     productImages: {
       type: [String],
@@ -94,6 +94,9 @@ const ProductSchema = new mongoose.Schema(
         this._previousProductImages = this.productImages;
         return productImages;
       },
+    },
+    link: {
+      type: String,
     },
     rating: {
       type: Number,
@@ -115,7 +118,7 @@ const ProductSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-UserSchema.pre("save", async function (next) {
+ProductSchema.pre("save", async function (next) {
   // Deleting previous images if they are updated or removed
   if (this.isModified("productImages")) {
     const previous = this._previousProductImages;
@@ -128,6 +131,17 @@ UserSchema.pre("save", async function (next) {
           fs.unlink(previousPath, (err) => err && console.error(err));
         }
       }
+    }
+  }
+  next();
+});
+
+ProductSchema.pre("remove", async function (next) {
+  // Deleting all images if the product is deleted
+  for (const image of this.productImages) {
+    const imagePath = path.join(__dirname, "..", "client", "public", image);
+    if (fs.existsSync(imagePath)) {
+      fs.unlink(imagePath, (err) => err && console.error(err));
     }
   }
 });

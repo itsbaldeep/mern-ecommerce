@@ -24,45 +24,18 @@ const UserSchema = new mongoose.Schema(
         "Please provide a valid email",
       ],
     },
+    number: {
+      type: String,
+      match: [
+        /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
+        "Please provide a valid phone number",
+      ],
+    },
     password: {
       type: String,
       required: [true, "Please provide a password"],
       minlength: [8, "Password must have atleast eight or more characters"],
       select: false,
-    },
-    storeName: {
-      type: String,
-      maxlength: [64, "Store name is too long"],
-      minlength: [3, "Store name is too short"],
-    },
-    description: {
-      type: String,
-      maxlength: [1024, "Description is too long"],
-      default: "",
-    },
-    address: {
-      type: String,
-      minlength: [8, "Address is too short"],
-      maxlength: [256, "Address is too long"],
-    },
-    tagline: {
-      type: String,
-      maxlength: [32, "Tagline is too long"],
-      default: "",
-    },
-    website: {
-      type: String,
-      lowercase: true,
-      default: "",
-      trim: true,
-      match: [
-        /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
-        "Please provide a valid website",
-      ],
-    },
-    category: {
-      type: [String],
-      default: [],
     },
     profileImage: {
       type: String,
@@ -71,75 +44,15 @@ const UserSchema = new mongoose.Schema(
         return profileImage;
       },
     },
-    directoryImages: {
-      type: [String],
-      set: function (directoryImages) {
-        this._previousDirectoryImages = this.directoryImages;
-        return directoryImages;
-      },
-    },
-    username: {
-      type: String,
-      unique: true,
-      lowercase: true,
-      index: true,
-    },
-    details: {
-      type: [
-        {
-          title: {
-            type: String,
-            minlength: [4, "Details title is too short"],
-            maxlength: [12, "Details title is too long"],
-          },
-          content: {
-            type: String,
-            minlength: [4, "Details content is too short"],
-            maxlength: [64, "Details content is too long"],
-          },
-        },
-      ],
-      default: [],
-    },
-    features: {
-      type: [
-        {
-          type: String,
-          minlength: [4, "Feature length is too short"],
-          maxlength: [16, "Feature length is too long"],
-        },
-      ],
-      default: [],
-    },
-    state: {
-      type: String,
-      default: "",
-    },
-    city: {
-      type: String,
-      default: "",
-    },
-    pincode: {
-      type: String,
-      default: "",
-    },
-    number: {
-      type: String,
-      default: "",
-      match: [
-        /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
-        "Please provide a valid phone number",
-      ],
-    },
     role: {
       type: String,
       default: "Customer",
     },
-    isVerified: {
-      type: Boolean,
-      default: false,
+    directory: {
+      type: mongoose.SchemaTypes.ObjectId,
+      ref: "Directory",
     },
-    isApproved: {
+    isVerified: {
       type: Boolean,
       default: false,
     },
@@ -167,19 +80,6 @@ UserSchema.pre("save", async function (next) {
       const previousPath = path.join(__dirname, "..", "client", "public", previous);
       if (fs.existsSync(previousPath)) {
         fs.unlink(previousPath, (err) => err && console.error(err));
-      }
-    }
-  }
-  if (this.isModified("directoryImages")) {
-    const previous = this._previousDirectoryImages;
-    // Checking for deleted images
-    if (previous && previous.length > this.directoryImages.length) {
-      const deletedImages = previous.filter((x) => !this.directoryImages.includes(x));
-      for (const image of deletedImages) {
-        const previousPath = path.join(__dirname, "..", "client", "public", image);
-        if (fs.existsSync(previousPath)) {
-          fs.unlink(previousPath, (err) => err && console.error(err));
-        }
       }
     }
   }
