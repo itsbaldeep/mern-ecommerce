@@ -4,7 +4,7 @@ const ErrorResponse = require("../utils/errorResponse");
 // GET /api/product/
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isApproved: false });
+    const products = await Product.find({ isApproved: true });
     return res.status(200).json({
       success: true,
       products,
@@ -17,7 +17,7 @@ exports.getProducts = async (req, res, next) => {
 // GET /api/product/:id
 exports.getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).where("isApproved").equals(false);
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
     if (!product) return next(new ErrorResponse("Product not found", 404));
     return res.status(200).json({
       success: true,
@@ -27,6 +27,10 @@ exports.getProductById = async (req, res, next) => {
     next(error);
   }
 };
+
+/*
+ * Private routes for client
+ */
 
 // GET /api/product/own
 exports.getOwnProducts = async (req, res, next) => {
@@ -72,7 +76,7 @@ exports.addProduct = async (req, res, next) => {
       isVeg: req.body?.isVeg,
       ageRange: JSON.parse(req.body?.ageRange),
     });
-    if (req?.files) {
+    if (req.files) {
       const newImages = req.files.map((image) => `/uploads/${image.filename}`);
       product.productImages = product.productImages.concat(newImages);
     }

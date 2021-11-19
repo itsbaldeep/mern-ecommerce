@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { Card, Container, Row, Col, Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
 import { FaBookmark, FaFilter, FaMapMarker } from "react-icons/fa";
 
 // Actions
@@ -100,9 +99,9 @@ const DirectoriesScreen = () => {
             </div>
             <div className="area-section">
               <h4>Filter by State</h4>
-              <Form.Select aria-label="Default select example">
+              <Form.Select defaultValue="Delhi">
                 {stateOptions.map((state) => (
-                  <option value={state} key={state} selected={state === "Delhi"}>
+                  <option value={state} key={state}>
                     {state}
                   </option>
                 ))}
@@ -116,18 +115,21 @@ const DirectoriesScreen = () => {
             </div>
             <button className="btn btn-primary">Apply Filters</button>
           </div>
-
-          <Row>
+          <div className="directories">
             {loading ? (
               <h3>Loading</h3>
+            ) : directories.length > 0 ? (
+              <Row>
+                {directories.map((directory, index) => (
+                  <Col sm={12} md={6} lg={4} key={index}>
+                    <DirectoryCard directory={directory} key={index} />
+                  </Col>
+                ))}
+              </Row>
             ) : (
-              directories.map((directory, index) => (
-                <Col lg={4} sm={6} xs={12}>
-                  <DirectoryCard directory={directory} key={index} />
-                </Col>
-              ))
+              <h3>No directories to show</h3>
             )}
-          </Row>
+          </div>
         </div>
       </Container>
     </>

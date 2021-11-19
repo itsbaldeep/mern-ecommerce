@@ -28,7 +28,7 @@ const PetohubNavbar = () => {
   return (
     <Navbar sticky="top" expand="lg" bg="primary" variant="dark">
       <Container fluid>
-        <LinkContainer exact to="/">
+        <LinkContainer to="/">
           <Navbar.Brand>
             <img src="/assets/logo/Petohub-Logo-Wide.png" alt="" width="150px" height="50px" />
           </Navbar.Brand>
@@ -36,19 +36,19 @@ const PetohubNavbar = () => {
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="justify-content-end flex-grow-1">
-            <Link exact to="/" className="nav-link">
+            <Link to="/" className="nav-link">
               <FaHome /> Home
             </Link>
-            <Link exact to="/shop" className="nav-link">
+            <Link to="/shop" className="nav-link">
               <FaStore /> Shop
             </Link>
-            <Link exact to="/services" className="nav-link">
+            <Link to="/services" className="nav-link">
               <FaFirstAid /> Services
             </Link>
-            <Link exact to="/directories" className="nav-link">
+            <Link to="/directories" className="nav-link">
               <FaMapPin /> Directories
             </Link>
-            <Link exact to="/ngo" className="nav-link">
+            <Link to="/ngo" className="nav-link">
               <FaHandsHelping /> NGOs
             </Link>
             {user.isAuthenticated ? (
@@ -61,15 +61,15 @@ const PetohubNavbar = () => {
               >
                 {user.user.role === "Client" && (
                   <>
-                    <Link exact to="/account/products" className="dropdown-item">
+                    <Link to="/account/products" className="dropdown-item">
                       <FaProductHunt /> Your Products
                     </Link>
-                    <Link exact to="/account/services" className="dropdown-item">
+                    <Link to="/account/services" className="dropdown-item">
                       <FaProductHunt /> Your Services
                     </Link>
                   </>
                 )}
-                <Link exact to="/account" className="dropdown-item">
+                <Link to="/account" className="dropdown-item">
                   <FaUserCog /> Your Account
                 </Link>
                 <NavDropdown.Divider />
@@ -79,13 +79,13 @@ const PetohubNavbar = () => {
               </NavDropdown>
             ) : (
               <>
-                <Link exact to="/register/member" className="nav-link">
+                <Link to="/register/member" className="nav-link">
                   <FaConnectdevelop /> Member
                 </Link>
-                <Link exact to="/register" className="nav-link">
+                <Link to="/register" className="nav-link">
                   <FaUserPlus /> Sign Up
                 </Link>
-                <Link exact to="/login" className="nav-link">
+                <Link to="/login" className="nav-link">
                   <FaSignInAlt /> Sign In
                 </Link>
               </>

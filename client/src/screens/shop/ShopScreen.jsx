@@ -112,18 +112,16 @@ const ShopScreen = () => {
           <div className="products">
             {loading ? (
               <h3>Loading</h3>
-            ) : (
+            ) : products.length > 0 ? (
               <Row>
-                {products.length > 0 ? (
-                  products.map((product) => (
-                    <Col sm={12} md={6} lg={4} key={product._id}>
-                      <Product product={product} />
-                    </Col>
-                  ))
-                ) : (
-                  <h3>No products to show</h3>
-                )}
+                {products.map((product, index) => (
+                  <Col sm={12} md={6} lg={4} key={index}>
+                    <Product product={product} />
+                  </Col>
+                ))}
               </Row>
+            ) : (
+              <h3>No products to show</h3>
             )}
           </div>
         </div>

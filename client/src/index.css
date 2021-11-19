@@ -1,11 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Sora&display=swap");
 
-:root {
-  --navbar-color: rgb(185, 79, 148);
-  --content-color: rgb(233, 233, 233);
-  --footer-color: rgb(105, 136, 145);
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,11 +9,6 @@
 a {
   text-decoration: none;
   color: inherit;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
 }
 
 body {

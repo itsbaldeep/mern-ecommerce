@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { FaBuilding, FaFacebook, FaInstagram, FaPhone, FaTwitter } from "react-icons/fa";
+import { FaBuilding, FaPhone } from "react-icons/fa";
 import "./HomeScreen.css";
 
 const HomeScreen = () => {

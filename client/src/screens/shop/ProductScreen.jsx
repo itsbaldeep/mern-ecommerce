@@ -1,18 +1,20 @@
+// Dependencies
 import { useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
-
-import { getProduct } from "redux/actions/product";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+
+// Actions
+import { getProduct } from "redux/actions/product";
 
 const ProductScreen = ({ match }) => {
   const dispatch = useDispatch();
-  const { loading, success, product } = useSelector((state) => state.product);
+  const { loading, product } = useSelector((state) => state.product);
 
   useEffect(() => {
     dispatch(getProduct(match.params.productId));
-  }, [dispatch]);
+  }, [dispatch, match.params.productId]);
 
   return (
     <Container className="py-3 mt-3">
@@ -28,7 +30,7 @@ const ProductScreen = ({ match }) => {
                 ))}
               </Swiper>
             ) : (
-              <img src="/assets/placeholders/product.png" />
+              <img src="/assets/placeholders/product.png" alt="Product" />
             )}
           </Col>
           <Col xs={12} md={6} className="pt-3">
