@@ -45,7 +45,7 @@ exports.register = async (req, res, next) => {
         address: req.body?.address,
         city: req.body?.city,
         state: req.body?.state,
-        pincode: req.body?.state,
+        pincode: req.body?.pincode,
       });
       // Creating new user profile along with directory id
       user = await User.create({

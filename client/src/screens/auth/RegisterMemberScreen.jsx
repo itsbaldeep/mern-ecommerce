@@ -92,7 +92,13 @@ const firstValidation = Yup.object({
     .required("Re-enter your password"),
   terms: Yup.bool().oneOf([true], "You are required to check this"),
 });
+
 export const FirstStep = ({ data, next }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(clearErrors());
+  }, [dispatch]);
+
   return (
     <Formik
       initialValues={data}
@@ -181,6 +187,11 @@ const stateOptions = [
 ];
 
 const SecondStep = ({ data, prev, next }) => {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(clearErrors());
+  }, [dispatch]);
+
   return (
     <Formik
       initialValues={data}
@@ -229,6 +240,7 @@ const ThirdStep = ({ data, prev, next }) => {
   useEffect(() => {
     dispatch(clearErrors());
   }, [dispatch]);
+
   return (
     <Formik
       initialValues={data}
