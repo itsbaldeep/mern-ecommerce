@@ -360,8 +360,7 @@ exports.updateProfile = async (req, res, next) => {
           if (req.body.username.toLowerCase().indexOf(lookup) !== -1)
             return next(new ErrorResponse("Invalid username. Try another one", 400));
         }
-        user.username = req.body.username;
-        console.log(`usernamed changed to ${req.body.username}`);
+        directory.username = req.body.username;
       }
       if (req.body.name) user.name = req.body.name;
       if (req.body.storeName) directory.storeName = req.body.storeName;
