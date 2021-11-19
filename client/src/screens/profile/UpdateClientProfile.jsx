@@ -112,7 +112,7 @@ const UpdateClientProfile = () => {
       {({ values, setFieldValue, touched, errors, handleSubmit }) => (
         <Form noValidate onSubmit={handleSubmit} className="pb-2">
           <Form.Group className="mb-3">
-            <Form.Label>Image</Form.Label>
+            <Form.Label>Profile Image</Form.Label>
             <input
               type="file"
               name="profileImage"

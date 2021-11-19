@@ -1,7 +1,7 @@
-import React from "react";
+import MainSlider from "components/MainSlider";
 
 const ServicesScreen = () => {
-  return <div>Coming Soon</div>;
+  return <MainSlider />;
 };
 
 export default ServicesScreen;

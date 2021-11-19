@@ -1,16 +1,20 @@
-import { useEffect } from "react";
+// Dependencies
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col, Form } from "react-bootstrap";
-import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
-
-import Product from "./Product.jsx";
-
-import { getProducts } from "redux/actions/product";
-
-import "./ShopScreen.css";
-import { useState } from "react";
 import { FaFilter } from "react-icons/fa";
 
+// Components
+import MainSlider from "components/MainSlider.jsx";
+import Product from "./Product.jsx";
+
+// Actions
+import { getProducts } from "redux/actions/product";
+
+// Custom CSS
+import "./ShopScreen.css";
+
+// Checkbox helper component
 const CheckBox = ({ label }) => (
   <Form.Group>
     <Form.Check type="checkbox" label={label}></Form.Check>
@@ -33,54 +37,7 @@ const ShopScreen = () => {
 
   return (
     <>
-      <Swiper loop pagination navigation={{ clickable: true }}>
-        <SwiperSlide>
-          <div class="content">
-            <p className="display-6">AMAZING VALUE</p>
-            <p className="lead">
-              There are multiple offers and discounts running all the time so make sure to keep an
-              eye on all the amazing offers so you don't miss out on anything for your pets.
-            </p>
-            <a href="#" class="btn btn-primary btn-lg">
-              Check Now
-            </a>
-          </div>
-          <div class="image">
-            <img src="/assets/images/shop-3.png" alt="" />
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div class="content">
-            <p className="display-6">BEST QUALITY PRODUCTS</p>
-            <p className="lead">
-              Get assured quality on the best products for your beloved companion. Browse through a
-              variety of options and variations based on your pet with reasonable prices.
-            </p>
-            <a href="#" class="btn btn-primary btn-lg">
-              Order Now
-            </a>
-          </div>
-          <div class="image">
-            <img src="/assets/images/shop-1.png" alt="" />
-          </div>
-        </SwiperSlide>
-        <SwiperSlide>
-          <div class="content">
-            <p className="display-6">TOP RATED PRODUCTS</p>
-            <p className="lead">
-              All of our products are rated by the community itself so that you can be assure of the
-              quality of the product for your pet. A high standard is maintained by our top analysts
-              and reviewers
-            </p>
-            <a href="#" class="btn btn-primary btn-lg">
-              Browse Now
-            </a>
-          </div>
-          <div class="image">
-            <img src="/assets/images/shop-2.png" alt="" />
-          </div>
-        </SwiperSlide>
-      </Swiper>
+      <MainSlider />
       <Container fluid>
         <div className="shop-screen py-2">
           <div

@@ -22,19 +22,6 @@
   font-size: 1.1rem;
 }
 
-.swiper-slide {
-  padding: 0 3rem;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-}
-
-.swiper-slide .image img {
-  height: 400px;
-  filter: drop-shadow(0px 10px 1px #00000055);
-}
-
 @media (max-width: 768px) {
   .collapse-button {
     display: block;
@@ -42,8 +29,5 @@
   .shop-screen {
     display: grid;
     grid-template-columns: 1fr;
-  }
-  .swiper-slide {
-    flex-direction: column-reverse;
   }
 }
