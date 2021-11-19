@@ -43,7 +43,7 @@ const DirectoryProfileScreen = ({ match }) => {
                     className="d-flex justify-content-center align-items-center"
                     key={index}
                   >
-                    <img src={image} key={index} width="300px" alt="" className="my-auto" />
+                    <img src={image} key={index} width="300px" alt="" />
                   </SwiperSlide>
                 ))}
               </Swiper>
@@ -56,7 +56,6 @@ const DirectoryProfileScreen = ({ match }) => {
             <h4>About this directory</h4>
             <p>{directory.description || "No information available"}</p>
             {directory.tagline && <p>Tagline: {directory.tagline}</p>}
-
             <p>Address: {directory.address}</p>
             <p>State: {directory.state}</p>
             <p>City: {directory.city}</p>
@@ -72,7 +71,7 @@ const DirectoryProfileScreen = ({ match }) => {
               </a>
             )}
           </Col>
-          {directory.features.length > 0 && (
+          {directory.features?.length > 0 && (
             <div className="features">
               <h3>Features</h3>
               <ul>
@@ -82,7 +81,7 @@ const DirectoryProfileScreen = ({ match }) => {
               </ul>
             </div>
           )}
-          {directory.details.length > 0 && (
+          {directory.details?.length > 0 && (
             <div className="details">
               <h3>Details</h3>
               <ul>
