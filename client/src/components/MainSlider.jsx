@@ -19,6 +19,7 @@ const MainSlider = () => {
       autoplay={{ delay: 2500, disableOnInteraction: false }}
       navigation
       pagination={{ clickable: true, dynamicBullets: true }}
+      className="main-swiper"
     >
       <SwiperSlide>
         <div className="content">

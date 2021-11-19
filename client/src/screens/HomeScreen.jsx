@@ -138,7 +138,7 @@ const HomeScreen = () => {
               }}
             >
               <h3 className="text-light">Donate and support us</h3>
-              <a className="btn btn-dark btn-md" href="/donate" role="button">
+              <a className="btn btn-primary btn-md" href="/donate" role="button">
                 Donate now
               </a>
             </Col>
@@ -149,7 +149,7 @@ const HomeScreen = () => {
                 Cats are believed to be the only mammals who don't taste sweetness. Show sweetness
                 to homeless cats by providing them shelter.
               </p>
-              <button className="btn btn-dark btn-md">See the cats</button>
+              <button className="btn btn-primary btn-md">See the cats</button>
             </Col>
             <Col md={3} sm={6} xs={12} className="adopt-pet-section px-2">
               <img src="assets/images/adopt-dog.jpg" alt="" />
@@ -158,7 +158,7 @@ const HomeScreen = () => {
                 Their sense of smell is at least 40x better than ours. Let these dogs smell the
                 scent of home by taking one home
               </p>
-              <button className="btn btn-dark btn-md">See the dogs</button>
+              <button className="btn btn-primary btn-md">See the dogs</button>
             </Col>
             <Col md={3} sm={6} xs={12} className="adopt-pet-section px-2">
               <img src="assets/images/adopt-others.jpg" alt="" />
@@ -167,7 +167,7 @@ const HomeScreen = () => {
                 75% of pet owners celebrate their pet's birthday. A companion is sometimes all you
                 need to enrich your life with positivity.
               </p>
-              <button className="btn btn-dark btn-md">See the pets</button>
+              <button className="btn btn-primary btn-md">See the pets</button>
             </Col>
           </Row>
           <Row>
@@ -178,7 +178,7 @@ const HomeScreen = () => {
               <Col xs={12} md={6}>
                 <form className="newsletter-form">
                   <input type="email" className="form-control" placeholder="Enter your email" />
-                  <button className="btn btn-dark my-2" type="submit">
+                  <button className="btn btn-primary my-2" type="submit">
                     Subscribe
                   </button>
                 </form>

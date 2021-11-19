@@ -97,6 +97,7 @@ const ProductSchema = new mongoose.Schema(
     },
     link: {
       type: String,
+      default: "",
     },
     rating: {
       type: Number,

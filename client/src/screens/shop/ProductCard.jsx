@@ -30,7 +30,11 @@ const ProductCard = ({ product }) => {
       />
       <Card.Body>
         <Card.Title>{product.name}</Card.Title>
-        <Card.Text>{product.description}</Card.Text>
+        <Card.Text>
+          {product.description.length > 100
+            ? `${product.description.slice(0, 100)}...`
+            : product.description}
+        </Card.Text>
       </Card.Body>
       <Card.Footer className="d-flex align-items-center justify-content-center">
         <Button className="mx-1" size="sm" onClick={showViewDialog}>

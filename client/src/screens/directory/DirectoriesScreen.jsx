@@ -155,7 +155,7 @@ const DirectoryCard = ({ directory }) => {
             {directory.pincode}
           </Card.Text>
         </Card.Body>
-        <Card.Footer className="text-muted">{diffDays} days ago</Card.Footer>
+        <Card.Footer className="text-muted">{diffDays} day(s) ago</Card.Footer>
       </Link>
     </Card>
   );
