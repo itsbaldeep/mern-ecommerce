@@ -1,0 +1,45 @@
+/*
+ * Public Actions
+ */
+
+// GET /api/service
+export const GET_SERVICES_REQUEST = "GET_SERVICES_REQUEST";
+export const GET_SERVICES_SUCCESS = "GET_SERVICES_SUCCESS";
+export const GET_SERVICES_FAIL = "GET_SERVICES_FAIL";
+
+// GET /api/service/:id
+export const GET_SERVICE_REQUEST = "GET_SERVICE_REQUEST";
+export const GET_SERVICE_SUCCESS = "GET_SERVICE_SUCCESS";
+export const GET_SERVICE_FAIL = "GET_SERVICE_FAIL";
+
+/*
+ * Client Actions
+ */
+
+// GET /api/service/own
+export const GET_OWN_SERVICES_REQUEST = "GET_OWN_SERVICES_REQUEST";
+export const GET_OWN_SERVICES_SUCCESS = "GET_OWN_SERVICES_SUCCESS";
+export const GET_OWN_SERVICES_FAIL = "GET_OWN_SERVICES_FAIL";
+
+// GET /api/service/own/:id
+export const GET_OWN_SERVICE_REQUEST = "GET_OWN_SERVICE_REQUEST";
+export const GET_OWN_SERVICE_SUCCESS = "GET_OWN_SERVICE_SUCCESS";
+export const GET_OWN_SERVICE_FAIL = "GET_OWN_SERVICE_FAIL";
+
+// POST /api/service/add
+export const ADD_SERVICE_REQUEST = "ADD_SERVICE_REQUEST";
+export const ADD_SERVICE_SUCCESS = "ADD_SERVICE_SUCCESS";
+export const ADD_SERVICE_FAIL = "ADD_SERVICE_FAIL";
+
+// PUT /api/service/edit/:id
+export const EDIT_SERVICE_REQUEST = "EDIT_SERVICE_REQUEST";
+export const EDIT_SERVICE_SUCCESS = "EDIT_SERVICE_SUCCESS";
+export const EDIT_SERVICE_FAIL = "EDIT_SERVICE_FAIL";
+
+// DEL /api/service/remove/:id
+export const REMOVE_SERVICE_REQUEST = "REMOVE_SERVICE_REQUEST";
+export const REMOVE_SERVICE_SUCCESS = "REMOVE_SERVICE_SUCCESS";
+export const REMOVE_SERVICE_FAIL = "REMOVE_SERVICE_FAIL";
+
+// Clear errors
+export const CLEAR_ERRORS = "CLEAR_ERRORS";

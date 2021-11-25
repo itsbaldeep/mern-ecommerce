@@ -51,35 +51,4 @@ export const UPDATE_PASSWORD_SUCCESS = "UPDATE_PASSWORD_SUCCESS";
 export const UPDATE_PASSWORD_RESET = "UPDATE_PASSWORD_RESET";
 export const UPDATE_PASSWORD_FAIL = "UPDATE_PASSWORD_FAIL";
 
-/*
- * Admin actions
- */
-
-// GET /api/user/
-export const GET_USERS_REQUEST = "GET_USERS_REQUEST";
-export const GET_USERS_SUCCESS = "GET_USERS_SUCCESS";
-export const GET_USERS_FAIL = "GET_USERS_FAIL";
-
-// GET /api/user/:id
-export const GET_USER_REQUEST = "GET_USER_REQUEST";
-export const GET_USER_SUCCESS = "GET_USER_SUCCESS";
-export const GET_USER_FAIL = "GET_USER_FAIL";
-
-// POST /api/user/add
-export const ADD_USER_REQUEST = "ADD_USER_REQUEST";
-export const ADD_USER_SUCCESS = "ADD_USER_SUCCESS";
-export const ADD_USER_FAIL = "ADD_USER_FAIL";
-
-// PUT /api/user/edit/:id
-export const EDIT_USER_REQUEST = "EDIT_USER_REQUEST";
-export const EDIT_USER_SUCCESS = "EDIT_USER_SUCCESS";
-export const EDIT_USER_RESET = "EDIT_USER_RESET";
-export const EDIT_USER_FAIL = "EDIT_USER_FAIL";
-
-// DEL /api/user/delete/:id
-export const DELETE_USER_REQUEST = "DELETE_USER_REQUEST";
-export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
-export const DELETE_USER_FAIL = "DELETE_USER_FAIL";
-export const DELETE_USER_RESET = "DELETE_USER_RESET";
-
 export const CLEAR_ERRORS = "CLEAR_ERRORS";

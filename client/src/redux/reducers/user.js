@@ -94,9 +94,6 @@ export const profileReducer = (state = {}, action) => {
     // Request actions
     case actionTypes.UPDATE_PROFILE_REQUEST:
     case actionTypes.UPDATE_PASSWORD_REQUEST:
-    case actionTypes.EDIT_USER_REQUEST:
-    case actionTypes.ADD_USER_REQUEST:
-    case actionTypes.DELETE_USER_REQUEST:
       return {
         ...state,
         loading: true,
@@ -104,9 +101,6 @@ export const profileReducer = (state = {}, action) => {
 
     // Success actions
     case actionTypes.UPDATE_PROFILE_SUCCESS:
-    case actionTypes.EDIT_USER_SUCCESS:
-    case actionTypes.ADD_USER_SUCCESS:
-    case actionTypes.DELETE_USER_SUCCESS:
       return {
         ...state,
         error: null,
@@ -124,9 +118,6 @@ export const profileReducer = (state = {}, action) => {
     // Fail actions
     case actionTypes.UPDATE_PROFILE_FAIL:
     case actionTypes.UPDATE_PASSWORD_FAIL:
-    case actionTypes.EDIT_USER_FAIL:
-    case actionTypes.ADD_USER_FAIL:
-    case actionTypes.DELETE_USER_FAIL:
       return {
         ...state,
         loading: false,
@@ -142,8 +133,6 @@ export const profileReducer = (state = {}, action) => {
         isUpdatedPassword: false,
       };
     case actionTypes.UPDATE_PROFILE_RESET:
-    case actionTypes.EDIT_USER_RESET:
-    case actionTypes.DELETE_USER_RESET:
       return {
         ...state,
         isUpdatedProfile: false,
@@ -190,45 +179,6 @@ export const forgotPasswordReducer = (state = {}, action) => {
     // Fail actions
     case actionTypes.FORGOT_PASSWORD_FAIL:
     case actionTypes.RESET_PASSWORD_FAIL:
-      return {
-        ...state,
-        loading: false,
-        error: action.payload,
-      };
-
-    // Clear errors
-    case actionTypes.CLEAR_ERRORS:
-      return {
-        ...state,
-        error: null,
-      };
-    default:
-      return state;
-  }
-};
-
-export const allUsersReducer = (state = { users: [] }, action) => {
-  switch (action.type) {
-    // Request actions
-    case actionTypes.GET_USERS_REQUEST:
-    case actionTypes.GET_USER_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
-
-    // Success actions
-    case actionTypes.GET_USERS_SUCCESS:
-    case actionTypes.GET_USER_SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        users: action.payload,
-      };
-
-    // Fail actions
-    case actionTypes.GET_USERS_FAIL:
-    case actionTypes.GET_USER_FAIL:
       return {
         ...state,
         loading: false,

@@ -1,12 +1,17 @@
+// Dependencies
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Button, Row, Col } from "react-bootstrap";
 import { useState } from "react";
 
-import { getOwnProducts } from "redux/actions/product";
+// Components
 import AddProduct from "./AddProduct.jsx";
 import ProductCard from "./ProductCard.jsx";
 
+// Actions
+import { getOwnProducts } from "redux/actions/product";
+
+// Custom CSS
 import "./ProductDashboard.css";
 
 const ProductDashboard = () => {

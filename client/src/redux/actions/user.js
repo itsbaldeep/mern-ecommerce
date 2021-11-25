@@ -124,61 +124,6 @@ export const updatePassword = (passwords) => async (dispatch) => {
   }
 };
 
-// GET /api/user/
-export const getUsers = () => async (dispatch) => {
-  try {
-    dispatch({ type: actionTypes.GET_USERS_REQUEST });
-    const { data } = await axios.get("/api/user/", getConfig());
-    dispatch({ type: actionTypes.GET_USERS_SUCCESS, payload: data.users });
-  } catch (error) {
-    dispatch({ type: actionTypes.GET_USERS_FAIL, payload: error.response.data.error });
-  }
-};
-
-// GET /api/user/:id
-export const getUser = (id) => async (dispatch) => {
-  try {
-    dispatch({ type: actionTypes.GET_USER_REQUEST });
-    const { data } = await axios.get(`/api/user/${id}`, getConfig());
-    dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: data.user });
-  } catch (error) {
-    dispatch({ type: actionTypes.GET_USER_FAIL, payload: error.response.data.error });
-  }
-};
-
-// POST /api/user/add
-export const addUser = (user) => async (dispatch) => {
-  try {
-    dispatch({ type: actionTypes.ADD_USER_REQUEST });
-    const { data } = await axios.post("/api/add", user, getConfig());
-    dispatch({ type: actionTypes.ADD_USER_SUCCESS, payload: data.user });
-  } catch (error) {
-    dispatch({ type: actionTypes.ADD_USER_FAIL, payload: error.response.data.error });
-  }
-};
-
-// PUT /api/user/edit/:id
-export const editUser = (id, user) => async (dispatch) => {
-  try {
-    dispatch({ type: actionTypes.EDIT_USER_REQUEST });
-    const { data } = await axios.post(`/api/edit/${id}`, user, getConfig());
-    dispatch({ type: actionTypes.EDIT_USER_SUCCESS, payload: data.user });
-  } catch (error) {
-    dispatch({ type: actionTypes.EDIT_USER_FAIL, payload: error.response.data.error });
-  }
-};
-
-// DEL /api/user/delete/:id
-export const deleteUser = (id) => async (dispatch) => {
-  try {
-    dispatch({ type: actionTypes.DELETE_USER_REQUEST });
-    const { data } = await axios.post(`/api/delete/${id}`, getConfig());
-    dispatch({ type: actionTypes.DELETE_USER_SUCCESS, payload: data.user });
-  } catch (error) {
-    dispatch({ type: actionTypes.DELETE_USER_FAIL, payload: error.response.data.error });
-  }
-};
-
 // Clearing Errors
 export const clearErrors = () => async (dispatch) => {
   dispatch({ type: actionTypes.CLEAR_ERRORS });
