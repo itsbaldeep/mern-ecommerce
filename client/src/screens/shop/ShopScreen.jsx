@@ -54,6 +54,9 @@ const ShopScreen = () => {
               <CheckBox label="Food" />
               <CheckBox label="Cosmetic" />
               <CheckBox label="Accessory" />
+              <CheckBox label="Vaccination" />
+              <CheckBox label="Medicine" />
+              <CheckBox label="Clothing" />
               <CheckBox label="Other" />
             </div>
             <div className="pettype-section">
@@ -61,6 +64,7 @@ const ShopScreen = () => {
               <CheckBox label="Dog" />
               <CheckBox label="Cat" />
               <CheckBox label="Bird" />
+              <CheckBox label="Fish" />
               <CheckBox label="Other" />
             </div>
             <div className="sort-section">

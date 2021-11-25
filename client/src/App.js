@@ -14,9 +14,10 @@ import Footer from "./components/Footer.jsx";
 // Main Screens
 import HomeScreen from "./screens/HomeScreen.jsx";
 import ShopScreen from "./screens/shop/ShopScreen.jsx";
-import ServicesScreen from "./screens/services/ServicesScreen.jsx";
-import NGOScreen from "./screens/NGOScreen.jsx";
 import ProductScreen from "./screens/shop/ProductScreen.jsx";
+import ServicesScreen from "./screens/services/ServicesScreen.jsx";
+import ServiceScreen from "screens/services/ServiceScreen.jsx";
+import NGOScreen from "./screens/NGOScreen.jsx";
 
 // Directory Screens
 import DirectoriesScreen from "./screens/directory/DirectoriesScreen.jsx";
@@ -34,9 +35,10 @@ import ResetPasswordScreen from "./screens/auth/ResetPasswordScreen.jsx";
 import AccountScreen from "./screens/AccountScreen.jsx";
 import ProfileScreen from "./screens/profile/ProfileScreen.jsx";
 
-// Client Dashboard Screens
-import ProductDashboard from "./screens/shop/ProductDashboard.jsx";
-import ServicesDashboard from "./screens/services/ServicesDashboard.jsx";
+// Dashboard Screens
+import ProductDashboard from "./screens/dashboards/products/ProductDashboard.jsx";
+import ServiceDashboard from "./screens/dashboards/services/ServiceDashboard.jsx";
+import AdminDashboard from "./screens/dashboards/admin/AdminDashboard.jsx";
 
 function App() {
   // Checking for user token
@@ -54,13 +56,12 @@ function App() {
     <Router>
       <Navbar />
       <Switch>
-        {/* Home Route */}
-        <Route exact path="/" component={HomeScreen} />
-
         {/* Main Routes */}
+        <Route exact path="/" component={HomeScreen} />
         <Route exact path="/shop" component={ShopScreen} />
         <Route exact path="/shop/:productId" component={ProductScreen} />
         <Route exact path="/services" component={ServicesScreen} />
+        <Route exact path="/services/:serviceId" component={ServiceScreen} />
         <Route exact path="/ngo" component={NGOScreen} />
 
         {/* Auth Routes */}
@@ -75,7 +76,8 @@ function App() {
         <PrivateRoute exact path="/account" component={AccountScreen} />
         <PrivateRoute exact path="/account/profile" component={ProfileScreen} />
         <PrivateRoute exact path="/account/products" component={ProductDashboard} />
-        <PrivateRoute exact path="/account/services" component={ServicesDashboard} />
+        <PrivateRoute exact path="/account/services" component={ServiceDashboard} />
+        <PrivateRoute exact path="/account/admin" component={AdminDashboard} />
 
         {/* Custom directory URL routes, must be at the end */}
         <Route path="/directories" component={DirectoriesScreen} />

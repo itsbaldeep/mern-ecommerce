@@ -1,3 +1,4 @@
+// Dependencies
 import { Button, Modal, Row, Col } from "react-bootstrap";
 
 const ViewProduct = ({ show, onHide, product }) => {
@@ -45,13 +46,13 @@ const ViewProduct = ({ show, onHide, product }) => {
           Weight: <span className="text-muted">{product.weight} grams</span>
         </p>
         <p>
-          Dimensions:{" "}
+          Dimensions:
           <span className="text-muted">
             {product.size.length}cm x {product.size.height}cm x {product.size.width}cm
           </span>
         </p>
         <p>
-          Age Range:{" "}
+          Age Range:
           <span className="text-muted">
             {product.ageRange.min}-{product.ageRange.max}yrs
           </span>

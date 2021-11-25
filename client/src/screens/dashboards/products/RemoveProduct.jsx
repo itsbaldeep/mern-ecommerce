@@ -1,6 +1,8 @@
+// Dependencies
 import { useDispatch, useSelector } from "react-redux";
 import { Modal, Button } from "react-bootstrap";
 
+// Actions
 import { removeProduct } from "redux/actions/product";
 
 const RemoveProduct = ({ show, onHide, product }) => {

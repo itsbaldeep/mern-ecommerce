@@ -43,16 +43,16 @@ const ServiceSchema = new mongoose.Schema(
     timings: {
       from: {
         type: String,
-        default: "0000",
+        default: "00:00",
       },
       to: {
         type: String,
-        default: "2359",
+        default: "00:00",
       },
       _id: false,
     },
     // Days will be evaluated using bitwise &
-    // sun=1, mon=2, tue=4, wed=8, thu=16, fri=32, sat=64
+    // mon = 1, tue=2, wed=4, thu=8, fri=16, sat=32, sun=64
     days: {
       type: Number,
       default: 127,
@@ -97,7 +97,7 @@ const ServiceSchema = new mongoose.Schema(
     serviceImages: {
       type: [String],
       set: function (serviceImages) {
-        this._previousProductImages = this.serviceImages;
+        this._previousServiceImages = this.serviceImages;
         return serviceImages;
       },
     },

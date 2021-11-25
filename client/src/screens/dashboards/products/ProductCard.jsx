@@ -1,6 +1,8 @@
+// Dependencies
 import { useState } from "react";
 import { Button, Card } from "react-bootstrap";
 
+// Components
 import ViewProduct from "./ViewProduct.jsx";
 import EditProduct from "./EditProduct.jsx";
 import RemoveProduct from "./RemoveProduct.jsx";

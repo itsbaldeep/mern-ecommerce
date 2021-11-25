@@ -1,10 +1,14 @@
+// Dependencies
 import { Button, Modal, Form, Row, Col, Alert } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
+// Components
 import { TextField, SelectField, CheckBoxOptions, CheckBox } from "components/InputFields.jsx";
+
+// Actions
 import { addProduct, clearErrors } from "redux/actions/product";
 
 const AddProduct = ({ show, onHide }) => {
