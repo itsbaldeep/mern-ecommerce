@@ -27,6 +27,7 @@ const ProductSchema = new mongoose.Schema(
     petType: {
       type: [String],
       min: [1, "Please provide atleast one pet type for this product"],
+      required: [true, "Please provide a pet type for this product"],
     },
     breedType: {
       type: String,
@@ -145,6 +146,7 @@ ProductSchema.pre("remove", async function (next) {
       fs.unlink(imagePath, (err) => err && console.error(err));
     }
   }
+  next();
 });
 
 const Product = mongoose.model("Product", ProductSchema);

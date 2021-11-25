@@ -1,14 +1,16 @@
 // Dependencies
 const mongoose = require("mongoose");
+const path = require("path");
+const fs = require("fs");
 
 const ServiceSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       minlength: [4, "Service name is too short"],
+      maxlength: [32, "Service name is too long"],
       required: [true, "Please provie a service name"],
       trim: true,
-      maxlength: [32, "Service name is too long"],
     },
     alias: {
       type: [String],
@@ -39,41 +41,39 @@ const ServiceSchema = new mongoose.Schema(
       ],
     },
     timings: {
-      type: {
-        from: {
-          type: Date,
-          required: [true, "Please provide valid timings"],
-        },
-        to: {
-          type: Date,
-          required: [true, "Please provide valid timings"],
-        },
+      from: {
+        type: String,
+        default: "0000",
       },
+      to: {
+        type: String,
+        default: "2359",
+      },
+      _id: false,
     },
     // Days will be evaluated using bitwise &
     // sun=1, mon=2, tue=4, wed=8, thu=16, fri=32, sat=64
     days: {
       type: Number,
-      min: [1, "Put atleast one day for this service"],
-      required: [true, "Please mention the days of availability of this service"],
+      default: 127,
     },
     category: {
       type: String,
-      enum: ["Health", "Vaccination", "Cleaning", "Housing", "Maintenance", "Training", "Others"],
       required: [true, "Please provide a service category"],
     },
     petType: {
-      type: String,
-      enum: ["Dog", "Cat", "Bird", "Fish", "Other"],
-      required: [true, "Please provide a pet type for this service"],
+      type: [String],
+      min: [1, "Please provide atleast one pet type for this service"],
+      required: [true, "Please provide a pet type for this serviec"],
     },
     breedType: {
       type: String,
+      default: "",
     },
     description: {
       type: String,
-      minlength: [8, "Description is too short"],
       required: [true, "Please provide a service description"],
+      minlength: [8, "Description is too short"],
       maxlength: [1024, "Description is too long"],
     },
     price: {
@@ -82,19 +82,28 @@ const ServiceSchema = new mongoose.Schema(
       required: [true, "Please provide a price"],
     },
     ageRange: {
-      type: {
-        min: {
-          type: Number,
-          min: [0, "Age must be a positive number"],
-        },
-        max: {
-          type: Number,
-          min: [0, "Age must be a positive number"],
-        },
+      min: {
+        type: Number,
+        default: 0,
+        min: [0, "Age must be a positive number"],
+      },
+      max: {
+        type: Number,
+        default: 0,
+        min: [0, "Age must be a positive number"],
+      },
+      _id: false,
+    },
+    serviceImages: {
+      type: [String],
+      set: function (serviceImages) {
+        this._previousProductImages = this.serviceImages;
+        return serviceImages;
       },
     },
-    imageURLs: {
-      type: [String],
+    link: {
+      type: String,
+      default: "",
     },
     rating: {
       type: Number,
@@ -111,11 +120,39 @@ const ServiceSchema = new mongoose.Schema(
     },
     reviews: {
       type: [Object],
-      select: false,
     },
   },
   { timestamps: true }
 );
+
+ServiceSchema.pre("save", async function (next) {
+  // Deleting previous images if they are updated or removed
+  if (this.isModified("serviceImages")) {
+    const previous = this._previousServiceImages;
+    // Checking for deleted images
+    if (previous && previous.length > this.serviceImages.length) {
+      const deletedImages = previous.filter((x) => !this.serviceImages.includes(x));
+      for (const image of deletedImages) {
+        const previousPath = path.join(__dirname, "..", "client", "public", image);
+        if (fs.existsSync(previousPath)) {
+          fs.unlink(previousPath, (err) => err && console.error(err));
+        }
+      }
+    }
+  }
+  next();
+});
+
+ServiceSchema.pre("remove", async function (next) {
+  // Deleting all images if the service is deleted
+  for (const image of this.serviceImages) {
+    const imagePath = path.join(__dirname, "..", "client", "public", image);
+    if (fs.existsSync(imagePath)) {
+      fs.unlink(imagePath, (err) => err && console.error(err));
+    }
+  }
+  next();
+});
 
 const Service = mongoose.model("Service", ServiceSchema);
 module.exports = Service;

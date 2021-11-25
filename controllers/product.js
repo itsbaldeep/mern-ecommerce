@@ -79,8 +79,8 @@ exports.addProduct = async (req, res, next) => {
     if (req.files) {
       const newImages = req.files.map((image) => `/uploads/${image.filename}`);
       product.productImages = product.productImages.concat(newImages);
+      await product.save();
     }
-    await product.save();
     res.status(200).json({
       success: true,
       product,
@@ -98,7 +98,7 @@ exports.removeProduct = async (req, res, next) => {
     if (!product) return next(new ErrorResponse("Product not found", 404));
 
     // Check if the current user is the seller of that product
-    if (req.user && product.seller.toString() != req.user._id.toString())
+    if (product.seller.toString() != req.user._id.toString())
       return next(new ErrorResponse("Unable to remove product", 404));
 
     // Delete the product
