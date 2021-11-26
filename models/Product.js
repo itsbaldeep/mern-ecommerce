@@ -17,7 +17,6 @@ const ProductSchema = new mongoose.Schema(
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
-      required: [true, "Seller ID not found"],
       ref: "User",
     },
     category: {

@@ -1,6 +1,10 @@
 const Product = require("../models/Product");
 const ErrorResponse = require("../utils/errorResponse");
 
+/*
+ * Public routes
+ */
+
 // GET /api/product/
 exports.getProducts = async (req, res, next) => {
   try {
@@ -97,8 +101,8 @@ exports.removeProduct = async (req, res, next) => {
     // Check if the product exists
     if (!product) return next(new ErrorResponse("Product not found", 404));
 
-    // Check if the current user is the seller of that product
-    if (product.seller.toString() != req.user._id.toString())
+    // Check if the current user is the seller of that product or an admin
+    if (req.user.role !== "Admin" && product.seller.toString() != req.user._id.toString())
       return next(new ErrorResponse("Unable to remove product", 404));
 
     // Delete the product
@@ -144,6 +148,56 @@ exports.editProduct = async (req, res, next) => {
     await product.save();
 
     // Returning the updated product
+    return res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/*
+ * Admin routes
+ */
+
+// GET /api/product/all
+exports.getAllProducts = async (req, res, next) => {
+  try {
+    const products = await Product.find();
+    return res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/product/any/:id
+exports.getAnyProductById = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return next(new ErrorResponse("Product not found", 404));
+
+    return res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// PUT /api/product/approve/:id
+exports.approveProduct = async (req, res, next) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return next(new ErrorResponse("Product not found", 404));
+
+    product.isApproved = true;
+    product.approvedAt = Date.now();
+    await product.save();
     return res.status(200).json({
       success: true,
       product,

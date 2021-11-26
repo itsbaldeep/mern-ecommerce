@@ -1,6 +1,10 @@
 const Service = require("../models/Service");
 const ErrorResponse = require("../utils/errorResponse");
 
+/*
+ * Public routes
+ */
+
 // GET /api/service/
 exports.getServices = async (req, res, next) => {
   try {
@@ -98,8 +102,8 @@ exports.removeService = async (req, res, next) => {
     // Check if the service exists
     if (!service) return next(new ErrorResponse("Service not found", 404));
 
-    // Check if the current user is the seller of that service
-    if (service.seller.toString() != req.user._id.toString())
+    // Check if the current user is the seller of that service or an admin
+    if (req.user.role !== "Admin" && service.seller.toString() != req.user._id.toString())
       return next(new ErrorResponse("Unable to remove service", 404));
 
     // Delete the service
@@ -146,6 +150,56 @@ exports.editService = async (req, res, next) => {
     await service.save();
 
     // Returning the updated service
+    return res.status(200).json({
+      success: true,
+      service,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/*
+ * Admin routes
+ */
+
+// GET /api/service/all
+exports.getAllServices = async (req, res, next) => {
+  try {
+    const services = await Service.find();
+    return res.status(200).json({
+      success: true,
+      services,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/service/any/:id
+exports.getAnyServiceById = async (req, res, next) => {
+  try {
+    const service = await Service.findById(req.params.id);
+    if (!service) return next(new ErrorResponse("Service not found", 404));
+
+    return res.status(200).json({
+      success: true,
+      service,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// PUT /api/service/approve/:id
+exports.approveService = async (req, res, next) => {
+  try {
+    const service = await Service.findById(req.params.id);
+    if (!service) return next(new ErrorResponse("Service not found", 404));
+
+    service.isApproved = true;
+    service.approvedAt = Date.now();
+    await service.save();
     return res.status(200).json({
       success: true,
       service,

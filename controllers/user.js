@@ -276,7 +276,7 @@ exports.convertClient = async (req, res, next) => {
     req.user.role = "Client";
     await req.user.save();
 
-    sendToken(req.user, 200, res);
+    return await sendToken(req.user, 200, res);
   } catch (error) {
     next(error);
   }
@@ -435,9 +435,45 @@ exports.getUserById = async (req, res, next) => {
 // POST /api/user/add
 exports.addUser = async (req, res, next) => {
   try {
-    const user = await User.create({ ...req.body });
-    user.isVerified = true;
-    await user.save();
+    // Checking if required fields are passed
+    const { name, email, password } = req.body;
+    if (!name || !email || !password)
+      return next(new ErrorResponse("Please provide name, email and password", 400));
+
+    // Checking if a user already exists with that email
+    if (await User.findOne({ email }))
+      return next(new ErrorResponse("There is already a user with that email", 400));
+
+    // Handling client registration
+    let user;
+    if (req.body.role === "Client") {
+      // Creating new directory profile
+      const directory = await Directory.create({
+        email,
+        number: req.body?.number,
+        storeName: req.body?.storeName,
+        category: req.body?.category,
+        address: req.body?.address,
+        city: req.body?.city,
+        state: req.body?.state,
+        pincode: req.body?.pincode,
+      });
+      // Creating new user profile along with directory id
+      user = await User.create({
+        name,
+        email,
+        password,
+        number: req.body?.number,
+        role: req.body.role,
+        directory: directory._id,
+      });
+      // Adding user object ref to directory object
+      directory.user = user._id;
+      directory.save();
+    }
+    // Customer registration
+    else user = await User.create({ name, email, password });
+
     res.status(200).json({
       success: true,
       user,
@@ -450,9 +486,21 @@ exports.addUser = async (req, res, next) => {
 // PUT /api/user/edit/:id
 exports.editUser = async (req, res, next) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-    });
+    // Checking if the user exists
+    const user = await User.findById(req.params.id);
+    if (!user) return next(new ErrorResponse("Unable to find the user", 404));
+
+    // Updating fields
+    if (req.body.name) user.name = req.body.name;
+    if (req.body.email) user.email = req.body.email;
+    if (req.body.password) user.password = req.body.password;
+    if (req.body.role) user.role = req.body.role;
+    if (req.body.number) user.number = req.body.number;
+    if (req.body.directory) user.directory = req.body.directory;
+    if (req.file) user.profileImage = `/uploads/${req.file.filename}`;
+
+    // Saving and returning the user
+    await user.save();
     return res.status(200).json({
       success: true,
       user,
@@ -462,8 +510,32 @@ exports.editUser = async (req, res, next) => {
   }
 };
 
-// DEL /api/user/delete/:id
-exports.deleteUser = async (req, res, next) => {
+// PUT /api/user/verifyaccount/:id
+exports.verifyUser = async (req, res, next) => {
+  try {
+    // Checking if the user exists
+    const user = await User.findById(req.params.id);
+    if (!user) return next(new ErrorResponse("Unable to find the user", 404));
+
+    // Checking if the user is already verified
+    if (user.isVerified) return next(new ErrorResponse("This user is already verified", 400));
+
+    // Verifying the user
+    user.isVerified = true;
+    user.verifiedAt = Date.now();
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DEL /api/user/remove/:id
+exports.removeUser = async (req, res, next) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
     return res.status(200).json({

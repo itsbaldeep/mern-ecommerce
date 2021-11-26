@@ -16,7 +16,14 @@ const {
 } = require("../controllers/user");
 
 // Admin controller functions
-const { getUsers, getUserById, addUser, editUser, deleteUser } = require("../controllers/user");
+const {
+  getUsers,
+  getUserById,
+  addUser,
+  editUser,
+  verifyUser,
+  removeUser,
+} = require("../controllers/user");
 
 // Access control middleware
 const { protect, roles } = require("../middleware/auth");
@@ -46,8 +53,9 @@ router.route("/convertclient").put(protect, convertClient);
 // Admin routes
 router.route("/").get(protect, roles("Admin"), getUsers);
 router.route("/add").post(protect, roles("Admin"), addUser);
-router.route("/edit/:id").put(protect, roles("Admin"), editUser);
-router.route("/delete/:id").delete(protect, roles("Admin"), deleteUser);
-router.route("/:id").get(protect, roles("Admin"), getUserById);
+router.route("/edit/:id").put(protect, roles("Admin"), upload.single("profileImage"), editUser);
+router.route("/verifyaccount/:id").put(protect, roles("Admin"), verifyUser);
+router.route("/remove/:id").delete(protect, roles("Admin"), removeUser);
+router.route("/:id").get(protect, roles("Admin"), getUserById); // this route must be at the end
 
 module.exports = router;

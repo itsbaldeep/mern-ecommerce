@@ -17,7 +17,6 @@ const ServiceSchema = new mongoose.Schema(
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
-      required: [true, "Seller ID not found"],
       ref: "User",
     },
     address: {

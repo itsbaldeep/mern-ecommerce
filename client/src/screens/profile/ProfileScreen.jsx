@@ -10,6 +10,7 @@ import UpdatePassword from "./UpdatePassword.jsx";
 import UpdateCustomerProfile from "./UpdateCustomerProfile.jsx";
 import UpdateClientProfile from "./UpdateClientProfile.jsx";
 import AdditionalDetails from "./AdditionalDetails.jsx";
+import { FaIdCard, FaKey, FaMapMarkerAlt, FaUserEdit } from "react-icons/fa";
 
 const ProfileScreen = () => {
   const { user } = useSelector((state) => state.user);
@@ -36,17 +37,25 @@ const ProfileScreen = () => {
           <Col sm={3}>
             <Nav variant="pills" className="flex-column profile-sidebar py-2">
               <Nav.Item>
-                <Nav.Link eventKey="first">Profile Details</Nav.Link>
+                <Nav.Link eventKey="first">
+                  <FaIdCard /> Profile Details
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="second">Update Password</Nav.Link>
+                <Nav.Link eventKey="second">
+                  <FaKey /> Update Password
+                </Nav.Link>
               </Nav.Item>
               <Nav.Item>
-                <Nav.Link eventKey="third">Update Details</Nav.Link>
+                <Nav.Link eventKey="third">
+                  <FaUserEdit /> Update Profile Details
+                </Nav.Link>
               </Nav.Item>
               {user.role === "Client" && (
                 <Nav.Item>
-                  <Nav.Link eventKey="fourth">Directory Profile</Nav.Link>
+                  <Nav.Link eventKey="fourth">
+                    <FaMapMarkerAlt /> Directory Profile
+                  </Nav.Link>
                 </Nav.Item>
               )}
             </Nav>

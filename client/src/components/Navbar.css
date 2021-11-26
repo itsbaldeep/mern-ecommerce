@@ -18,8 +18,8 @@
   align-items: center;
 }
 
-.navbar-nav svg {
-  display: block;
+.dropdown-menu[data-bs-popper] {
+  left: -28% !important;
 }
 
 .dropdown-item {

@@ -15,6 +15,7 @@ const DirectorySchema = new mongoose.Schema(
       type: mongoose.SchemaTypes.ObjectId,
       ref: "User",
       default: null,
+      select: false,
     },
     email: {
       type: String,

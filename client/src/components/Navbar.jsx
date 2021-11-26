@@ -8,13 +8,13 @@ import "./Navbar.css";
 // Actions
 import { logout } from "../redux/actions/user";
 import {
+  FaBoxOpen,
   FaConnectdevelop,
   FaFirstAid,
   FaHandsHelping,
   FaHome,
   FaMapPin,
   FaPowerOff,
-  FaProductHunt,
   FaSignInAlt,
   FaStore,
   FaUserAlt,
@@ -59,19 +59,19 @@ const PetohubNavbar = () => {
                   </>
                 }
               >
-                {user.user.role === "Client" && (
-                  <>
-                    <Link to="/account/products" className="dropdown-item">
-                      <FaProductHunt /> Your Products
-                    </Link>
-                    <Link to="/account/services" className="dropdown-item">
-                      <FaProductHunt /> Your Services
-                    </Link>
-                  </>
-                )}
                 <Link to="/account" className="dropdown-item">
                   <FaUserCog /> Your Account
                 </Link>
+                {user.user.role === "Client" && (
+                  <>
+                    <Link to="/account/products" className="dropdown-item">
+                      <FaBoxOpen /> Your Products
+                    </Link>
+                    <Link to="/account/services" className="dropdown-item">
+                      <FaFirstAid /> Your Services
+                    </Link>
+                  </>
+                )}
                 <NavDropdown.Divider />
                 <NavDropdown.Item onClick={() => dispatch(logout())}>
                   <FaPowerOff /> Sign Out
