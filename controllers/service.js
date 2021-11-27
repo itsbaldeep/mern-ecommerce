@@ -68,18 +68,18 @@ exports.addService = async (req, res, next) => {
   try {
     const service = await Service.create({
       seller: req.user.role === "Client" ? req.user._id : null,
-      name: req.body?.name,
-      address: req.body?.address,
-      nameOfIncharge: req.body?.nameOfIncharge,
-      numberOfIncharge: req.body?.numberOfIncharge,
-      timings: JSON.parse(req.body?.timings),
-      days: req.body?.days,
-      category: req.body?.category,
-      petType: req.body?.petType.split(","),
-      breedType: req.body?.breedType,
-      description: req.body?.description,
-      price: req.body?.price,
-      ageRange: JSON.parse(req.body?.ageRange),
+      name: req.body.name,
+      address: req.body.address,
+      nameOfIncharge: req.body.nameOfIncharge,
+      numberOfIncharge: req.body.numberOfIncharge,
+      timings: JSON.parse(req.body.timings || "{}"),
+      days: req.body.days,
+      category: req.body.category,
+      petType: req.body.petType?.split(","),
+      breedType: req.body.breedType,
+      description: req.body.description,
+      price: req.body.price,
+      ageRange: JSON.parse(req.body.ageRange || "{}"),
     });
     if (req.files) {
       const newImages = req.files.map((image) => `/uploads/${image.filename}`);
@@ -102,9 +102,13 @@ exports.removeService = async (req, res, next) => {
     // Check if the service exists
     if (!service) return next(new ErrorResponse("Service not found", 404));
 
+    // Check if the current user is editing a non-seller service
+    if (req.user.role !== "Admin" && !service.seller)
+      return next(new ErrorResponse("Unable to remove service", 403));
+
     // Check if the current user is the seller of that service or an admin
     if (req.user.role !== "Admin" && service.seller.toString() != req.user._id.toString())
-      return next(new ErrorResponse("Unable to remove service", 404));
+      return next(new ErrorResponse("Unable to remove service", 403));
 
     // Delete the service
     await service.remove();
@@ -124,9 +128,13 @@ exports.editService = async (req, res, next) => {
     // Check if the service exists
     if (!service) return next(new ErrorResponse("Service not found", 404));
 
-    // Check if the current user is the seller of that service
-    if (service.seller.toString() != req.user._id.toString())
-      return next(new ErrorResponse("Unable to remove service", 404));
+    // Check if the current user is editing a non-seller service
+    if (req.user.role !== "Admin" && !service.seller)
+      return next(new ErrorResponse("Unable to remove service", 403));
+
+    // Check if the current user is the seller of that service or an admin
+    if (req.user.role !== "Admin" && service.seller.toString() != req.user._id.toString())
+      return next(new ErrorResponse("Unable to remove service", 403));
 
     // Updating the service
     if (req.body.name) service.name = req.body.name;

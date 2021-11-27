@@ -68,17 +68,17 @@ exports.addProduct = async (req, res, next) => {
   try {
     const product = await Product.create({
       seller: req.user.role === "Client" ? req.user._id : null,
-      name: req.body?.name,
-      category: req.body?.category,
-      petType: req.body?.petType.split(","),
-      breedType: req.body?.breedType,
-      description: req.body?.description,
-      weight: req.body?.weight,
-      size: JSON.parse(req.body?.size),
-      countInStock: req.body?.countInStock,
-      price: req.body?.price,
-      isVeg: req.body?.isVeg,
-      ageRange: JSON.parse(req.body?.ageRange),
+      name: req.body.name,
+      category: req.body.category,
+      petType: req.body.petType?.split(","),
+      breedType: req.body.breedType,
+      description: req.body.description,
+      weight: req.body.weight,
+      size: JSON.parse(req.body.size || "{}"),
+      countInStock: req.body.countInStock,
+      price: req.body.price,
+      isVeg: req.body.isVeg,
+      ageRange: JSON.parse(req.body.ageRange || "{}"),
     });
     if (req.files) {
       const newImages = req.files.map((image) => `/uploads/${image.filename}`);
@@ -101,9 +101,13 @@ exports.removeProduct = async (req, res, next) => {
     // Check if the product exists
     if (!product) return next(new ErrorResponse("Product not found", 404));
 
+    // Check if the current user is editing a non-seller product
+    if (req.user.role !== "Admin" && !product.seller)
+      return next(new ErrorResponse("Unable to remove product", 403));
+
     // Check if the current user is the seller of that product or an admin
     if (req.user.role !== "Admin" && product.seller.toString() != req.user._id.toString())
-      return next(new ErrorResponse("Unable to remove product", 404));
+      return next(new ErrorResponse("Unable to remove product", 403));
 
     // Delete the product
     await product.remove();
@@ -123,9 +127,13 @@ exports.editProduct = async (req, res, next) => {
     // Check if the product exists
     if (!product) return next(new ErrorResponse("Product not found", 404));
 
-    // Check if the current user is the seller of that product
-    if (req.user && product.seller.toString() != req.user._id.toString())
-      return next(new ErrorResponse("Unable to remove product", 404));
+    // Check if the current user is editing a non-seller product
+    if (req.user.role !== "Admin" && !product.seller)
+      return next(new ErrorResponse("Unable to remove product", 403));
+
+    // Check if the current user is the seller of that product or an admin
+    if (req.user.role !== "Admin" && product.seller.toString() != req.user._id.toString())
+      return next(new ErrorResponse("Unable to remove product", 403));
 
     // Updating the product
     if (req.body.name) product.name = req.body.name;

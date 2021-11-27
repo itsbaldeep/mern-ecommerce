@@ -107,6 +107,9 @@ const ProductSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    approvedAt: {
+      type: Date,
+    },
     numOfReviews: {
       type: Number,
       default: 0,
@@ -134,6 +137,8 @@ ProductSchema.pre("save", async function (next) {
       }
     }
   }
+  // Set approval to false every time the document is updated
+  if (!this.isModified("isApproved")) this.isApproved = false;
   next();
 });
 
