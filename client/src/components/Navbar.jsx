@@ -9,14 +9,20 @@ import "./Navbar.css";
 import { logout } from "../redux/actions/user";
 import {
   FaBoxOpen,
+  FaCogs,
   FaConnectdevelop,
+  FaFacebook,
   FaFirstAid,
   FaHandsHelping,
   FaHome,
+  FaInstagram,
   FaMapPin,
+  FaPhone,
   FaPowerOff,
+  FaQuestion,
   FaSignInAlt,
   FaStore,
+  FaTwitter,
   FaUserAlt,
   FaUserCog,
   FaUserPlus,
@@ -35,7 +41,7 @@ const PetohubNavbar = () => {
         </LinkContainer>
         <Navbar.Toggle aria-controls="responsive-navbar-nav" />
         <Navbar.Collapse id="responsive-navbar-nav">
-          <Nav className="justify-content-end flex-grow-1">
+          <Nav className="justify-content-center flex-grow-1">
             <Link to="/" className="nav-link">
               <FaHome /> Home
             </Link>
@@ -51,32 +57,41 @@ const PetohubNavbar = () => {
             <Link to="/ngo" className="nav-link">
               <FaHandsHelping /> NGOs
             </Link>
+
             {user.isAuthenticated ? (
-              <NavDropdown
-                title={
-                  <>
-                    <FaUserAlt /> {user.user.name}
-                  </>
-                }
-              >
-                <Link to="/account" className="dropdown-item">
-                  <FaUserCog /> Your Account
-                </Link>
-                {user.user.role === "Client" && (
-                  <>
-                    <Link to="/account/products" className="dropdown-item">
-                      <FaBoxOpen /> Your Products
-                    </Link>
-                    <Link to="/account/services" className="dropdown-item">
-                      <FaFirstAid /> Your Services
-                    </Link>
-                  </>
+              <>
+                {user.user.role === "Admin" && (
+                  <Link to="/admin" className="nav-link">
+                    <FaCogs /> Dashboard
+                  </Link>
                 )}
-                <NavDropdown.Divider />
-                <NavDropdown.Item onClick={() => dispatch(logout())}>
-                  <FaPowerOff /> Sign Out
-                </NavDropdown.Item>
-              </NavDropdown>
+                <NavDropdown
+                  class="account-dropdown"
+                  title={
+                    <>
+                      <FaUserAlt /> {user.user.name}
+                    </>
+                  }
+                >
+                  <Link to="/account" className="dropdown-item">
+                    <FaUserCog /> Your Account
+                  </Link>
+                  {user.user.role === "Client" && (
+                    <>
+                      <Link to="/account/products" className="dropdown-item">
+                        <FaBoxOpen /> Your Products
+                      </Link>
+                      <Link to="/account/services" className="dropdown-item">
+                        <FaFirstAid /> Your Services
+                      </Link>
+                    </>
+                  )}
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={() => dispatch(logout())}>
+                    <FaPowerOff /> Sign Out
+                  </NavDropdown.Item>
+                </NavDropdown>
+              </>
             ) : (
               <>
                 <Link to="/register/member" className="nav-link">

@@ -1,5 +1,6 @@
 // Models
 const Directory = require("../models/Directory");
+const User = require("../models/User");
 const ErrorResponse = require("../utils/errorResponse");
 
 /*
@@ -36,7 +37,7 @@ exports.getDirectory = async (req, res, next) => {
 // GET /api/directory/all
 exports.getAllDirectories = async (req, res, next) => {
   try {
-    const directories = await Directory.find();
+    const directories = await Directory.find().select("+user").populate("user");
     return res.status(200).json({
       success: true,
       directories,
@@ -49,7 +50,7 @@ exports.getAllDirectories = async (req, res, next) => {
 // GET /api/directory/any/:id
 exports.getAnyDirectoryById = async (req, res, next) => {
   try {
-    const directory = await Directory.findById(req.params.id);
+    const directory = await Directory.findById(req.params.id).select("+user").populate("user");
     if (!directory) return next(new ErrorResponse("Directory not found", 404));
 
     return res.status(200).json({
@@ -64,9 +65,19 @@ exports.getAnyDirectoryById = async (req, res, next) => {
 // POST /api/directory/add
 exports.addDirectory = async (req, res, next) => {
   try {
+    // Checking if the directory is being linked to an existing user
+    let user, link;
+    if (req.body.user !== "") {
+      user = await User.findById(req.body.user);
+      if (!user) return next(new ErrorResponse("User not found", 404));
+      if (user.directory)
+        return next(new ErrorResponse("This user already has a directory profile", 404));
+      link = true;
+    }
+
+    // Creating the directory
     const directory = await Directory.create({
       storeName: req.body?.storeName,
-      user: req.body?.user,
       email: req.body?.email,
       address: req.body?.address,
       category: req.body?.category,
@@ -75,9 +86,20 @@ exports.addDirectory = async (req, res, next) => {
       pincode: req.body?.pincode,
       number: req.body?.number,
     });
+
+    // Adding refs to directory and user
+    if (link) {
+      directory.user = req.body.user;
+      user.directory = directory._id;
+      if (user.role === "Customer") user.role = "Client";
+      await directory.save();
+      await user.save();
+    }
+
     return res.status(200).json({
       success: true,
       directory,
+      user,
     });
   } catch (error) {
     next(error);

@@ -4,10 +4,13 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
   switch (action.type) {
     case actionTypes.GET_SERVICES_REQUEST:
     case actionTypes.GET_OWN_SERVICES_REQUEST:
+    case actionTypes.GET_ALL_SERVICES_REQUEST:
     case actionTypes.GET_OWN_SERVICE_REQUEST:
     case actionTypes.GET_SERVICE_REQUEST:
+    case actionTypes.GET_ANY_SERVICE_REQUEST:
     case actionTypes.ADD_SERVICE_REQUEST:
     case actionTypes.EDIT_SERVICE_REQUEST:
+    case actionTypes.APPROVE_SERVICE_REQUEST:
     case actionTypes.REMOVE_SERVICE_REQUEST:
       return {
         ...state,
@@ -15,16 +18,20 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
       };
     case actionTypes.GET_SERVICES_SUCCESS:
     case actionTypes.GET_OWN_SERVICES_SUCCESS:
+    case actionTypes.GET_ALL_SERVICES_SUCCESS:
       return {
         ...state,
         loading: false,
+        success: true,
         services: action.payload,
       };
     case actionTypes.GET_SERVICE_SUCCESS:
     case actionTypes.GET_OWN_SERVICE_SUCCESS:
+    case actionTypes.GET_ANY_SERVICE_SUCCESS:
       return {
         ...state,
         loading: false,
+        success: true,
         service: action.payload,
       };
     case actionTypes.ADD_SERVICE_SUCCESS:
@@ -43,6 +50,7 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
         success: true,
       };
     case actionTypes.EDIT_SERVICE_SUCCESS:
+    case actionTypes.APPROVE_SERVICE_SUCCESS:
       const editIndex = state.services.findIndex((service) => service._id === action.payload._id);
       state.services[editIndex] = action.payload;
       return {
@@ -57,9 +65,13 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
     case actionTypes.ADD_SERVICE_FAIL:
     case actionTypes.EDIT_SERVICE_FAIL:
     case actionTypes.REMOVE_SERVICE_FAIL:
+    case actionTypes.GET_ALL_SERVICES_FAIL:
+    case actionTypes.GET_ANY_SERVICE_FAIL:
+    case actionTypes.APPROVE_SERVICE_FAIL:
       return {
         ...state,
         error: action.payload,
+        success: false,
         loading: false,
       };
     case actionTypes.CLEAR_ERRORS:

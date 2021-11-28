@@ -51,4 +51,41 @@ export const UPDATE_PASSWORD_SUCCESS = "UPDATE_PASSWORD_SUCCESS";
 export const UPDATE_PASSWORD_RESET = "UPDATE_PASSWORD_RESET";
 export const UPDATE_PASSWORD_FAIL = "UPDATE_PASSWORD_FAIL";
 
+/*
+ * Admin actions
+ */
+
+// GET /api/user
+export const GET_USERS_REQUEST = "GET_USERS_REQUEST";
+export const GET_USERS_SUCCESS = "GET_USERS_SUCCESS";
+export const GET_USERS_FAIL = "GET_USERS_FAIL";
+
+// GET /api/user/:id
+export const GET_USER_REQUEST = "GET_USER_REQUEST";
+export const GET_USER_SUCCESS = "GET_USER_SUCCESS";
+export const GET_USER_FAIL = "GET_USER_FAIL";
+
+// POST /api/user/add
+export const ADD_USER_REQUEST = "ADD_USER_REQUEST";
+export const ADD_USER_SUCCESS = "ADD_USER_SUCCESS";
+export const ADD_USER_FAIL = "ADD_USER_FAIL";
+export const ADD_USER_RESET = "ADD_USER_RESET";
+
+// PUT /api/user/edit/:id
+export const EDIT_USER_REQUEST = "EDIT_USER_REQUEST";
+export const EDIT_USER_SUCCESS = "EDIT_USER_SUCCESS";
+export const EDIT_USER_FAIL = "EDIT_USER_FAIL";
+export const EDIT_USER_RESET = "EDIT_USER_RESET";
+
+// PUT /api/user/verifyaccount/:id
+export const VERIFY_USER_REQUEST = "VERIFY_USER_REQUEST";
+export const VERIFY_USER_SUCCESS = "VERIFY_USER_SUCCESS";
+export const VERIFY_USER_FAIL = "VERIFY_USER_FAIL";
+
+// DEL /api/user/remove/:id
+export const REMOVE_USER_REQUEST = "REMOVE_USER_REQUEST";
+export const REMOVE_USER_SUCCESS = "REMOVE_USER_SUCCESS";
+export const REMOVE_USER_FAIL = "REMOVE_USER_FAIL";
+export const REMOVE_USER_RESET = "REMOVE_USER_RESET";
+
 export const CLEAR_ERRORS = "CLEAR_ERRORS";

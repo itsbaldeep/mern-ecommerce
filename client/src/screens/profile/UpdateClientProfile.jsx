@@ -184,7 +184,7 @@ const UpdateClientProfile = () => {
             <Form.Control.Feedback type="invalid">{errors.address}</Form.Control.Feedback>
           </Form.Group>
           <Row>
-            <Col sm={12} md={4}>
+            <Col xs={12} sm={4}>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="city">City</Form.Label>
                 <Field
@@ -196,7 +196,7 @@ const UpdateClientProfile = () => {
                 <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col sm={12} md={4}>
+            <Col xs={12} sm={4}>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="state">State</Form.Label>
                 <Field as="select" name="state" className="form-control">
@@ -209,7 +209,7 @@ const UpdateClientProfile = () => {
                 <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col sm={12} md={4}>
+            <Col xs={12} sm={4}>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="pincode">Pincode</Form.Label>
                 <Field

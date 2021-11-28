@@ -96,6 +96,43 @@ export const editProduct = (product, id) => async (dispatch) => {
   }
 };
 
+/*
+ * Admin specific routes
+ */
+
+// GET /api/product/all
+export const getAllProducts = () => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_ALL_PRODUCTS_REQUEST });
+    const { data } = await axios.get("/api/product/all", getConfig());
+    dispatch({ type: actionTypes.GET_ALL_PRODUCTS_SUCCESS, payload: data.products });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_ALL_PRODUCTS_FAIL, payload: error.response.data.error });
+  }
+};
+
+// GET /api/product/any/:id
+export const getAnyProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_ANY_PRODUCT_REQUEST });
+    const { data } = await axios.get(`/api/product/any/${id}`, getConfig());
+    dispatch({ type: actionTypes.GET_ANY_PRODUCT_SUCCESS, payload: data.product });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_ANY_PRODUCT_FAIL, payload: error.response.data.error });
+  }
+};
+
+// PUT /api/product/approve
+export const approveProduct = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.APPROVE_PRODUCT_REQUEST });
+    const { data } = await axios.get(`/api/product/approve/${id}`, getConfig());
+    dispatch({ type: actionTypes.APPROVE_PRODUCT_SUCCESS, payload: data.product });
+  } catch (error) {
+    dispatch({ type: actionTypes.APPROVE_PRODUCT_FAIL, payload: error.response.data.error });
+  }
+};
+
 export const clearErrors = () => async (dispatch) => {
   dispatch({ type: actionTypes.CLEAR_ERRORS });
 };

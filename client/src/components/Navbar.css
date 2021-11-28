@@ -18,10 +18,6 @@
   align-items: center;
 }
 
-.dropdown-menu[data-bs-popper] {
-  left: -28% !important;
-}
-
 .dropdown-item {
   flex-direction: row !important;
 }

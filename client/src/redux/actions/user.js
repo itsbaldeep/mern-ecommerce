@@ -124,7 +124,89 @@ export const updatePassword = (passwords) => async (dispatch) => {
   }
 };
 
+/*
+ * Admin Routes
+ */
+
+// GET /api/user
+export const getUsers = () => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_USERS_REQUEST });
+    const { data } = await axios.get("/api/user", getConfig());
+    dispatch({ type: actionTypes.GET_USERS_SUCCESS, payload: data.users });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_USERS_FAIL, payload: error.response.data.error });
+  }
+};
+
+// GET /api/user/:id
+export const getUser = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_USER_REQUEST });
+    const { data } = await axios.get(`/api/user/${id}`, getConfig());
+    dispatch({ type: actionTypes.GET_USER_SUCCESS, payload: data.user });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_USER_FAIL, payload: error.response.data.error });
+  }
+};
+
+// POST /api/user/add
+export const addUser = (user) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.ADD_USER_REQUEST });
+    const { data } = await axios.post(`/api/user/add`, user, getConfig());
+    dispatch({ type: actionTypes.ADD_USER_SUCCESS, payload: data.user });
+  } catch (error) {
+    dispatch({ type: actionTypes.ADD_USER_FAIL, payload: error.response.data.error });
+  }
+};
+
+// PUT /api/user/edit/:id
+export const editUser = (user, id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.EDIT_USER_REQUEST });
+    const { data } = await axios.put(`/api/user/edit/${id}`, user, getConfigFD());
+    dispatch({ type: actionTypes.EDIT_USER_SUCCESS, payload: data.user });
+  } catch (error) {
+    dispatch({ type: actionTypes.EDIT_USER_FAIL, payload: error.response.data.error });
+  }
+};
+
+// PUT /api/user/verifyaccount/:id
+export const verifyUser = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.VERIFY_USER_REQUEST });
+    const { data } = await axios.put(`/api/user/verifyaccount/${id}`, {}, getConfig());
+    dispatch({ type: actionTypes.VERIFY_USER_SUCCESS, payload: data.user });
+  } catch (error) {
+    dispatch({ type: actionTypes.VERIFY_USER_FAIL, payload: error.response.data.error });
+  }
+};
+
+// DEL /api/user/remove/:id
+export const removeUser = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.REMOVE_USER_REQUEST });
+    const { data } = await axios.delete(`/api/user/remove/${id}`, getConfig());
+    dispatch({ type: actionTypes.REMOVE_USER_SUCCESS, payload: data.user });
+  } catch (error) {
+    dispatch({ type: actionTypes.REMOVE_USER_FAIL, payload: error.response.data.error });
+  }
+};
+
 // Clearing Errors
 export const clearErrors = () => async (dispatch) => {
   dispatch({ type: actionTypes.CLEAR_ERRORS });
+};
+
+export const addUserReset = () => async (dispatch) => {
+  dispatch({ type: actionTypes.ADD_USER_RESET });
+};
+
+export const editUserReset = () => async (dispatch) => {
+  dispatch({ type: actionTypes.EDIT_USER_RESET });
+};
+
+export const removeUserReset = () => async (dispatch) => {
+  dispatch({ type: actionTypes.REMOVE_USER_RESET });
 };

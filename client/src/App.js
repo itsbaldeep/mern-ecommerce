@@ -77,7 +77,7 @@ function App() {
         <PrivateRoute exact path="/account/profile" component={ProfileScreen} />
         <PrivateRoute exact path="/account/products" component={ProductDashboard} />
         <PrivateRoute exact path="/account/services" component={ServiceDashboard} />
-        <PrivateRoute exact path="/account/admin" component={AdminDashboard} />
+        <PrivateRoute exact path="/admin" isAdmin component={AdminDashboard} />
 
         {/* Custom directory URL routes, must be at the end */}
         <Route path="/directories" component={DirectoriesScreen} />

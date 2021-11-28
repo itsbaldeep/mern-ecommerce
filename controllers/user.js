@@ -410,7 +410,7 @@ exports.updateProfile = async (req, res, next) => {
 
 // GET /api/user/
 exports.getUsers = async (req, res, next) => {
-  const users = await User.find();
+  const users = await User.find().populate("directory");
   return res.status(200).json({
     success: true,
     users,
@@ -420,7 +420,7 @@ exports.getUsers = async (req, res, next) => {
 // GET /api/user/:id
 exports.getUserById = async (req, res, next) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).populate("directory");
     if (!user) return next(new ErrorResponse("User not found", 404));
 
     return res.status(200).json({

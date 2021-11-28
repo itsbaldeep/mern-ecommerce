@@ -4,7 +4,7 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 // Reducers
-import { forgotPasswordReducer, profileReducer, userReducer } from "./reducers/user";
+import { forgotPasswordReducer, profileReducer, userReducer, adminReducer } from "./reducers/user";
 import { productsReducer } from "./reducers/product";
 import { servicesReducer } from "./reducers/service";
 import { directoryReducer } from "./reducers/directory";
@@ -14,6 +14,7 @@ const reducer = combineReducers({
   forgotPassword: forgotPasswordReducer,
   profile: profileReducer,
   user: userReducer,
+  admin: adminReducer,
   product: productsReducer,
   service: servicesReducer,
   directory: directoryReducer,

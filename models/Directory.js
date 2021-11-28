@@ -161,6 +161,8 @@ DirectorySchema.pre("save", async function (next) {
       }
     }
   }
+  // Set approval to false every time the document is updated
+  if (!this.isModified("isApproved")) this.isApproved = false;
   next();
 });
 

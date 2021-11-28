@@ -75,7 +75,7 @@ const AdditionalDetails = () => {
     <Formik
       initialValues={additionalData}
       validationSchema={additionalDataValidate}
-      onSubmit={async (values, actions) => {
+      onSubmit={(values) => {
         // Converting to FormData and updating only modified fields
         const fd = new FormData();
 

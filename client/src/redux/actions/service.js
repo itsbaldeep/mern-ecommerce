@@ -96,6 +96,43 @@ export const editService = (service, id) => async (dispatch) => {
   }
 };
 
+/*
+ * Admin specific routes
+ */
+
+// GET /api/service/all
+export const getAllServices = () => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_ALL_SERVICES_REQUEST });
+    const { data } = await axios.get("/api/service/all", getConfig());
+    dispatch({ type: actionTypes.GET_ALL_SERVICES_SUCCESS, payload: data.services });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_ALL_SERVICES_FAIL, payload: error.response.data.error });
+  }
+};
+
+// GET /api/service/any/:id
+export const getAnyService = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_ANY_SERVICE_REQUEST });
+    const { data } = await axios.get(`/api/service/any/${id}`, getConfig());
+    dispatch({ type: actionTypes.GET_ANY_SERVICE_SUCCESS, payload: data.service });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_ANY_SERVICE_FAIL, payload: error.response.data.error });
+  }
+};
+
+// PUT /api/service/approve
+export const approveService = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.APPROVE_SERVICE_REQUEST });
+    const { data } = await axios.get(`/api/service/approve/${id}`, getConfig());
+    dispatch({ type: actionTypes.APPROVE_SERVICE_SUCCESS, payload: data.service });
+  } catch (error) {
+    dispatch({ type: actionTypes.APPROVE_SERVICE_FAIL, payload: error.response.data.error });
+  }
+};
+
 export const clearErrors = () => async (dispatch) => {
   dispatch({ type: actionTypes.CLEAR_ERRORS });
 };

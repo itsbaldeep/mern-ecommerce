@@ -170,22 +170,16 @@ const HomeScreen = () => {
               <button className="btn btn-primary btn-md">See the pets</button>
             </Col>
           </Row>
-          <Row>
-            <Row className="newsletter py-5 text-center my-2">
-              <Col xs={12} md={6}>
-                <h4 className="text-light">Subscribe to our newsletter</h4>
-              </Col>
-              <Col xs={12} md={6}>
-                <form className="newsletter-form">
-                  <input type="email" className="form-control" placeholder="Enter your email" />
-                  <button className="btn btn-primary my-2" type="submit">
-                    Subscribe
-                  </button>
-                </form>
-              </Col>
-            </Row>
-          </Row>
         </Container>
+        <div className="newsletter py-5">
+          <h4 className="text-light">Subscribe to our newsletter</h4>
+          <form className="newsletter-form">
+            <input type="email" className="form-control" placeholder="Enter your email" />
+            <button className="btn btn-primary my-2" type="submit">
+              Subscribe
+            </button>
+          </form>
+        </div>
       </section>
     </main>
   );

@@ -85,8 +85,6 @@
   align-items: center;
   justify-content: space-around;
   background-color: rgb(144, 150, 165);
-  border-radius: 50px;
-  margin: 0;
 }
 
 .newsletter-form input[type="email"] {
@@ -142,4 +140,10 @@
 
 .footer-sentence p {
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .newsletter {
+    flex-direction: column;
+  }
 }
