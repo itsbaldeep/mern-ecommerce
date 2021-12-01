@@ -1,31 +1,31 @@
 // Dependencies
-import { Button, Modal, Form, Row, Col, Alert, Card } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
+
+// Config
+import { serviceCategories, petTypes, days } from "config.json";
 
 // Components
 import { TextField } from "components/InputFields.jsx";
-
-// Config
-import { serviceCategories, petTypes, days as allDays } from "config.json";
 
 // Helpers
 import { arrayToBinary, binaryToArray } from "helpers/daysHandler";
 
 // Actions
-import { editService, clearErrors } from "redux/actions/service";
+import { editService, editServiceReset } from "redux/actions/service";
 
-const EditService = ({ show, onHide, service }) => {
+const EditService = ({ show, onHide, service, serviceId }) => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.service);
+  const { loading, error, isUpdated } = useSelector((state) => state.service);
 
   useEffect(() => {
-    dispatch(clearErrors());
+    dispatch(editServiceReset());
   }, [dispatch]);
 
-  const MAX_IMAGES = 3;
+  const MAX_IMAGES = 5;
   const spaceLeft = MAX_IMAGES - service.serviceImages.length;
 
   const initialValues = {
@@ -85,57 +85,58 @@ const EditService = ({ show, onHide, service }) => {
     }),
   });
 
-  const handleServiceEdit = (values) => {
-    // Converting days to binary number
-    const daysBinary = arrayToBinary(values.days);
-
-    // Converting to FormData and updating only modified fields
-    const fd = new FormData();
-
-    // Plain text fields
-    if (values.name !== service.name) fd.append("name", values.name);
-    if (values.description !== service.description) fd.append("description", values.description);
-    if (values.category !== service.category) fd.append("category", values.category);
-    if (values.price !== service.price) fd.append("price", values.price);
-    if (values.address !== service.address) fd.append("address", values.address);
-    if (values.nameOfIncharge !== service.nameOfIncharge)
-      fd.append("nameOfIncharge", values.nameOfIncharge);
-    if (values.numberOfIncharge !== service.numberOfIncharge)
-      fd.append("numberOfIncharge", values.numberOfIncharge);
-    if (values.breedType !== service.breedType) fd.append("breedType", values.breedType);
-    if (daysBinary !== service.days) fd.append("days", daysBinary);
-
-    // Object fields
-    const timingsJSON = JSON.stringify(values.timings);
-    if (timingsJSON !== JSON.stringify(service.timings)) fd.append("timings", timingsJSON);
-    const ageRangeJSON = JSON.stringify(values.ageRange);
-    if (ageRangeJSON !== JSON.stringify(service.ageRange)) fd.append("ageRange", ageRangeJSON);
-
-    // Array fields
-    if (values.petType.toString() !== service.petType.toString())
-      fd.append("petType", values.petType);
-
-    // Images
-    const filesLength = values.serviceImages.length;
-    if (filesLength > 0) {
-      for (let i = 0; i < filesLength; i++) fd.append("serviceImages", values.serviceImages[i]);
-    }
-
-    dispatch(editService(fd, service._id));
-  };
-
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
-        <Modal.Title>{service.name}</Modal.Title>
+        <Modal.Title>Edit Service</Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleServiceEdit(values)}
+        onSubmit={(values) => {
+          // Converting days to binary number
+          const daysBinary = arrayToBinary(values.days);
+
+          // Converting to FormData and updating only modified fields
+          const fd = new FormData();
+
+          // Plain text fields
+          if (values.name !== service.name) fd.append("name", values.name);
+          if (values.description !== service.description)
+            fd.append("description", values.description);
+          if (values.category !== service.category) fd.append("category", values.category);
+          if (values.price !== service.price) fd.append("price", values.price);
+          if (values.address !== service.address) fd.append("address", values.address);
+          if (values.nameOfIncharge !== service.nameOfIncharge)
+            fd.append("nameOfIncharge", values.nameOfIncharge);
+          if (values.numberOfIncharge !== service.numberOfIncharge)
+            fd.append("numberOfIncharge", values.numberOfIncharge);
+          if (values.breedType !== service.breedType) fd.append("breedType", values.breedType);
+          if (daysBinary !== service.days) fd.append("days", daysBinary);
+
+          // Object fields
+          const timingsJSON = JSON.stringify(values.timings);
+          if (timingsJSON !== JSON.stringify(service.timings)) fd.append("timings", timingsJSON);
+          const ageRangeJSON = JSON.stringify(values.ageRange);
+          if (ageRangeJSON !== JSON.stringify(service.ageRange))
+            fd.append("ageRange", ageRangeJSON);
+
+          // Array fields
+          if (values.petType.toString() !== service.petType.toString())
+            fd.append("petType", values.petType);
+
+          // Images
+          const filesLength = values.serviceImages.length;
+          if (filesLength > 0) {
+            for (let i = 0; i < filesLength; i++)
+              fd.append("serviceImages", values.serviceImages[i]);
+          }
+
+          dispatch(editService(fd, serviceId));
+        }}
       >
-        {({ values, touched, errors, setFieldValue, setErrors, handleSubmit }) => (
-          <Form noValidation onSubmit={handleSubmit}>
+        {({ values, errors, touched, handleSubmit, setErrors, setFieldValue }) => (
+          <Form>
             <Modal.Body>
               <Form.Group className="mb-3">
                 <h4>Images</h4>
@@ -245,7 +246,7 @@ const EditService = ({ show, onHide, service }) => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="days">Days</Form.Label>
                 <div>
-                  {allDays.map((opt, index) => (
+                  {days.map((opt, index) => (
                     <Field
                       name="days"
                       key={index}
@@ -339,7 +340,7 @@ const EditService = ({ show, onHide, service }) => {
                   {error}
                 </Alert>
               )}
-              {success && (
+              {isUpdated && (
                 <Alert className="my-3" variant="success">
                   Service successfully updated
                 </Alert>
@@ -349,8 +350,14 @@ const EditService = ({ show, onHide, service }) => {
               <Button variant="danger" onClick={onHide}>
                 Cancel
               </Button>
-              <Button disabled={loading} type="submit">
-                Update
+              <Button
+                disabled={loading}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+              >
+                {loading ? "Updating" : "Update"}
               </Button>
             </Modal.Footer>
           </Form>
@@ -360,7 +367,7 @@ const EditService = ({ show, onHide, service }) => {
   );
 };
 
-const ImageCard = ({ image, index, _serviceImages, id }) => {
+const ImageCard = ({ image, index, service }) => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.service);
 
@@ -388,16 +395,15 @@ const ImageCard = ({ image, index, _serviceImages, id }) => {
               variant="danger"
               disabled={loading}
               onClick={(e) => {
-                e.preventDefault();
-                const serviceImages = [..._serviceImages];
+                const serviceImages = [...service?.serviceImages];
                 serviceImages.splice(index, 1);
                 const fd = new FormData();
                 fd.append("serviceImages", serviceImages);
-                dispatch(editService(fd, id));
+                dispatch(editService(fd, service._id));
                 handleClose();
               }}
             >
-              {loading ? "Deleting" : "Yes"}
+              Yes
             </Button>
           </Modal.Footer>
         </Modal>

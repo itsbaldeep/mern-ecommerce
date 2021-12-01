@@ -8,6 +8,9 @@ import { FaFilter } from "react-icons/fa";
 import MainSlider from "components/MainSlider.jsx";
 import Product from "./Product.jsx";
 
+// Config
+import { productCategories, petTypes } from "config.json";
+
 // Actions
 import { getProducts } from "redux/actions/product";
 
@@ -51,21 +54,15 @@ const ShopScreen = () => {
           <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
-              <CheckBox label="Food" />
-              <CheckBox label="Cosmetic" />
-              <CheckBox label="Accessory" />
-              <CheckBox label="Vaccination" />
-              <CheckBox label="Medicine" />
-              <CheckBox label="Clothing" />
-              <CheckBox label="Other" />
+              {productCategories.map((value, index) => (
+                <CheckBox label={value} key={index} />
+              ))}
             </div>
             <div className="pettype-section">
               <h4>Filter by Pet</h4>
-              <CheckBox label="Dog" />
-              <CheckBox label="Cat" />
-              <CheckBox label="Bird" />
-              <CheckBox label="Fish" />
-              <CheckBox label="Other" />
+              {petTypes.map((value, index) => (
+                <CheckBox label={value} key={index} />
+              ))}
             </div>
             <div className="sort-section">
               <h4>Sort By</h4>

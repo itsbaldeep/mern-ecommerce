@@ -39,6 +39,7 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
         ...state,
         loading: false,
         success: true,
+        isAdded: true,
         services: state.services.concat([action.payload]),
       };
     case actionTypes.REMOVE_SERVICE_SUCCESS:
@@ -47,6 +48,7 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
       return {
         ...state,
         loading: false,
+        isRemoved: true,
         success: true,
       };
     case actionTypes.EDIT_SERVICE_SUCCESS:
@@ -56,6 +58,7 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
       return {
         ...state,
         loading: false,
+        isUpdated: true,
         success: true,
       };
     case actionTypes.GET_SERVICES_FAIL:
@@ -79,6 +82,21 @@ export const servicesReducer = (state = { services: [], service: {} }, action) =
         ...state,
         error: null,
         success: null,
+      };
+    case actionTypes.ADD_SERVICE_RESET:
+      return {
+        ...state,
+        isAdded: null,
+      };
+    case actionTypes.EDIT_SERVICE_RESET:
+      return {
+        ...state,
+        isUpdated: null,
+      };
+    case actionTypes.REMOVE_SERVICE_RESET:
+      return {
+        ...state,
+        isRemoved: null,
       };
     default:
       return state;

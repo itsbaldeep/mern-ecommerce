@@ -1,82 +1,29 @@
 // Dependencies
-import { Button, Modal, Form, Row, Col, Alert } from "react-bootstrap";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
 
 // Components
-import { TextField, SelectField, CheckBoxOptions, CheckBox } from "components/InputFields.jsx";
+import { TextField, SelectField, CheckBox, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Config
 import { productCategories, petTypes } from "config.json";
 
 // Actions
-import { addProduct, clearErrors } from "redux/actions/product";
+import { addProduct, addProductReset } from "redux/actions/product";
 
 const AddProduct = ({ show, onHide }) => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.product);
+  const { loading, error, isAdded } = useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(clearErrors());
+    dispatch(addProductReset());
   }, [dispatch]);
 
   const MAX_IMAGES = 7;
   const spaceLeft = MAX_IMAGES;
-
-  const initialValues = {
-    name: "",
-    description: "",
-    category: "Others",
-    price: 0,
-    countInStock: 0,
-    petType: [],
-    breedType: "",
-    weight: 0,
-    size: {
-      length: 0,
-      height: 0,
-      width: 0,
-    },
-    isVeg: false,
-    ageRange: {
-      min: 0,
-      max: 0,
-    },
-    productImages: [],
-  };
-
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(5, "Product name is too short")
-      .max(32, "Product name is too long")
-      .required("Please provide a product name"),
-    description: Yup.string()
-      .min(8, "Product description is too short")
-      .max(1024, "Product description is too long")
-      .required("Please provide a product description"),
-    category: Yup.string().required("Pick atleast one category"),
-    price: Yup.number()
-      .positive("Price must be a positive number")
-      .required("Please provide a price"),
-    countInStock: Yup.number()
-      .positive("Please provide a positive count")
-      .required("Please provide a count in stock"),
-    petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
-    breedType: Yup.string(),
-    weight: Yup.number().min(0, "Weight must be positive"),
-    size: Yup.object({
-      length: Yup.number().min(0, "Length must be positive"),
-      height: Yup.number().min(0, "Height must be positive"),
-      width: Yup.number().min(0, "Width must be positive"),
-    }),
-    isVeg: Yup.boolean(),
-    ageRange: Yup.object({
-      min: Yup.number().min(0, "Minimum age should be atleast 0"),
-      max: Yup.number().min(0, "Maximum age should be atleast 0"),
-    }),
-  });
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -84,8 +31,57 @@ const AddProduct = ({ show, onHide }) => {
         <Modal.Title>Add a new product</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
+        initialValues={{
+          name: "",
+          description: "",
+          category: "Others",
+          price: 0,
+          countInStock: 0,
+          petType: [],
+          breedType: "",
+          weight: 0,
+          size: {
+            length: 0,
+            height: 0,
+            width: 0,
+          },
+          isVeg: false,
+          ageRange: {
+            min: 0,
+            max: 0,
+          },
+          productImages: [],
+        }}
+        validationSchema={Yup.object({
+          name: Yup.string()
+            .min(5, "Product name is too short")
+            .max(32, "Product name is too long")
+            .required("Please provide a product name"),
+          description: Yup.string()
+            .min(8, "Product description is too short")
+            .max(1024, "Product description is too long")
+            .required("Please provide a product description"),
+          category: Yup.string().required("Pick atleast one category"),
+          price: Yup.number()
+            .positive("Price must be a positive number")
+            .required("Please provide a price"),
+          countInStock: Yup.number()
+            .positive("Please provide a positive count")
+            .required("Please provide a count in stock"),
+          petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
+          breedType: Yup.string(),
+          weight: Yup.number().min(0, "Weight must be positive"),
+          size: Yup.object({
+            length: Yup.number().min(0, "Length must be positive"),
+            height: Yup.number().min(0, "Height must be positive"),
+            width: Yup.number().min(0, "Width must be positive"),
+          }),
+          isVeg: Yup.boolean(),
+          ageRange: Yup.object({
+            min: Yup.number().min(0, "Minimum age should be atleast 0"),
+            max: Yup.number().min(0, "Maximum age should be atleast 0"),
+          }),
+        })}
         onSubmit={(values) => {
           // Converting to FormData
           const fd = new FormData();
@@ -103,7 +99,7 @@ const AddProduct = ({ show, onHide }) => {
         }}
       >
         {({ errors, setErrors, setFieldValue, handleSubmit }) => (
-          <Form noValidation onSubmit={handleSubmit}>
+          <Form>
             <Modal.Body>
               <Form.Group className="mb-3">
                 <input
@@ -211,7 +207,7 @@ const AddProduct = ({ show, onHide }) => {
                   {error}
                 </Alert>
               )}
-              {success && (
+              {isAdded && (
                 <Alert className="my-3" variant="success">
                   Product successfully added
                 </Alert>
@@ -221,7 +217,13 @@ const AddProduct = ({ show, onHide }) => {
               <Button variant="danger" onClick={onHide}>
                 Cancel
               </Button>
-              <Button disabled={loading} type="submit">
+              <Button
+                disabled={loading}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+              >
                 {loading ? "Adding" : "Add"}
               </Button>
             </Modal.Footer>

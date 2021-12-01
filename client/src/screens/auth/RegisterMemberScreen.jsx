@@ -15,6 +15,9 @@ import {
   SelectField,
 } from "components/InputFields.jsx";
 
+// Config
+import { directoryCategories, states } from "config.json";
+
 // Actions
 import { register, clearErrors } from "redux/actions/user";
 
@@ -34,7 +37,7 @@ const RegisterMemberScreen = () => {
     category: [],
     number: "",
     address: "",
-    state: "",
+    state: "Delhi",
     city: "",
     pincode: "",
     role: "Client",
@@ -146,46 +149,6 @@ const secondValidation = Yup.object({
   pincode: Yup.number().required("Please provide a pincode"),
 });
 
-const categoryOptions = ["Dog", "Cat", "Bird", "Others"];
-const stateOptions = [
-  "Andaman and Nicobar Islands",
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chandigarh",
-  "Chhattisgarh",
-  "Dadra and Nagar Haveli",
-  "Daman and Diu",
-  "Delhi",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jammu and Kashmir",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Lakshadweep",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Puducherry",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-];
-
 const SecondStep = ({ data, prev, next }) => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -206,7 +169,7 @@ const SecondStep = ({ data, prev, next }) => {
             type="text"
             placeholder="Enter your business name here"
           />
-          <CheckBoxOptions label="Category" options={categoryOptions} name="category" />
+          <CheckBoxOptions label="Category" options={directoryCategories} name="category" />
           <TextField label="Phone Number" name="number" type="number" placeholder="9876543210" />
           <TextField
             label="Address"
@@ -219,7 +182,7 @@ const SecondStep = ({ data, prev, next }) => {
               <TextField label="City" name="city" type="text" placeholder="City" />
             </Col>
             <Col sm={12} md={4}>
-              <SelectField label="State" name="state" options={stateOptions} defaultValue="Delhi" />
+              <SelectField label="State" name="state" options={states} defaultValue="Delhi" />
             </Col>
             <Col sm={12} md={4}>
               <TextField label="Pincode" name="pincode" type="number" placeholder="Zip" />

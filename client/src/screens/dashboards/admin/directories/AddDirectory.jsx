@@ -8,6 +8,9 @@ import * as Yup from "yup";
 // Components
 import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
+// Config
+import { directoryCategories, states } from "config.json";
+
 // Actions
 import { addDirectory, addDirectoryReset } from "redux/actions/directory";
 
@@ -18,46 +21,6 @@ const AddDirectory = ({ show, onHide }) => {
   useEffect(() => {
     dispatch(addDirectoryReset());
   }, [dispatch]);
-
-  const categoryOptions = ["Dog", "Cat", "Bird", "Others"];
-  const stateOptions = [
-    "Andaman and Nicobar Islands",
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chandigarh",
-    "Chhattisgarh",
-    "Dadra and Nagar Haveli",
-    "Daman and Diu",
-    "Delhi",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jammu and Kashmir",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Lakshadweep",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Puducherry",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-  ];
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -112,15 +75,10 @@ const AddDirectory = ({ show, onHide }) => {
                 </Col>
               </Row>
               <TextField name="address" label="Address" placeholder="Enter the business address" />
-              <CheckBoxOptions name="category" label="Category" options={categoryOptions} />
+              <CheckBoxOptions name="category" label="Category" options={directoryCategories} />
               <Row>
                 <Col xs={12} sm={4}>
-                  <SelectField
-                    name="state"
-                    label="State"
-                    options={stateOptions}
-                    defaultValue="Delhi"
-                  />
+                  <SelectField name="state" label="State" options={states} defaultValue="Delhi" />
                 </Col>
                 <Col xs={12} sm={4}>
                   <TextField name="city" label="City" placeholder="City" />

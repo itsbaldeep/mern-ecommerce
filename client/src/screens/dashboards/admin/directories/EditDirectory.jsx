@@ -5,6 +5,9 @@ import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 
+// Config
+import { directoryCategories, states } from "config.json";
+
 // Actions
 import { editDirectory, editDirectoryReset } from "redux/actions/directory";
 
@@ -15,46 +18,6 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
   useEffect(() => {
     dispatch(editDirectoryReset());
   }, [dispatch]);
-
-  const categoryOptions = ["Dog", "Cat", "Bird", "Others"];
-  const stateOptions = [
-    "Andaman and Nicobar Islands",
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chandigarh",
-    "Chhattisgarh",
-    "Dadra and Nagar Haveli",
-    "Daman and Diu",
-    "Delhi",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jammu and Kashmir",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Lakshadweep",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Puducherry",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-  ];
 
   const MAX_IMAGES = 5;
   const spaceLeft = MAX_IMAGES - directory.directoryImages.length;
@@ -205,7 +168,7 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="category">Category</Form.Label>
                 <div>
-                  {categoryOptions.map((opt, index) => (
+                  {directoryCategories.map((opt, index) => (
                     <Field
                       name="category"
                       key={index}
@@ -257,7 +220,7 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="state">State</Form.Label>
                     <Field as="select" name="state" className="form-control">
-                      {stateOptions.map((opt) => (
+                      {states.map((opt) => (
                         <option key={opt} value={opt}>
                           {opt}
                         </option>

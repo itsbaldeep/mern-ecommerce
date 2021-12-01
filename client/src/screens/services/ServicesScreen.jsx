@@ -8,6 +8,9 @@ import { FaFilter } from "react-icons/fa";
 import MainSlider from "components/MainSlider.jsx";
 import Service from "./Service.jsx";
 
+// Config
+import { serviceCategories, petTypes } from "config.json";
+
 // Actions
 import { getServices } from "redux/actions/service";
 
@@ -51,21 +54,15 @@ const ServicesScreen = () => {
           <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
-              <CheckBox label="Health" />
-              <CheckBox label="Vaccination" />
-              <CheckBox label="Cleaning" />
-              <CheckBox label="Housing" />
-              <CheckBox label="Maintenance" />
-              <CheckBox label="Training" />
-              <CheckBox label="Other" />
+              {serviceCategories.map((value, index) => (
+                <CheckBox label={value} key={index} />
+              ))}
             </div>
             <div className="pettype-section">
               <h4>Filter by Pet</h4>
-              <CheckBox label="Dog" />
-              <CheckBox label="Cat" />
-              <CheckBox label="Bird" />
-              <CheckBox label="Fish" />
-              <CheckBox label="Other" />
+              {petTypes.map((value, index) => (
+                <CheckBox label={value} key={index} />
+              ))}
             </div>
             <div className="sort-section">
               <h4>Sort By</h4>

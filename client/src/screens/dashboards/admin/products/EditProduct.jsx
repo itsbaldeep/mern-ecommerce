@@ -1,22 +1,22 @@
 // Dependencies
-import { Button, Modal, Form, Row, Col, Alert, Card } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { useState, useEffect } from "react";
-
-// Actions
-import { editProduct, clearErrors } from "redux/actions/product";
 
 // Config
 import { productCategories, petTypes } from "config.json";
 
-const EditProduct = ({ show, onHide, product }) => {
+// Actions
+import { editProduct, editProductReset } from "redux/actions/product";
+
+const EditProduct = ({ show, onHide, product, productId }) => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.product);
+  const { loading, error, isUpdated } = useSelector((state) => state.product);
 
   useEffect(() => {
-    dispatch(clearErrors());
+    dispatch(editProductReset());
   }, [dispatch]);
 
   const MAX_IMAGES = 7;
@@ -68,69 +68,64 @@ const EditProduct = ({ show, onHide, product }) => {
     }),
   });
 
-  const handleProductEdit = (values) => {
-    // Converting to FormData and updating only modified fields
-    const fd = new FormData();
-
-    // Plain text fields
-    if (values.name !== product.name) fd.append("name", values.name);
-    if (values.description !== product.description) fd.append("description", values.description);
-    if (values.category !== product.category) fd.append("category", values.category);
-    if (values.price !== product.price) fd.append("price", values.price);
-    if (values.countInStock !== product.countInStock)
-      fd.append("countInStock", values.countInStock);
-    if (values.isVeg !== product.isVeg) fd.append("isVeg", values.isVeg);
-    if (values.weight !== product.weight) fd.append("weight", values.weight);
-    if (values.breedType !== product.breedType) fd.append("breedType", values.breedType);
-
-    // Object fields
-    const sizeJSON = JSON.stringify(values.size);
-    if (sizeJSON !== JSON.stringify(product.size)) fd.append("size", sizeJSON);
-    const ageRangeJSON = JSON.stringify(values.ageRange);
-    if (ageRangeJSON !== JSON.stringify(product.ageRange)) fd.append("ageRange", ageRangeJSON);
-
-    // Array fields
-    if (values.petType.toString() !== product.petType.toString())
-      fd.append("petType", values.petType);
-
-    // Images
-    const filesLength = values.productImages.length;
-    if (filesLength > 0) {
-      for (let i = 0; i < filesLength; i++) fd.append("productImages", values.productImages[i]);
-    }
-
-    dispatch(editProduct(fd, product._id));
-  };
-
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
-        <Modal.Title>{product.name}</Modal.Title>
+        <Modal.Title>Edit Product</Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={(values) => handleProductEdit(values)}
+        onSubmit={(values) => {
+          // Converting to FormData and updating only modified fields
+          const fd = new FormData();
+
+          // Plain text fields
+          if (values.name !== product.name) fd.append("name", values.name);
+          if (values.description !== product.description)
+            fd.append("description", values.description);
+          if (values.category !== product.category) fd.append("category", values.category);
+          if (values.price !== product.price) fd.append("price", values.price);
+          if (values.countInStock !== product.countInStock)
+            fd.append("countInStock", values.countInStock);
+          if (values.isVeg !== product.isVeg) fd.append("isVeg", values.isVeg);
+          if (values.weight !== product.weight) fd.append("weight", values.weight);
+          if (values.breedType !== product.breedType) fd.append("breedType", values.breedType);
+
+          // Object fields
+          const sizeJSON = JSON.stringify(values.size);
+          if (sizeJSON !== JSON.stringify(product.size)) fd.append("size", sizeJSON);
+          const ageRangeJSON = JSON.stringify(values.ageRange);
+          if (ageRangeJSON !== JSON.stringify(product.ageRange))
+            fd.append("ageRange", ageRangeJSON);
+
+          // Array fields
+          if (values.petType.toString() !== product.petType.toString())
+            fd.append("petType", values.petType);
+
+          // Images
+          const filesLength = values.productImages.length;
+          if (filesLength > 0) {
+            for (let i = 0; i < filesLength; i++)
+              fd.append("productImages", values.productImages[i]);
+          }
+          dispatch(editProduct(fd, product._id));
+        }}
       >
-        {({ values, touched, errors, setFieldValue, setErrors, handleSubmit }) => (
-          <Form noValidation onSubmit={handleSubmit}>
+        {({ values, errors, touched, handleSubmit, setErrors, setFieldValue }) => (
+          <Form>
             <Modal.Body>
               <Form.Group className="mb-3">
                 <h4>Images</h4>
                 {product.productImages.length > 0 ? (
                   <Row>
-                    {product.productImages.map((image, index, array) => (
+                    {product.productImages.map((image, index) => (
                       <Col
                         key={image}
                         xs={6}
                         className="my-2 d-flex align-items-center justify-content-center"
                       >
-                        <ImageCard
-                          image={image}
-                          index={index}
-                          _productImages={array}
-                          id={product._id}
-                        />
+                        <ImageCard image={image} index={index} product={product} />
                       </Col>
                     ))}
                   </Row>
@@ -160,12 +155,7 @@ const EditProduct = ({ show, onHide, product }) => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="name">Product Name</Form.Label>
-                <Field
-                  name="name"
-                  as={Form.Control}
-                  value={values.name}
-                  isInvalid={touched.name && !!errors.name}
-                />
+                <Field name="name" as={Form.Control} value={values.name} />
                 <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3">
@@ -175,18 +165,12 @@ const EditProduct = ({ show, onHide, product }) => {
                   className="form-control"
                   as="textarea"
                   value={values.description}
-                  isInvalid={touched.description && !!errors.description}
                 />
                 <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="category">Category</Form.Label>
-                <Field
-                  as="select"
-                  name="category"
-                  className="form-control"
-                  defaultValue={values.category}
-                >
+                <Field as="select" name="category" className="form-control">
                   {productCategories.map((opt) => (
                     <option key={opt} value={opt}>
                       {opt}
@@ -196,20 +180,14 @@ const EditProduct = ({ show, onHide, product }) => {
                 <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
               </Form.Group>
               <Row>
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="price">Price</Form.Label>
-                    <Field
-                      name="price"
-                      as={Form.Control}
-                      type="number"
-                      value={values.price}
-                      isInvalid={touched.price && !!errors.price}
-                    />
+                    <Field name="price" as={Form.Control} type="number" value={values.price} />
                     <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="countInStock">Count in stock</Form.Label>
                     <Field
@@ -217,7 +195,6 @@ const EditProduct = ({ show, onHide, product }) => {
                       as={Form.Control}
                       type="number"
                       value={values.countInStock}
-                      isInvalid={touched.countInStock && !!errors.countInStock}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.countInStock}
@@ -235,7 +212,6 @@ const EditProduct = ({ show, onHide, product }) => {
                       as={Form.Check}
                       className="form-check-inline"
                       checked={values.petType.includes(opt)}
-                      isInvalid={touched.petType && !!errors.petType}
                       type="checkbox"
                       value={opt}
                       label={opt}
@@ -245,63 +221,37 @@ const EditProduct = ({ show, onHide, product }) => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="breedType">Breed Type</Form.Label>
-                <Field
-                  name="breedType"
-                  as={Form.Control}
-                  value={values.breedType}
-                  isInvalid={touched.breedType && !!errors.breedType}
-                />
+                <Field name="breedType" as={Form.Control} value={values.breedType} />
                 <Form.Control.Feedback type="invalid">{errors.breedType}</Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="weight">Weight (in grams)</Form.Label>
-                <Field
-                  name="weight"
-                  as={Form.Control}
-                  type="number"
-                  value={values.weight}
-                  isInvalid={touched.weight && !!errors.weight}
-                />
+                <Field name="weight" as={Form.Control} type="number" value={values.weight} />
                 <Form.Control.Feedback type="invalid">{errors.weight}</Form.Control.Feedback>
               </Form.Group>
               <Row>
-                <Col sm={12} md={4}>
+                <Col xs={12} sm={4}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="size.length">Length (in cms)</Form.Label>
-                    <Field
-                      name="size.length"
-                      as={Form.Control}
-                      type="number"
-                      isInvalid={touched.size?.length && !!errors.size?.length}
-                    />
+                    <Field name="size.length" as={Form.Control} type="number" />
                     <Form.Control.Feedback type="invalid">
                       {errors.size?.length}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col sm={12} md={4}>
+                <Col xs={12} sm={4}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="size.height">Height (in cms)</Form.Label>
-                    <Field
-                      name="size.height"
-                      as={Form.Control}
-                      type="number"
-                      isInvalid={touched.size?.height && !!errors.size?.height}
-                    />
+                    <Field name="size.height" as={Form.Control} type="number" />
                     <Form.Control.Feedback type="invalid">
                       {errors.size?.height}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col sm={12} md={4}>
+                <Col xs={12} sm={4}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="size.width">Width (in cms)</Form.Label>
-                    <Field
-                      name="size.width"
-                      as={Form.Control}
-                      type="number"
-                      isInvalid={touched.size?.width && !!errors.size?.width}
-                    />
+                    <Field name="size.width" as={Form.Control} type="number" />
                     <Form.Control.Feedback type="invalid">
                       {errors.size?.width}
                     </Form.Control.Feedback>
@@ -309,29 +259,19 @@ const EditProduct = ({ show, onHide, product }) => {
                 </Col>
               </Row>
               <Row>
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="ageRange.min">Minimum Age (in yrs)</Form.Label>
-                    <Field
-                      name="ageRange.min"
-                      as={Form.Control}
-                      type="number"
-                      isInvalid={touched.ageRange?.min && !!errors.ageRange?.min}
-                    />
+                    <Field name="ageRange.min" as={Form.Control} type="number" />
                     <Form.Control.Feedback type="invalid">
                       {errors.ageRange?.min}
                     </Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="max">Maximum Age (in yrs)</Form.Label>
-                    <Field
-                      name="ageRange.max"
-                      as={Form.Control}
-                      type="number"
-                      isInvalid={touched.ageRange?.max && !!errors.ageRange?.max}
-                    />
+                    <Field name="ageRange.max" as={Form.Control} type="number" />
                     <Form.Control.Feedback type="invalid">
                       {errors.ageRange?.max}
                     </Form.Control.Feedback>
@@ -343,19 +283,18 @@ const EditProduct = ({ show, onHide, product }) => {
                   name="isVeg"
                   as={Form.Check}
                   checked={values.isVeg}
-                  isInvalid={touched.isVeg && !!errors.isVeg}
                   label="This product is vegetarian"
                 />
                 <Form.Control.Feedback type="invalid">{errors.isVeg}</Form.Control.Feedback>
               </Form.Group>
               {error && (
-                <Alert className="my-3" variant="danger">
+                <Alert className="my-1" variant="danger">
                   {error}
                 </Alert>
               )}
-              {success && (
-                <Alert className="my-3" variant="success">
-                  Product successfully updated
+              {isUpdated && (
+                <Alert className="my-1" variant="success">
+                  Product has been updated succesfully
                 </Alert>
               )}
             </Modal.Body>
@@ -363,8 +302,14 @@ const EditProduct = ({ show, onHide, product }) => {
               <Button variant="danger" onClick={onHide}>
                 Cancel
               </Button>
-              <Button disabled={loading} type="submit">
-                Update
+              <Button
+                disabled={loading}
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmit();
+                }}
+              >
+                {loading ? "Updating" : "Update"}
               </Button>
             </Modal.Footer>
           </Form>
@@ -374,7 +319,7 @@ const EditProduct = ({ show, onHide, product }) => {
   );
 };
 
-const ImageCard = ({ image, index, _productImages, id }) => {
+const ImageCard = ({ image, index, product }) => {
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.product);
 
@@ -402,16 +347,15 @@ const ImageCard = ({ image, index, _productImages, id }) => {
               variant="danger"
               disabled={loading}
               onClick={(e) => {
-                e.preventDefault();
-                const productImages = [..._productImages];
+                const productImages = [...product.productImages];
                 productImages.splice(index, 1);
                 const fd = new FormData();
                 fd.append("productImages", productImages);
-                dispatch(editProduct(fd, id));
+                dispatch(editProduct(fd, product._id));
                 handleClose();
               }}
             >
-              {loading ? "Deleting" : "Yes"}
+              Yes
             </Button>
           </Modal.Footer>
         </Modal>

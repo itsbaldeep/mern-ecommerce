@@ -1,24 +1,6 @@
 import * as actionTypes from "../constants/directory";
 import axios from "axios";
 
-const getConfig = () => {
-  const authToken = localStorage.getItem(process.env.REACT_APP_TOKEN_NAME);
-  const Authorization = `Bearer ${authToken}`;
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization,
-    },
-  };
-  return config;
-};
-
-const getConfigFD = () => {
-  const config = getConfig();
-  config.headers["Content-Type"] = "multipart/form-data";
-  return config;
-};
-
 // GET /api/directory
 export const loadDirectories = () => async (dispatch) => {
   try {
@@ -49,7 +31,7 @@ export const loadDirectory = (username) => async (dispatch) => {
 export const getAllDirectories = () => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.GET_ALL_DIRECTORIES_REQUEST });
-    const { data } = await axios.get("/api/directory/all", getConfig());
+    const { data } = await axios.get("/api/directory/all");
     dispatch({ type: actionTypes.GET_ALL_DIRECTORIES_SUCCESS, payload: data.directories });
   } catch (error) {
     dispatch({ type: actionTypes.GET_ALL_DIRECTORIES_FAIL, payload: error.response.data.error });
@@ -60,7 +42,7 @@ export const getAllDirectories = () => async (dispatch) => {
 export const getAnyDirectory = (id) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.GET_ANY_DIRECTORY_REQUEST });
-    const { data } = await axios.get(`/api/directory/${id}`, getConfig());
+    const { data } = await axios.get(`/api/directory/${id}`);
     dispatch({ type: actionTypes.GET_ANY_DIRECTORY_SUCCESS, payload: data.directory });
   } catch (error) {
     dispatch({ type: actionTypes.GET_ANY_DIRECTORY_FAIL, payload: error.response.data.error });
@@ -71,7 +53,7 @@ export const getAnyDirectory = (id) => async (dispatch) => {
 export const addDirectory = (directory) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.ADD_DIRECTORY_REQUEST });
-    const { data } = await axios.post(`/api/directory/add`, directory, getConfig());
+    const { data } = await axios.post(`/api/directory/add`, directory);
     dispatch({ type: actionTypes.ADD_DIRECTORY_SUCCESS, payload: data.directory });
     // In case a user ref is added
     if (data.user) dispatch({ type: "EDIT_USER_SUCCESS", payload: data.user });
@@ -84,7 +66,7 @@ export const addDirectory = (directory) => async (dispatch) => {
 export const editDirectory = (directory, id) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.EDIT_DIRECTORY_REQUEST });
-    const { data } = await axios.put(`/api/directory/edit/${id}`, directory, getConfigFD());
+    const { data } = await axios.put(`/api/directory/edit/${id}`, directory);
     dispatch({ type: actionTypes.EDIT_DIRECTORY_SUCCESS, payload: data.directory });
   } catch (error) {
     dispatch({ type: actionTypes.EDIT_DIRECTORY_FAIL, payload: error.response.data.error });
@@ -95,7 +77,7 @@ export const editDirectory = (directory, id) => async (dispatch) => {
 export const approveDirectory = (id) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.APPROVE_DIRECTORY_REQUEST });
-    const { data } = await axios.put(`/api/directory/approve/${id}`, {}, getConfig());
+    const { data } = await axios.put(`/api/directory/approve/${id}`);
     dispatch({ type: actionTypes.APPROVE_DIRECTORY_SUCCESS, payload: data.directory });
   } catch (error) {
     dispatch({ type: actionTypes.APPROVE_DIRECTORY_FAIL, payload: error.response.data.error });
@@ -106,7 +88,7 @@ export const approveDirectory = (id) => async (dispatch) => {
 export const removeDirectory = (id) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.REMOVE_DIRECTORY_REQUEST });
-    const { data } = await axios.delete(`/api/directory/remove/${id}`, getConfig());
+    const { data } = await axios.delete(`/api/directory/remove/${id}`);
     dispatch({ type: actionTypes.REMOVE_DIRECTORY_SUCCESS, payload: data.directory });
   } catch (error) {
     dispatch({ type: actionTypes.REMOVE_DIRECTORY_FAIL, payload: error.response.data.error });

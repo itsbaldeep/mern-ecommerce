@@ -1,7 +1,7 @@
 // Dependencies
 import { useState, useEffect } from "react";
 import { Table, Button, Form } from "react-bootstrap";
-import { FaCheck, FaCopy, FaExternalLinkAlt, FaPencilAlt, FaSearch, FaTimes } from "react-icons/fa";
+import { FaCheck, FaCopy, FaExternalLinkAlt, FaPencilAlt, FaTimes } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 // Components
@@ -10,25 +10,11 @@ import VerifyUser from "./VerifyUser.jsx";
 import EditUser from "./EditUser.jsx";
 import RemoveUser from "./RemoveUser.jsx";
 
+// Helpers
+import convertTime from "helpers/convertTime";
+
 // Actions
 import { getUsers } from "redux/actions/user";
-
-const convertTime = (time) => {
-  if (!time) return;
-  const date = new Date(time);
-  const day = date.getDate();
-  const month = date.getMonth();
-  const year = date.getFullYear();
-  let hours = date.getHours();
-  const isPM = hours > 11;
-  if (isPM && hours !== 12) hours -= 12;
-  if (hours < 10) hours = `0${hours}`;
-  let minutes = date.getMinutes();
-  if (minutes < 10) minutes = `0${minutes}`;
-  let seconds = date.getSeconds();
-  if (seconds < 10) seconds = `0${seconds}`;
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds} ${isPM ? "PM" : "AM"}`;
-};
 
 const UsersDashboard = () => {
   const dispatch = useDispatch();

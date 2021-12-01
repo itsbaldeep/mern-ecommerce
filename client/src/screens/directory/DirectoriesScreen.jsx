@@ -8,6 +8,9 @@ import { FaBookmark, FaFilter, FaMapMarker } from "react-icons/fa";
 // Actions
 import { loadDirectories } from "redux/actions/directory";
 
+// Config
+import { directoryCategories, petTypes, states } from "config.json";
+
 // Components
 import MainSlider from "components/MainSlider.jsx";
 
@@ -31,44 +34,6 @@ const DirectoriesScreen = () => {
     return () => window.removeEventListener("resize", listener);
   }, [dispatch]);
 
-  const stateOptions = [
-    "Andaman and Nicobar Islands",
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chandigarh",
-    "Chhattisgarh",
-    "Dadra and Nagar Haveli",
-    "Daman and Diu",
-    "Delhi",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jammu and Kashmir",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Lakshadweep",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Puducherry",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-  ];
   return (
     <>
       <MainSlider />
@@ -85,22 +50,20 @@ const DirectoriesScreen = () => {
           <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
-              <CheckBox label="Food" />
-              <CheckBox label="Cosmetic" />
-              <CheckBox label="Accessory" />
-              <CheckBox label="Other" />
+              {directoryCategories.map((value, index) => (
+                <CheckBox label={value} key={index} />
+              ))}
             </div>
             <div className="pettype-section">
               <h4>Filter by Pet</h4>
-              <CheckBox label="Dog" />
-              <CheckBox label="Cat" />
-              <CheckBox label="Bird" />
-              <CheckBox label="Other" />
+              {petTypes.map((value, index) => (
+                <CheckBox label={value} key={index} />
+              ))}
             </div>
             <div className="area-section">
               <h4>Filter by State</h4>
               <Form.Select defaultValue="Delhi">
-                {stateOptions.map((state) => (
+                {states.map((state) => (
                   <option value={state} key={state}>
                     {state}
                   </option>

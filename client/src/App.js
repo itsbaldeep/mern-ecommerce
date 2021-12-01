@@ -44,11 +44,7 @@ function App() {
   // Checking for user token
   const dispatch = useDispatch();
   useEffect(() => {
-    const refetch = () => {
-      localStorage.getItem(process.env.REACT_APP_TOKEN_NAME);
-      dispatch(loadUser());
-    };
-    const listener = window.addEventListener("storage", refetch());
+    const listener = window.addEventListener("storage", (() => dispatch(loadUser()))());
     return () => window.removeEventListener("storage", listener);
   }, [dispatch]);
 

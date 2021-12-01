@@ -11,18 +11,13 @@ import {
   FaBoxOpen,
   FaCogs,
   FaConnectdevelop,
-  FaFacebook,
   FaFirstAid,
   FaHandsHelping,
   FaHome,
-  FaInstagram,
   FaMapPin,
-  FaPhone,
   FaPowerOff,
-  FaQuestion,
   FaSignInAlt,
   FaStore,
-  FaTwitter,
   FaUserAlt,
   FaUserCog,
   FaUserPlus,
@@ -66,7 +61,7 @@ const PetohubNavbar = () => {
                   </Link>
                 )}
                 <NavDropdown
-                  class="account-dropdown"
+                  className="account-dropdown"
                   title={
                     <>
                       <FaUserAlt /> {user.user.name}

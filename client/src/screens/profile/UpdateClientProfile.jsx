@@ -4,6 +4,9 @@ import * as Yup from "yup";
 import { Row, Col, Form, Alert, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
+// Config
+import { directoryCategories, states } from "config.json";
+
 // Actions
 import { updateProfile } from "redux/actions/user";
 
@@ -15,6 +18,7 @@ const UpdateClientProfile = () => {
 
   const clientProfileChangeData = {
     name: user.name,
+    profileImage: null,
     storeName: directory.storeName,
     category: [...directory.category],
     number: directory.number,
@@ -23,6 +27,7 @@ const UpdateClientProfile = () => {
     city: directory.city,
     pincode: directory.pincode,
   };
+
   const clientProfileChangeValidate = Yup.object({
     name: Yup.string()
       .min(3, "Must be atleast 3 characters")
@@ -47,46 +52,6 @@ const UpdateClientProfile = () => {
     city: Yup.string().required("Please provide a city"),
     pincode: Yup.number().required("Please provide a pincode"),
   });
-
-  const categoryOptions = ["Dog", "Cat", "Bird", "Others"];
-  const stateOptions = [
-    "Andaman and Nicobar Islands",
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chandigarh",
-    "Chhattisgarh",
-    "Dadra and Nagar Haveli",
-    "Daman and Diu",
-    "Delhi",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jammu and Kashmir",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Lakshadweep",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Puducherry",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-  ];
 
   return (
     <Formik
@@ -148,7 +113,7 @@ const UpdateClientProfile = () => {
           <Form.Group className="mb-3">
             <Form.Label htmlFor="category">Category</Form.Label>
             <div>
-              {categoryOptions.map((opt, index) => (
+              {directoryCategories.map((opt, index) => (
                 <Field
                   name="category"
                   key={index}
@@ -200,7 +165,7 @@ const UpdateClientProfile = () => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="state">State</Form.Label>
                 <Field as="select" name="state" className="form-control">
-                  {stateOptions.map((opt) => (
+                  {states.map((opt) => (
                     <option key={opt} value={opt}>
                       {opt}
                     </option>

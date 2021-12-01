@@ -39,6 +39,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         ...state,
         loading: false,
         success: true,
+        isAdded: true,
         products: state.products.concat([action.payload]),
       };
     case actionTypes.REMOVE_PRODUCT_SUCCESS:
@@ -46,6 +47,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
       state.products.splice(removeIndex, 1);
       return {
         ...state,
+        isRemoved: true,
         loading: false,
         success: true,
       };
@@ -55,6 +57,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
       state.products[editIndex] = action.payload;
       return {
         ...state,
+        isUpdated: true,
         loading: false,
         success: true,
       };
@@ -79,6 +82,21 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         ...state,
         error: null,
         success: null,
+      };
+    case actionTypes.ADD_PRODUCT_RESET:
+      return {
+        ...state,
+        isAdded: null,
+      };
+    case actionTypes.EDIT_PRODUCT_RESET:
+      return {
+        ...state,
+        isUpdated: null,
+      };
+    case actionTypes.REMOVE_PRODUCT_RESET:
+      return {
+        ...state,
+        isRemoved: null,
       };
     default:
       return state;
