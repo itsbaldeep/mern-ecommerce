@@ -1,5 +1,4 @@
 // Dependencies
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
@@ -8,19 +7,14 @@ import * as Yup from "yup";
 // Components
 import { TextField, SelectField, CheckBox, CheckBoxOptions } from "components/InputFields.jsx";
 
-// Config
-import { productCategories, petTypes } from "config.json";
-
 // Actions
-import { addProduct, addProductReset } from "redux/actions/product";
+import { addProduct } from "redux/actions/product";
 
 const AddProduct = ({ show, onHide }) => {
   const dispatch = useDispatch();
   const { loading, error, isAdded } = useSelector((state) => state.product);
-
-  useEffect(() => {
-    dispatch(addProductReset());
-  }, [dispatch]);
+  const { productCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   const MAX_IMAGES = 7;
   const spaceLeft = MAX_IMAGES;
@@ -34,7 +28,7 @@ const AddProduct = ({ show, onHide }) => {
         initialValues={{
           name: "",
           description: "",
-          category: "Others",
+          category: "",
           price: 0,
           countInStock: 0,
           petType: [],
@@ -94,7 +88,6 @@ const AddProduct = ({ show, onHide }) => {
             for (let i = 0; i < filesLength; i++)
               fd.append("productImages", values.productImages[i]);
           }
-          // fd.forEach((value, key) => console.log(`${key}: ${value}`));
           dispatch(addProduct(fd));
         }}
       >
@@ -126,9 +119,8 @@ const AddProduct = ({ show, onHide }) => {
               />
               <SelectField
                 label="Category"
-                options={productCategories}
+                options={productCategories.map((category) => category.name)}
                 name="category"
-                defaultValue="Others"
               />
               <Row>
                 <Col sm={12} md={6}>
@@ -149,7 +141,11 @@ const AddProduct = ({ show, onHide }) => {
                   />
                 </Col>
               </Row>
-              <CheckBoxOptions label="Pet Type" options={petTypes} name="petType" />
+              <CheckBoxOptions
+                label="Pet Type"
+                options={pets.map((pet) => pet.name)}
+                name="petType"
+              />
               <TextField name="breedType" label="Breed Type" placeholder="Compatible breeds" />
               <TextField
                 name="weight"

@@ -34,7 +34,7 @@ const DirectorySchema = new mongoose.Schema(
       maxlength: [64, "Address is too long"],
     },
     category: {
-      type: [String],
+      type: [{ type: String, ref: "Category" }],
       minlength: [1, "Please provide atleast one category"],
     },
     state: {

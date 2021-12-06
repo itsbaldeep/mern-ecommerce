@@ -9,7 +9,7 @@ import { FaBookmark, FaFilter, FaMapMarker } from "react-icons/fa";
 import { loadDirectories } from "redux/actions/directory";
 
 // Config
-import { directoryCategories, petTypes, states } from "config.json";
+import { states } from "config.json";
 
 // Components
 import MainSlider from "components/MainSlider.jsx";
@@ -25,6 +25,9 @@ const CheckBox = ({ label }) => (
 const DirectoriesScreen = () => {
   const dispatch = useDispatch();
   const { loading, directories } = useSelector((state) => state.directory);
+  const { directoryCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
+
   const [showFilter, setShowFilter] = useState(window.innerWidth > 768);
 
   useEffect(() => {
@@ -50,14 +53,14 @@ const DirectoriesScreen = () => {
           <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
-              {directoryCategories.map((value, index) => (
-                <CheckBox label={value} key={index} />
+              {directoryCategories?.map((category, index) => (
+                <CheckBox label={category.name} key={index} />
               ))}
             </div>
             <div className="pettype-section">
               <h4>Filter by Pet</h4>
-              {petTypes.map((value, index) => (
-                <CheckBox label={value} key={index} />
+              {pets?.map((pet, index) => (
+                <CheckBox label={pet.name} key={index} />
               ))}
             </div>
             <div className="area-section">

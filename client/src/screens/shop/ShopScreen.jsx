@@ -8,11 +8,10 @@ import { FaFilter } from "react-icons/fa";
 import MainSlider from "components/MainSlider.jsx";
 import Product from "./Product.jsx";
 
-// Config
-import { productCategories, petTypes } from "config.json";
-
 // Actions
 import { getProducts } from "redux/actions/product";
+import { getProductCategories } from "redux/actions/category";
+import { getPets } from "redux/actions/pet";
 
 // Custom CSS
 import "./ShopScreen.css";
@@ -27,12 +26,16 @@ const CheckBox = ({ label }) => (
 const ShopScreen = () => {
   const dispatch = useDispatch();
   const { loading, products } = useSelector((state) => state.product);
+  const { productCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [showFilter, setShowFilter] = useState(window.innerWidth > 768);
 
   useEffect(() => {
     dispatch(getProducts());
+    dispatch(getProductCategories());
+    dispatch(getPets());
     const handleResize = () => setShowFilter(window.innerWidth > 768);
     const listener = window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", listener);
@@ -54,14 +57,14 @@ const ShopScreen = () => {
           <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
-              {productCategories.map((value, index) => (
-                <CheckBox label={value} key={index} />
+              {productCategories?.map((category, index) => (
+                <CheckBox label={category.name} key={index} />
               ))}
             </div>
             <div className="pettype-section">
               <h4>Filter by Pet</h4>
-              {petTypes.map((value, index) => (
-                <CheckBox label={value} key={index} />
+              {pets?.map((pet, index) => (
+                <CheckBox label={pet.name} key={index} />
               ))}
             </div>
             <div className="sort-section">

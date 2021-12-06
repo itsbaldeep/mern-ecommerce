@@ -29,6 +29,10 @@ app.use("/api/directory", require("./routes/directory"));
 app.use("/api/product", require("./routes/product"));
 app.use("/api/service", require("./routes/service"));
 
+// Category and Pet routes
+app.use("/api/category", require("./routes/category"));
+app.use("/api/pet", require("./routes/pet"));
+
 // Middlewares
 app.use(require("./middleware/errorHandler"));
 

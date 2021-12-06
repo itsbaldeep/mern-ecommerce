@@ -5,7 +5,7 @@ import { Row, Col, Form, Alert, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 // Config
-import { directoryCategories, states } from "config.json";
+import { states } from "config.json";
 
 // Actions
 import { updateProfile } from "redux/actions/user";
@@ -14,6 +14,7 @@ const UpdateClientProfile = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile);
   const { user } = useSelector((state) => state.user);
+  const { directoryCategories } = useSelector((state) => state.category);
   const directory = user.directory;
 
   const clientProfileChangeData = {
@@ -113,17 +114,17 @@ const UpdateClientProfile = () => {
           <Form.Group className="mb-3">
             <Form.Label htmlFor="category">Category</Form.Label>
             <div>
-              {directoryCategories.map((opt, index) => (
+              {directoryCategories.map((category, index) => (
                 <Field
                   name="category"
                   key={index}
                   as={Form.Check}
                   className="form-check-inline"
-                  checked={values.category.includes(opt)}
+                  checked={values.category.includes(category.name)}
                   isInvalid={touched.category && !!errors.category}
                   type="checkbox"
-                  value={opt}
-                  label={opt}
+                  value={category.name}
+                  label={category.name}
                 />
               ))}
             </div>

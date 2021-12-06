@@ -59,7 +59,7 @@ export const CheckBoxOptions = ({ label, options, ...props }) => {
   );
 };
 
-export const SelectField = ({ label, options, defaultValue, ...props }) => {
+export const SelectField = ({ label, options, ...props }) => {
   const [field, meta] = useField(props);
   const classes = `form-control ${meta.touched && !meta.error ? "is-valid" : ""}`;
   return (

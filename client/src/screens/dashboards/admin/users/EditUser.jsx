@@ -1,5 +1,4 @@
 // Dependencies
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
@@ -9,15 +8,11 @@ import * as Yup from "yup";
 import { TextField } from "components/InputFields.jsx";
 
 // Actions
-import { editUser, editUserReset } from "redux/actions/user";
+import { editUser } from "redux/actions/user";
 
 const EditUser = ({ show, onHide, user, userId }) => {
   const dispatch = useDispatch();
   const { loading, error, isUpdated } = useSelector((state) => state.admin);
-
-  useEffect(() => {
-    dispatch(editUserReset());
-  }, [dispatch]);
 
   return (
     <Modal show={show} onHide={onHide}>

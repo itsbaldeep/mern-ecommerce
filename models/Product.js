@@ -21,10 +21,11 @@ const ProductSchema = new mongoose.Schema(
     },
     category: {
       type: String,
+      ref: "Category",
       required: [true, "Please provide a product category"],
     },
     petType: {
-      type: [String],
+      type: [{ type: String, ref: "Pet" }],
       min: [1, "Please provide atleast one pet type for this product"],
       required: [true, "Please provide a pet type for this product"],
     },

@@ -1,23 +1,4 @@
 {
-  "directoryCategories": ["Dog", "Cat", "Bird", "Others"],
-  "productCategories": [
-    "Food",
-    "Cosmetic",
-    "Accessory",
-    "Vaccination",
-    "Medicine",
-    "Clothing",
-    "Others"
-  ],
-  "serviceCategories": [
-    "Health",
-    "Vaccination",
-    "Cleaning",
-    "Housing",
-    "Maintenance",
-    "Training",
-    "Others"
-  ],
   "states": [
     "Andaman and Nicobar Islands",
     "Andhra Pradesh",
@@ -56,6 +37,5 @@
     "Uttarakhand",
     "West Bengal"
   ],
-  "petTypes": ["Dog", "Cat", "Bird", "Fish", "Others"],
   "days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 }

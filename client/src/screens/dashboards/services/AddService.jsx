@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Config
-import { serviceCategories, petTypes, days } from "config.json";
+import { days } from "config.json";
 
 // Helpers
 import { arrayToBinary } from "helpers/daysHandler";
@@ -20,6 +20,8 @@ import { addService, clearErrors } from "redux/actions/service";
 const AddService = ({ show, onHide }) => {
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector((state) => state.service);
+  const { serviceCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   useEffect(() => {
     dispatch(clearErrors());
@@ -116,7 +118,7 @@ const AddService = ({ show, onHide }) => {
           dispatch(addService(fd));
         }}
       >
-        {({ errors, values, setErrors, setFieldValue, handleSubmit }) => (
+        {({ errors, setErrors, setFieldValue, handleSubmit }) => (
           <Form noValidation onSubmit={handleSubmit}>
             <Modal.Body>
               <Form.Group className="mb-3">
@@ -154,7 +156,7 @@ const AddService = ({ show, onHide }) => {
                 <Col xs={12} sm={6}>
                   <SelectField
                     label="Category"
-                    options={serviceCategories}
+                    options={serviceCategories.map((category) => category.name)}
                     name="category"
                     defaultValue="Others"
                   />
@@ -190,7 +192,11 @@ const AddService = ({ show, onHide }) => {
                   />
                 </Col>
               </Row>
-              <CheckBoxOptions label="Pet Type" options={petTypes} name="petType" />
+              <CheckBoxOptions
+                label="Pet Type"
+                options={pets.map((pet) => pet.name)}
+                name="petType"
+              />
               <TextField name="breedType" label="Breed Type" placeholder="Compatible breeds" />
               <Row>
                 <Col xs={12} sm={6}>

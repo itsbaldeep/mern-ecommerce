@@ -1,5 +1,4 @@
 // Dependencies
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
@@ -9,21 +8,19 @@ import * as Yup from "yup";
 import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Config
-import { serviceCategories, petTypes, days } from "config.json";
+import { days } from "config.json";
 
 // Helpers
 import { arrayToBinary } from "helpers/daysHandler";
 
 // Actions
-import { addService, addServiceReset } from "redux/actions/service";
+import { addService } from "redux/actions/service";
 
 const AddService = ({ show, onHide }) => {
   const dispatch = useDispatch();
   const { loading, error, isAdded } = useSelector((state) => state.service);
-
-  useEffect(() => {
-    dispatch(addServiceReset());
-  }, [dispatch]);
+  const { serviceCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   const MAX_IMAGES = 5;
   const spaceLeft = MAX_IMAGES;
@@ -150,9 +147,8 @@ const AddService = ({ show, onHide }) => {
                 <Col xs={12} sm={6}>
                   <SelectField
                     label="Category"
-                    options={serviceCategories}
+                    options={serviceCategories.map((category) => category.name)}
                     name="category"
-                    defaultValue="Others"
                   />
                 </Col>
               </Row>
@@ -186,7 +182,11 @@ const AddService = ({ show, onHide }) => {
                   />
                 </Col>
               </Row>
-              <CheckBoxOptions label="Pet Type" options={petTypes} name="petType" />
+              <CheckBoxOptions
+                label="Pet Type"
+                options={pets.map((pet) => pet.name)}
+                name="petType"
+              />
               <TextField name="breedType" label="Breed Type" placeholder="Compatible breeds" />
               <Row>
                 <Col xs={12} sm={6}>

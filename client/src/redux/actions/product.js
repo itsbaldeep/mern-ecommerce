@@ -126,9 +126,11 @@ export const clearErrors = () => async (dispatch) => {
 export const editProductReset = () => async (dispatch) => {
   dispatch({ type: actionTypes.EDIT_PRODUCT_RESET });
 };
+
 export const addProductReset = () => async (dispatch) => {
   dispatch({ type: actionTypes.ADD_PRODUCT_RESET });
 };
+
 export const removeProductReset = () => async (dispatch) => {
   dispatch({ type: actionTypes.REMOVE_PRODUCT_RESET });
 };

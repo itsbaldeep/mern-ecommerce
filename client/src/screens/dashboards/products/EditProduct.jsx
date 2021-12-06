@@ -8,12 +8,11 @@ import { useState, useEffect } from "react";
 // Actions
 import { editProduct, clearErrors } from "redux/actions/product";
 
-// Config
-import { productCategories, petTypes } from "config.json";
-
 const EditProduct = ({ show, onHide, product }) => {
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector((state) => state.product);
+  const { categories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   useEffect(() => {
     dispatch(clearErrors());
@@ -187,9 +186,9 @@ const EditProduct = ({ show, onHide, product }) => {
                   className="form-control"
                   defaultValue={values.category}
                 >
-                  {productCategories.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
+                  {categories.map((category, index) => (
+                    <option key={index} value={category.name}>
+                      {category.name}
                     </option>
                   ))}
                 </Field>
@@ -228,17 +227,17 @@ const EditProduct = ({ show, onHide, product }) => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="petType">Pet Type</Form.Label>
                 <div>
-                  {petTypes.map((opt, index) => (
+                  {pets.map((pet, index) => (
                     <Field
                       name="petType"
                       key={index}
                       as={Form.Check}
                       className="form-check-inline"
-                      checked={values.petType.includes(opt)}
+                      checked={values.petType.includes(pet.name)}
                       isInvalid={touched.petType && !!errors.petType}
                       type="checkbox"
-                      value={opt}
-                      label={opt}
+                      value={pet.name}
+                      label={pet.name}
                     />
                   ))}
                 </div>

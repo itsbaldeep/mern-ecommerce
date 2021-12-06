@@ -58,10 +58,11 @@ const ServiceSchema = new mongoose.Schema(
     },
     category: {
       type: String,
+      ref: "Category",
       required: [true, "Please provide a service category"],
     },
     petType: {
-      type: [String],
+      type: [{ type: String, ref: "Pet" }],
       min: [1, "Please provide atleast one pet type for this service"],
       required: [true, "Please provide a pet type for this serviec"],
     },

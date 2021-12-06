@@ -1,5 +1,4 @@
 // Dependencies
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
@@ -9,18 +8,15 @@ import * as Yup from "yup";
 import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Config
-import { directoryCategories, states } from "config.json";
+import { states } from "config.json";
 
 // Actions
-import { addUser, addUserReset } from "redux/actions/user";
+import { addUser } from "redux/actions/user";
 
 const AddUser = ({ show, onHide }) => {
   const dispatch = useDispatch();
   const { loading, error, isAdded } = useSelector((state) => state.admin);
-
-  useEffect(() => {
-    dispatch(addUserReset());
-  }, [dispatch]);
+  const { directoryCategories } = useSelector((state) => state.category);
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -93,7 +89,11 @@ const AddUser = ({ show, onHide }) => {
                     label="Address"
                     placeholder="Enter the business address"
                   />
-                  <CheckBoxOptions name="category" label="Category" options={directoryCategories} />
+                  <CheckBoxOptions
+                    name="category"
+                    label="Category"
+                    options={directoryCategories.map((category) => category.name)}
+                  />
                   <Row>
                     <Col xs={12} sm={4}>
                       <SelectField

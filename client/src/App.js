@@ -5,6 +5,13 @@ import { useDispatch } from "react-redux";
 
 // Actions
 import { loadUser } from "./redux/actions/user.js";
+import {
+  getDirectoryCategories,
+  getProductCategories,
+  getServiceCategories,
+  getCategories,
+} from "redux/actions/category.js";
+import { getPets } from "redux/actions/pet.js";
 
 // Components
 import PrivateRoute from "./components/PrivateRoute.jsx";
@@ -44,6 +51,11 @@ function App() {
   // Checking for user token
   const dispatch = useDispatch();
   useEffect(() => {
+    dispatch(getDirectoryCategories());
+    dispatch(getServiceCategories());
+    dispatch(getProductCategories());
+    dispatch(getCategories());
+    dispatch(getPets());
     const listener = window.addEventListener("storage", (() => dispatch(loadUser()))());
     return () => window.removeEventListener("storage", listener);
   }, [dispatch]);

@@ -1,23 +1,18 @@
 // Dependencies
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 
-// Config
-import { productCategories, petTypes } from "config.json";
-
 // Actions
-import { editProduct, editProductReset } from "redux/actions/product";
+import { editProduct } from "redux/actions/product";
 
 const EditProduct = ({ show, onHide, product, productId }) => {
   const dispatch = useDispatch();
   const { loading, error, isUpdated } = useSelector((state) => state.product);
-
-  useEffect(() => {
-    dispatch(editProductReset());
-  }, [dispatch]);
+  const { productCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   const MAX_IMAGES = 7;
   const spaceLeft = MAX_IMAGES - product.productImages.length;
@@ -109,10 +104,10 @@ const EditProduct = ({ show, onHide, product, productId }) => {
             for (let i = 0; i < filesLength; i++)
               fd.append("productImages", values.productImages[i]);
           }
-          dispatch(editProduct(fd, product._id));
+          dispatch(editProduct(fd, productId));
         }}
       >
-        {({ values, errors, touched, handleSubmit, setErrors, setFieldValue }) => (
+        {({ values, touched, errors, handleSubmit, setErrors, setFieldValue }) => (
           <Form>
             <Modal.Body>
               <Form.Group className="mb-3">
@@ -155,14 +150,20 @@ const EditProduct = ({ show, onHide, product, productId }) => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="name">Product Name</Form.Label>
-                <Field name="name" as={Form.Control} value={values.name} />
+                <Field
+                  name="name"
+                  className={`form-control ${touched.name && !!errors.name ? "is-invalid" : ""}`}
+                  value={values.name}
+                />
                 <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="description">Description</Form.Label>
                 <Field
                   name="description"
-                  className="form-control"
+                  className={`form-control ${
+                    touched.description && !!errors.description ? "is-invalid" : ""
+                  }`}
                   as="textarea"
                   value={values.description}
                 />
@@ -170,10 +171,16 @@ const EditProduct = ({ show, onHide, product, productId }) => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="category">Category</Form.Label>
-                <Field as="select" name="category" className="form-control">
-                  {productCategories.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
+                <Field
+                  as="select"
+                  name="category"
+                  className={`form-control ${
+                    touched.category && !!errors.category ? "is-invalid" : ""
+                  }`}
+                >
+                  {productCategories.map((category, index) => (
+                    <option key={index} value={category.name}>
+                      {category.name}
                     </option>
                   ))}
                 </Field>
@@ -183,7 +190,14 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                 <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="price">Price</Form.Label>
-                    <Field name="price" as={Form.Control} type="number" value={values.price} />
+                    <Field
+                      name="price"
+                      className={`form-control ${
+                        touched.price && !!errors.price ? "is-invalid" : ""
+                      }`}
+                      type="number"
+                      value={values.price}
+                    />
                     <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
@@ -192,7 +206,9 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                     <Form.Label htmlFor="countInStock">Count in stock</Form.Label>
                     <Field
                       name="countInStock"
-                      as={Form.Control}
+                      className={`form-control ${
+                        touched.countInStock && !!errors.countInStock ? "is-invalid" : ""
+                      }`}
                       type="number"
                       value={values.countInStock}
                     />
@@ -205,16 +221,16 @@ const EditProduct = ({ show, onHide, product, productId }) => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="petType">Pet Type</Form.Label>
                 <div>
-                  {petTypes.map((opt, index) => (
+                  {pets.map((pet, index) => (
                     <Field
                       name="petType"
                       key={index}
                       as={Form.Check}
                       className="form-check-inline"
-                      checked={values.petType.includes(opt)}
+                      checked={values.petType.includes(pet.name)}
                       type="checkbox"
-                      value={opt}
-                      label={opt}
+                      value={pet.name}
+                      label={pet.name}
                     />
                   ))}
                 </div>

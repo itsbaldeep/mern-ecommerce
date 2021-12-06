@@ -1,5 +1,4 @@
 // Dependencies
-import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
@@ -9,18 +8,15 @@ import * as Yup from "yup";
 import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Config
-import { directoryCategories, states } from "config.json";
+import { states } from "config.json";
 
 // Actions
-import { addDirectory, addDirectoryReset } from "redux/actions/directory";
+import { addDirectory } from "redux/actions/directory";
 
 const AddDirectory = ({ show, onHide }) => {
   const dispatch = useDispatch();
   const { loading, error, isAdded } = useSelector((state) => state.directory);
-
-  useEffect(() => {
-    dispatch(addDirectoryReset());
-  }, [dispatch]);
+  const { directoryCategories } = useSelector((state) => state.category);
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -75,7 +71,11 @@ const AddDirectory = ({ show, onHide }) => {
                 </Col>
               </Row>
               <TextField name="address" label="Address" placeholder="Enter the business address" />
-              <CheckBoxOptions name="category" label="Category" options={directoryCategories} />
+              <CheckBoxOptions
+                name="category"
+                label="Category"
+                options={directoryCategories.map((category) => category.name)}
+              />
               <Row>
                 <Col xs={12} sm={4}>
                   <SelectField name="state" label="State" options={states} defaultValue="Delhi" />

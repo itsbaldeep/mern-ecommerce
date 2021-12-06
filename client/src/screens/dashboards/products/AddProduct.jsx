@@ -8,15 +8,14 @@ import { useEffect } from "react";
 // Components
 import { TextField, SelectField, CheckBoxOptions, CheckBox } from "components/InputFields.jsx";
 
-// Config
-import { productCategories, petTypes } from "config.json";
-
 // Actions
 import { addProduct, clearErrors } from "redux/actions/product";
 
 const AddProduct = ({ show, onHide }) => {
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector((state) => state.product);
+  const { categories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   useEffect(() => {
     dispatch(clearErrors());
@@ -28,7 +27,7 @@ const AddProduct = ({ show, onHide }) => {
   const initialValues = {
     name: "",
     description: "",
-    category: "Others",
+    category: "",
     price: 0,
     countInStock: 0,
     petType: [],
@@ -130,7 +129,7 @@ const AddProduct = ({ show, onHide }) => {
               />
               <SelectField
                 label="Category"
-                options={productCategories}
+                options={categories.map((category) => category.name)}
                 name="category"
                 defaultValue="Others"
               />
@@ -153,7 +152,11 @@ const AddProduct = ({ show, onHide }) => {
                   />
                 </Col>
               </Row>
-              <CheckBoxOptions label="Pet Type" options={petTypes} name="petType" />
+              <CheckBoxOptions
+                label="Pet Type"
+                options={pets.map((pet) => pet.name)}
+                name="petType"
+              />
               <TextField name="breedType" label="Breed Type" placeholder="Compatible breeds" />
               <TextField
                 name="weight"

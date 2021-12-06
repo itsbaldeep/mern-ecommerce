@@ -1,12 +1,12 @@
 // Dependencies
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field } from "formik";
 import * as Yup from "yup";
 
 // Config
-import { serviceCategories, petTypes, days } from "config.json";
+import { days } from "config.json";
 
 // Components
 import { TextField } from "components/InputFields.jsx";
@@ -15,15 +15,13 @@ import { TextField } from "components/InputFields.jsx";
 import { arrayToBinary, binaryToArray } from "helpers/daysHandler";
 
 // Actions
-import { editService, editServiceReset } from "redux/actions/service";
+import { editService } from "redux/actions/service";
 
 const EditService = ({ show, onHide, service, serviceId }) => {
   const dispatch = useDispatch();
   const { loading, error, isUpdated } = useSelector((state) => state.service);
-
-  useEffect(() => {
-    dispatch(editServiceReset());
-  }, [dispatch]);
+  const { serviceCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   const MAX_IMAGES = 5;
   const spaceLeft = MAX_IMAGES - service.serviceImages.length;
@@ -183,12 +181,7 @@ const EditService = ({ show, onHide, service, serviceId }) => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="name">Service Name</Form.Label>
-                <Field
-                  name="name"
-                  as={Form.Control}
-                  value={values.name}
-                  isInvalid={touched.name && !!errors.name}
-                />
+                <Field name="name" as={Form.Control} value={values.name} />
                 <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
               </Form.Group>
               <Form.Group className="mb-3">
@@ -198,7 +191,6 @@ const EditService = ({ show, onHide, service, serviceId }) => {
                   className="form-control"
                   as="textarea"
                   value={values.description}
-                  isInvalid={touched.description && !!errors.description}
                 />
                 <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
               </Form.Group>
@@ -206,28 +198,17 @@ const EditService = ({ show, onHide, service, serviceId }) => {
                 <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="price">Price</Form.Label>
-                    <Field
-                      name="price"
-                      as={Form.Control}
-                      type="number"
-                      value={values.price}
-                      isInvalid={touched.price && !!errors.price}
-                    />
+                    <Field name="price" as={Form.Control} type="number" value={values.price} />
                     <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
                 <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="category">Category</Form.Label>
-                    <Field
-                      as="select"
-                      name="category"
-                      className="form-control"
-                      defaultValue={values.category}
-                    >
-                      {serviceCategories.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
+                    <Field as="select" name="category" className="form-control">
+                      {serviceCategories.map((category, index) => (
+                        <option key={index} value={category.name}>
+                          {category.name}
                         </option>
                       ))}
                     </Field>
@@ -253,7 +234,6 @@ const EditService = ({ show, onHide, service, serviceId }) => {
                       as={Form.Check}
                       className="form-check-inline"
                       checked={values.days.includes(opt)}
-                      isInvalid={touched.days && !!errors.days}
                       type="checkbox"
                       value={opt}
                       label={opt}
@@ -280,41 +260,30 @@ const EditService = ({ show, onHide, service, serviceId }) => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="petType">Pet Type</Form.Label>
                 <div>
-                  {petTypes.map((opt, index) => (
+                  {pets.map((pet, index) => (
                     <Field
                       name="petType"
                       key={index}
                       as={Form.Check}
                       className="form-check-inline"
-                      checked={values.petType.includes(opt)}
-                      isInvalid={touched.petType && !!errors.petType}
+                      checked={values.petType.includes(pet.name)}
                       type="checkbox"
-                      value={opt}
-                      label={opt}
+                      value={pet.name}
+                      label={pet.name}
                     />
                   ))}
                 </div>
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="breedType">Breed Type</Form.Label>
-                <Field
-                  name="breedType"
-                  as={Form.Control}
-                  value={values.breedType}
-                  isInvalid={touched.breedType && !!errors.breedType}
-                />
+                <Field name="breedType" as={Form.Control} value={values.breedType} />
                 <Form.Control.Feedback type="invalid">{errors.breedType}</Form.Control.Feedback>
               </Form.Group>
               <Row>
                 <Col sm={12} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="ageRange.min">Minimum Age (in yrs)</Form.Label>
-                    <Field
-                      name="ageRange.min"
-                      as={Form.Control}
-                      type="number"
-                      isInvalid={touched.ageRange?.min && !!errors.ageRange?.min}
-                    />
+                    <Field name="ageRange.min" as={Form.Control} type="number" />
                     <Form.Control.Feedback type="invalid">
                       {errors.ageRange?.min}
                     </Form.Control.Feedback>
@@ -323,12 +292,7 @@ const EditService = ({ show, onHide, service, serviceId }) => {
                 <Col sm={12} md={6}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="max">Maximum Age (in yrs)</Form.Label>
-                    <Field
-                      name="ageRange.max"
-                      as={Form.Control}
-                      type="number"
-                      isInvalid={touched.ageRange?.max && !!errors.ageRange?.max}
-                    />
+                    <Field name="ageRange.max" as={Form.Control} type="number" />
                     <Form.Control.Feedback type="invalid">
                       {errors.ageRange?.max}
                     </Form.Control.Feedback>

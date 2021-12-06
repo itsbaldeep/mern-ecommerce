@@ -8,9 +8,6 @@ import { FaFilter } from "react-icons/fa";
 import MainSlider from "components/MainSlider.jsx";
 import Service from "./Service.jsx";
 
-// Config
-import { serviceCategories, petTypes } from "config.json";
-
 // Actions
 import { getServices } from "redux/actions/service";
 
@@ -27,6 +24,8 @@ const CheckBox = ({ label }) => (
 const ServicesScreen = () => {
   const dispatch = useDispatch();
   const { loading, services } = useSelector((state) => state.service);
+  const { serviceCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [showFilter, setShowFilter] = useState(window.innerWidth > 768);
@@ -54,14 +53,14 @@ const ServicesScreen = () => {
           <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
-              {serviceCategories.map((value, index) => (
-                <CheckBox label={value} key={index} />
+              {serviceCategories.map((category, index) => (
+                <CheckBox label={category.name} key={index} />
               ))}
             </div>
             <div className="pettype-section">
               <h4>Filter by Pet</h4>
-              {petTypes.map((value, index) => (
-                <CheckBox label={value} key={index} />
+              {pets.map((pet, index) => (
+                <CheckBox label={pet.name} key={index} />
               ))}
             </div>
             <div className="sort-section">

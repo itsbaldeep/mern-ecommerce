@@ -16,7 +16,7 @@ import {
 } from "components/InputFields.jsx";
 
 // Config
-import { directoryCategories, states } from "config.json";
+import { states } from "config.json";
 
 // Actions
 import { register, clearErrors } from "redux/actions/user";
@@ -151,6 +151,8 @@ const secondValidation = Yup.object({
 
 const SecondStep = ({ data, prev, next }) => {
   const dispatch = useDispatch();
+  const { directoryCategories } = useSelector((state) => state.category);
+
   useEffect(() => {
     dispatch(clearErrors());
   }, [dispatch]);
@@ -169,7 +171,11 @@ const SecondStep = ({ data, prev, next }) => {
             type="text"
             placeholder="Enter your business name here"
           />
-          <CheckBoxOptions label="Category" options={directoryCategories} name="category" />
+          <CheckBoxOptions
+            label="Category"
+            options={directoryCategories?.map((category) => category.name)}
+            name="category"
+          />
           <TextField label="Phone Number" name="number" type="number" placeholder="9876543210" />
           <TextField
             label="Address"

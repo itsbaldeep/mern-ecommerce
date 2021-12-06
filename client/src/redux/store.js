@@ -8,6 +8,8 @@ import { forgotPasswordReducer, profileReducer, userReducer, adminReducer } from
 import { productsReducer } from "./reducers/product";
 import { servicesReducer } from "./reducers/service";
 import { directoryReducer } from "./reducers/directory";
+import { categoryReducer } from "./reducers/category";
+import { petReducer } from "./reducers/pet";
 
 // Combining reducers
 const reducer = combineReducers({
@@ -18,6 +20,8 @@ const reducer = combineReducers({
   product: productsReducer,
   service: servicesReducer,
   directory: directoryReducer,
+  category: categoryReducer,
+  pet: petReducer,
 });
 
 // Creating the store

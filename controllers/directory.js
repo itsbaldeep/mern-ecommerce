@@ -67,7 +67,7 @@ exports.addDirectory = async (req, res, next) => {
   try {
     // Checking if the directory is being linked to an existing user
     let user, link;
-    if (req.body.user !== "") {
+    if (req.body.user && req.body.user !== "") {
       user = await User.findById(req.body.user);
       if (!user) return next(new ErrorResponse("User not found", 404));
       if (user.directory)

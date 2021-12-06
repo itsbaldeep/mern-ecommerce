@@ -1,23 +1,20 @@
 // Dependencies
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field, FieldArray } from "formik";
 import * as Yup from "yup";
 
 // Config
-import { directoryCategories, states } from "config.json";
+import { states } from "config.json";
 
 // Actions
-import { editDirectory, editDirectoryReset } from "redux/actions/directory";
+import { editDirectory } from "redux/actions/directory";
 
 const EditDirectory = ({ show, onHide, directory, directoryId }) => {
   const dispatch = useDispatch();
   const { loading, error, isUpdated } = useSelector((state) => state.directory);
-
-  useEffect(() => {
-    dispatch(editDirectoryReset());
-  }, [dispatch]);
+  const { directoryCategories } = useSelector((state) => state.category);
 
   const MAX_IMAGES = 5;
   const spaceLeft = MAX_IMAGES - directory.directoryImages.length;
@@ -168,17 +165,17 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="category">Category</Form.Label>
                 <div>
-                  {directoryCategories.map((opt, index) => (
+                  {directoryCategories.map((category, index) => (
                     <Field
                       name="category"
                       key={index}
                       as={Form.Check}
                       className="form-check-inline"
-                      checked={values.category.includes(opt)}
+                      checked={values.category.includes(category.name)}
                       isInvalid={touched.category && !!errors.category}
                       type="checkbox"
-                      value={opt}
-                      label={opt}
+                      value={category.name}
+                      label={category.name}
                     />
                   ))}
                 </div>

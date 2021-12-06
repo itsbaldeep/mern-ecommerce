@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { TextField } from "components/InputFields.jsx";
 
 // Config
-import { serviceCategories, petTypes, days as allDays } from "config.json";
+import { days as allDays } from "config.json";
 
 // Helpers
 import { arrayToBinary, binaryToArray } from "helpers/daysHandler";
@@ -20,6 +20,8 @@ import { editService, clearErrors } from "redux/actions/service";
 const EditService = ({ show, onHide, service }) => {
   const dispatch = useDispatch();
   const { loading, error, success } = useSelector((state) => state.service);
+  const { serviceCategories } = useSelector((state) => state.category);
+  const { pets } = useSelector((state) => state.pet);
 
   useEffect(() => {
     dispatch(clearErrors());
@@ -224,9 +226,9 @@ const EditService = ({ show, onHide, service }) => {
                       className="form-control"
                       defaultValue={values.category}
                     >
-                      {serviceCategories.map((opt) => (
-                        <option key={opt} value={opt}>
-                          {opt}
+                      {serviceCategories.map((category, index) => (
+                        <option key={index} value={category.name}>
+                          {category.name}
                         </option>
                       ))}
                     </Field>
@@ -279,17 +281,17 @@ const EditService = ({ show, onHide, service }) => {
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="petType">Pet Type</Form.Label>
                 <div>
-                  {petTypes.map((opt, index) => (
+                  {pets.map((pet, index) => (
                     <Field
                       name="petType"
                       key={index}
                       as={Form.Check}
                       className="form-check-inline"
-                      checked={values.petType.includes(opt)}
+                      checked={values.petType.includes(pet.name)}
                       isInvalid={touched.petType && !!errors.petType}
                       type="checkbox"
-                      value={opt}
-                      label={opt}
+                      value={pet.name}
+                      label={pet.name}
                     />
                   ))}
                 </div>
