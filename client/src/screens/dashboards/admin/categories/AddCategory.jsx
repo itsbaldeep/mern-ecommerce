@@ -1,11 +1,11 @@
 // Dependencies
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Row, Col, Modal, Alert, Button } from "react-bootstrap";
+import { Form, Modal, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
 // Components
-import { TextField, SelectField } from "components/InputFields.jsx";
+import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Actions
 import { addCategory } from "redux/actions/category";
@@ -25,13 +25,13 @@ const AddCategory = ({ show, onHide }) => {
           name: "",
           description: "",
           type: "Product",
-          pet: "",
+          pet: [],
           image: "",
         }}
         validationSchema={Yup.object({
           name: Yup.string().required("Category name is required"),
           type: Yup.string().required("Category type is required"),
-          pet: Yup.string().required("Pet type is required"),
+          pet: Yup.array().min(1, "Please pick atleast one pet type"),
         })}
         // onSubmit={console.log}
         onSubmit={(values) => dispatch(addCategory(values))}
@@ -50,24 +50,18 @@ const AddCategory = ({ show, onHide }) => {
                 label="Category description"
                 placeholder="Enter the category description"
               />
-              <Row>
-                <Col xs={12} sm={6}>
-                  <SelectField
-                    name="type"
-                    label="Category type"
-                    options={["Product", "Service", "Directory"]}
-                    placeholder="Enter the category type"
-                  />
-                </Col>
-                <Col xs={12} sm={6}>
-                  <SelectField
-                    name="pet"
-                    label="Pet type"
-                    options={pets.map((pet) => pet.name)}
-                    placeholder="Enter the pet type"
-                  />
-                </Col>
-              </Row>
+              <SelectField
+                name="type"
+                label="Category type"
+                options={["Product", "Service", "Directory"]}
+                placeholder="Enter the category type"
+              />
+              <CheckBoxOptions
+                name="pet"
+                label="Pet type"
+                options={pets?.map((pet) => pet.name)}
+                placeholder="Enter the pet type"
+              />
               {error && (
                 <Alert className="my-1" variant="danger">
                   {error}

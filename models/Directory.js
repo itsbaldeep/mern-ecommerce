@@ -19,7 +19,6 @@ const DirectorySchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: [true, "Please provide an email"],
       lowercase: true,
       trim: true,
       match: [
@@ -31,7 +30,7 @@ const DirectorySchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provide an address"],
       minlength: [8, "Address is too short"],
-      maxlength: [64, "Address is too long"],
+      maxlength: [256, "Address is too long"],
     },
     category: {
       type: [{ type: String, ref: "Category" }],

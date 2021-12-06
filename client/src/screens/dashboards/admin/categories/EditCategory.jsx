@@ -1,7 +1,7 @@
 // Dependencies
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Row, Col, Modal, Alert, Button } from "react-bootstrap";
-import { Formik } from "formik";
+import { Form, Modal, Alert, Button } from "react-bootstrap";
+import { Formik, Field } from "formik";
 import * as Yup from "yup";
 
 // Components
@@ -25,17 +25,17 @@ const EditCategory = ({ show, onHide, categoryId, category }) => {
           name: category.name,
           description: category.description,
           type: category.type,
-          pet: category.pet,
+          pet: [...category.pet],
           image: category.image,
         }}
         validationSchema={Yup.object({
           name: Yup.string().required("Category name is required"),
           type: Yup.string().required("Category type is required"),
-          pet: Yup.string().required("Pet type is required"),
+          pet: Yup.array().min(1, "Please pick atleast one pet type"),
         })}
         onSubmit={(values) => dispatch(editCategory(values, categoryId))}
       >
-        {({ handleSubmit }) => (
+        {({ values, handleSubmit }) => (
           <Form>
             <Modal.Body>
               <TextField
@@ -49,24 +49,29 @@ const EditCategory = ({ show, onHide, categoryId, category }) => {
                 label="Category description"
                 placeholder="Enter the category description"
               />
-              <Row>
-                <Col xs={12} sm={6}>
-                  <SelectField
-                    name="type"
-                    label="Category type"
-                    options={["Product", "Service", "Directory"]}
-                    placeholder="Enter the category type"
-                  />
-                </Col>
-                <Col xs={12} sm={6}>
-                  <SelectField
-                    name="pet"
-                    label="Pet type"
-                    options={pets.map((pet) => pet.name)}
-                    placeholder="Enter the pet type"
-                  />
-                </Col>
-              </Row>
+              <SelectField
+                name="type"
+                label="Category type"
+                options={["Product", "Service", "Directory"]}
+                placeholder="Enter the category type"
+              />
+              <Form.Group className="mb-3">
+                <Form.Label htmlFor="pet">Pet Type</Form.Label>
+                <div>
+                  {pets.map((pet, index) => (
+                    <Field
+                      name="pet"
+                      key={index}
+                      as={Form.Check}
+                      className="form-check-inline"
+                      checked={values.pet.includes(pet.name)}
+                      type="checkbox"
+                      value={pet.name}
+                      label={pet.name}
+                    />
+                  ))}
+                </div>
+              </Form.Group>
               {error && (
                 <Alert className="my-1" variant="danger">
                   {error}
@@ -89,7 +94,7 @@ const EditCategory = ({ show, onHide, categoryId, category }) => {
                   handleSubmit();
                 }}
               >
-                {loading ? "Editing" : "Edit"}
+                {loading ? "Updating" : "Update"}
               </Button>
             </Modal.Footer>
           </Form>

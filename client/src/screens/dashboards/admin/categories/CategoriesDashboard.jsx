@@ -135,8 +135,8 @@ const CategoryRow = ({ category, index }) => {
       <td>{category.name}</td>
       <td>{category.description}</td>
       <td>{category.type}</td>
-      <td>{category.pet}</td>
-      <td>{category.docs?.map((doc) => doc.name).join(", ")}</td>
+      <td>{category.pet.join(", ")}</td>
+      <td>{category.docs?.map((doc) => doc.name || doc.storeName).join(", ")}</td>
       <td>{convertTime(category.createdAt)}</td>
       <td>{convertTime(category.updatedAt)}</td>
     </tr>

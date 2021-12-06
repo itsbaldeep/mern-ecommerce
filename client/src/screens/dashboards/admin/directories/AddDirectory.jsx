@@ -38,7 +38,6 @@ const AddDirectory = ({ show, onHide }) => {
         validationSchema={Yup.object({
           storeName: Yup.string().required("Business/store is required"),
           number: Yup.string().required("Phone Number is required"),
-          email: Yup.string().email("Please provide a valid email").required("Email is required"),
           address: Yup.string().required("Address is required"),
           state: Yup.string().required("State is required"),
           city: Yup.string().required("City is required"),

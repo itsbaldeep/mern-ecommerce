@@ -69,15 +69,15 @@ const DirectoriesDashboard = () => {
               <th>Actions</th>
               <th>Directory Images</th>
               <th>Business/Store Name</th>
+              <th>Address</th>
+              <th>Number</th>
+              <th>Categories</th>
+              <th>Email</th>
               <th>Description</th>
               <th>Website</th>
               <th>Tagline</th>
               <th>Username</th>
               <th>User</th>
-              <th>Email</th>
-              <th>Address</th>
-              <th>Number</th>
-              <th>Categories</th>
               <th>Approval</th>
               <th>Date of Approval</th>
               <th>Date of Creation</th>
@@ -109,6 +109,8 @@ const DirectoryRow = ({ directory, index }) => {
   const hideApproveDialog = () => setApproveDialog(false);
   const hideEditDialog = () => setEditDialog(false);
   const hideRemoveDialog = () => setRemoveDialog(false);
+
+  const address = `${directory.address}, ${directory.city}, ${directory.state}, ${directory.pincode}`;
 
   return (
     <tr>
@@ -153,6 +155,10 @@ const DirectoryRow = ({ directory, index }) => {
         </a>
       </td>
       <td>{directory.storeName}</td>
+      <td>{address.length > 60 ? `${address.substring(0, 60)}...` : address}</td>
+      <td>{directory.number}</td>
+      <td>{directory.category.join(", ")}</td>
+      <td>{directory.email}</td>
       <td>{directory.description}</td>
       <td>
         {directory.website && (
@@ -178,12 +184,6 @@ const DirectoryRow = ({ directory, index }) => {
           </p>
         )}
       </td>
-      <td>{directory.email}</td>
-      <td>
-        {directory.address}, {directory.city}, {directory.state}, {directory.pincode}
-      </td>
-      <td>{directory.number}</td>
-      <td>{directory.category.join(", ")}</td>
       <td>
         {directory.isApproved ? (
           <div className="text-success">

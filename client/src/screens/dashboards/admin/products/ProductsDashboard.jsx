@@ -161,7 +161,11 @@ const ProductRow = ({ product, index }) => {
         </a>
       </td>
       <td>{product.name}</td>
-      <td>{product.description}</td>
+      <td>
+        {product.description.length > 60
+          ? `${product.description.substring(0, 60)}...`
+          : product.description}
+      </td>
       <td>
         {product.seller && (
           <p
@@ -175,7 +179,7 @@ const ProductRow = ({ product, index }) => {
       </td>
       <td>₹{product.price}</td>
       <td>{product.countInStock}</td>
-      <td>
+      <td style={{ maxWidth: "110px", wordWrap: "break-word" }}>
         {product.link && (
           <a href={product.link} target="_blank" rel="noreferrer">
             <FaExternalLinkAlt /> {product.link}

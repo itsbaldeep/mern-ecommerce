@@ -34,7 +34,7 @@ const ProductCard = ({ product }) => {
         <Card.Title>{product.name}</Card.Title>
         <Card.Text>
           {product.description.length > 100
-            ? `${product.description.slice(0, 100)}...`
+            ? `${product.description.substring(0, 100)}...`
             : product.description}
         </Card.Text>
       </Card.Body>
