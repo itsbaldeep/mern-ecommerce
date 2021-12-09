@@ -1,7 +1,6 @@
 // Dependencies
 import { Button, Modal, Form, Row, Col, Alert } from "react-bootstrap";
 import { Formik } from "formik";
-import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
@@ -12,7 +11,9 @@ import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.
 import { days } from "config.json";
 
 // Helpers
-import { arrayToBinary } from "helpers/daysHandler";
+import { service as validationSchema } from "helpers/validationSchemas";
+import { service as initialValues } from "helpers/initialValuess";
+import { newService as handleSubmit } from "helpers/handleSubmit";
 
 // Actions
 import { addService, clearErrors } from "redux/actions/service";
@@ -30,91 +31,16 @@ const AddService = ({ show, onHide }) => {
   const MAX_IMAGES = 3;
   const spaceLeft = MAX_IMAGES;
 
-  const initialValues = {
-    name: "",
-    description: "",
-    address: "",
-    nameOfIncharge: "",
-    numberOfIncharge: "",
-    timings: {
-      from: "00:00",
-      to: "00:00",
-    },
-    days: [],
-    category: "Others",
-    price: 0,
-    petType: [],
-    breedType: "",
-    ageRange: {
-      min: 0,
-      max: 0,
-    },
-    serviceImages: [],
-  };
-
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(5, "Product name is too short")
-      .max(32, "Product name is too long")
-      .required("Please provide a product name"),
-    description: Yup.string()
-      .min(8, "Product description is too short")
-      .max(1024, "Product description is too long")
-      .required("Please provide a product description"),
-    category: Yup.string().required("Pick atleast one category"),
-    price: Yup.number()
-      .positive("Price must be a positive number")
-      .required("Please provide a price"),
-    address: Yup.string()
-      .min(8, "Address is too short")
-      .max(128, "Address is too long")
-      .required("Please provide address"),
-    nameOfIncharge: Yup.string()
-      .min(3, "Name of incharge is too short")
-      .max(32, "Name of incharge is too long")
-      .required("Please provide a name of the incharge for this service"),
-    numberOfIncharge: Yup.string()
-      .matches(
-        /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
-        "Please provide a valid phone number of the incharge"
-      )
-      .required("Please provide a phone number of the incharge"),
-    timings: Yup.object({
-      from: Yup.string().required("Please provide timings of this service"),
-      to: Yup.string().required("Please provide timings of this service"),
-    }),
-    days: Yup.array().min(1, "Please pick atleast one day when this service is provided"),
-    petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
-    breedType: Yup.string(),
-    ageRange: Yup.object({
-      min: Yup.number().min(0, "Minimum age should be atleast 0"),
-      max: Yup.number().min(0, "Maximum age should be atleast 0"),
-    }),
-  });
-
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
         <Modal.Title>Add a new service</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValues()}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          // Converting to FormData
-          const fd = new FormData();
-          for (const key in values) fd.append(key, values[key]);
-          fd.set("timings", JSON.stringify(values.timings));
-          fd.set("ageRange", JSON.stringify(values.ageRange));
-          // Converting days to binary number
-          fd.set("days", arrayToBinary(values.days));
-
-          // Images
-          const filesLength = values.serviceImages.length;
-          if (filesLength > 0) {
-            for (let i = 0; i < filesLength; i++) fd.set("serviceImages", values.serviceImages[i]);
-          }
-
+          const fd = handleSubmit(values);
           dispatch(addService(fd));
         }}
       >

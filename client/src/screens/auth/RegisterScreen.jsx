@@ -1,13 +1,16 @@
 // Dependencies
 import { Formik } from "formik";
 import { Form, Button, Container, Alert } from "react-bootstrap";
-import * as Yup from "yup";
 import { Link, useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 
 // Componenets
 import { CheckBox, TextField } from "components/InputFields.jsx";
+
+// Helpers
+import { customerRegistration as validationSchema } from "helpers/validationSchemas";
+import { customerRegistration as initialValues } from "helpers/initialValues";
 
 // Actions
 import { register, clearErrors } from "redux/actions/user";
@@ -22,28 +25,6 @@ const RegisterScreen = () => {
     if (user.isAuthenticated) history.push("/");
     dispatch(clearErrors());
   }, [dispatch, history, user.isAuthenticated]);
-
-  const initialValues = {
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    terms: false,
-  };
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(3, "Must be atleast 3 characters")
-      .max(32, "Must be 32 characters or less")
-      .required("Name is required"),
-    email: Yup.string().email("Email is invalid").required("Email is required"),
-    password: Yup.string()
-      .min(8, "Password must be at least 8 charaters")
-      .required("Password is required"),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Passwords must match")
-      .required("Re-enter your password"),
-    terms: Yup.bool().oneOf([true], "You are required to check this"),
-  });
 
   return (
     <Formik

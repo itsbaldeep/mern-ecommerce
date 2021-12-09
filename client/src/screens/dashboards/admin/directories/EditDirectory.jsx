@@ -3,10 +3,14 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field, FieldArray } from "formik";
-import * as Yup from "yup";
 
 // Config
 import { states } from "config.json";
+
+// Helpers
+import { directoryUpdate as initialValues } from "helpers/initialValues";
+import { directoryUpdate as validationSchema } from "helpers/validationSchemas";
+import { directoryUpdate as handleSubmit } from "helpers/handleSubmit";
 
 // Actions
 import { editDirectory } from "redux/actions/directory";
@@ -19,88 +23,6 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
   const MAX_IMAGES = 5;
   const spaceLeft = MAX_IMAGES - directory.directoryImages.length;
 
-  // Deep copying fields from directory state object
-  const features = [...directory.features];
-  const details = JSON.parse(JSON.stringify(directory.details));
-  const website = directory.website;
-  const tagline = directory.tagline;
-  const description = directory.description;
-  const username = directory.username;
-  const storeName = directory.storeName;
-  const category = [...directory.category];
-  const number = directory.number;
-  const address = directory.address;
-  const state = directory.state;
-  const city = directory.city;
-  const pincode = directory.pincode;
-
-  const initialValues = {
-    features,
-    details,
-    directoryImages: [],
-    website,
-    tagline,
-    description,
-    username,
-    storeName,
-    category,
-    number,
-    address,
-    state,
-    city,
-    pincode,
-  };
-
-  const validationSchema = Yup.object({
-    storeName: Yup.string()
-      .min(3, "Business Name must contain atleast 3 characters")
-      .max(64, "Business Name is too long")
-      .required("Please provide a business name"),
-    category: Yup.array().min(1, "Pick atleast one category").of(Yup.string()),
-    number: Yup.string()
-      .matches(
-        /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
-        "Please provide a valid phone number"
-      )
-      .required("Please provide a phone number"),
-    address: Yup.string()
-      .min(8, "Address is too short")
-      .max(256, "Address is too long")
-      .required("Please provide an address"),
-    state: Yup.string().required("Please provide a state"),
-    city: Yup.string().required("Please provide a city"),
-    pincode: Yup.number().required("Please provide a pincode"),
-    features: Yup.array()
-      .max(10, "You can only have a maximum of 10 features")
-      .of(
-        Yup.string()
-          .required("This is a required field")
-          .min(4, "This feature is too short")
-          .max(16, "This feature is too long")
-      ),
-    details: Yup.array()
-      .max(10, "You can only have a maximum of 10 details")
-      .of(
-        Yup.object({
-          title: Yup.string()
-            .required("The title is required")
-            .min(4, "This title is too short")
-            .max(12, "This title is too long"),
-          content: Yup.string()
-            .required("The description is required")
-            .min(4, "This description is too short")
-            .max(64, "This description is too long"),
-        })
-      ),
-    website: Yup.string().matches(
-      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
-      "Please provide a valid website"
-    ),
-    tagline: Yup.string().max(32, "The tagline is too long"),
-    description: Yup.string().max(1024, "The description is too long"),
-    username: Yup.string(),
-  });
-
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
@@ -110,43 +32,8 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          // Converting to FormData and updating only modified fields
-          const fd = new FormData();
-
-          // Plain text fields
-          if (values.description !== directory.description)
-            fd.append("description", values.description);
-          if (values.tagline !== directory.tagline) fd.append("tagline", values.tagline);
-          if (values.website !== directory.website) fd.append("website", values.website);
-          if (values.username !== directory.username) fd.append("username", values.username);
-
-          if (values.storeName !== directory.storeName) fd.append("storeName", values.storeName);
-          if (values.address !== directory.address) fd.append("address", values.address);
-          if (values.state !== directory.state) fd.append("state", values.state);
-          if (values.city !== directory.city) fd.append("city", values.city);
-          if (values.pincode !== directory.pincode) fd.append("pincode", values.pincode);
-          if (values.number !== directory.number) fd.append("number", values.number);
-
-          // Category
-          if (values.category.toString() !== directory.category.toString())
-            fd.append("category", values.category);
-
-          // Details
-          const detailsJSON = JSON.stringify(values.details);
-          if (detailsJSON !== JSON.stringify(directory.details)) fd.append("details", detailsJSON);
-
-          // Features
-          if (values.features.toString() !== directory.features.toString())
-            fd.append("features", values.features);
-
-          // Images
-          const filesLength = values.directoryImages.length;
-          if (filesLength > 0) {
-            for (let i = 0; i < filesLength; i++)
-              fd.append("directoryImages", values.directoryImages[i]);
-          }
+          const fd = handleSubmit(values, directory);
           dispatch(editDirectory(fd, directoryId));
-          fd.forEach((value, key) => console.log(`${key}: ${value}`));
         }}
       >
         {({ values, errors, touched, handleSubmit, setErrors, setFieldValue }) => (

@@ -37,7 +37,10 @@ const EditUser = ({ show, onHide, user, userId }) => {
           profileImage: null,
         }}
         validationSchema={Yup.object({
-          name: Yup.string().required("Name is required"),
+          name: Yup.string()
+            .required("Name is required")
+            .min(3, "Must be atleast 3 characters")
+            .max(32, "Must be 32 characters or less"),
           email: Yup.string().email("Provide a valid email").required("Email is required"),
           password: Yup.string().min(8, "Password should be atleast 8 characters"),
         })}
@@ -49,9 +52,7 @@ const EditUser = ({ show, onHide, user, userId }) => {
           if (user.number !== values.number) fd.append("number", values.number);
           if (values.password !== "") fd.append("password", values.password);
           if (values.profileImage !== null) fd.append("profileImage", values.profileImage);
-          // fd.forEach((value, key) => console.log(`${key}: ${value}`));
           dispatch(editUser(fd, userId));
-          // console.log(values);
         }}
       >
         {({ values, errors, handleSubmit, setFieldValue }) => (

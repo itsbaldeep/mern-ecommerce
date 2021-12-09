@@ -61,6 +61,68 @@ const DirectorySchema = new mongoose.Schema(
         "Please provide a valid phone number",
       ],
     },
+    products: {
+      type: [String],
+      default: [],
+      validate: [(arr) => arr.length <= 25, "Too many products"],
+    },
+    services: {
+      type: [String],
+      default: [],
+      validate: [(arr) => arr.length <= 25, "Too many services"],
+    },
+    location: {
+      type: {
+        _id: false,
+        lat: Number,
+        lng: Number,
+      },
+      default: {
+        lat: null,
+        lng: null,
+      },
+    },
+    timings: {
+      type: [
+        {
+          type: [
+            {
+              _id: false,
+              from: String,
+              to: String,
+            },
+          ],
+          validate: [(arr) => arr.length <= 2, "You can have at most 2 timings for a single day"],
+        },
+      ],
+      default: [],
+      validate: [(arr) => arr.length <= 7, "You can have at most 7 timings"],
+    },
+    faq: {
+      type: [
+        {
+          _id: false,
+          question: {
+            type: String,
+            required: true,
+            minlength: [4, "Question is too short"],
+            maxlength: [120, "Question is too long"],
+          },
+          answer: {
+            type: String,
+            required: true,
+            minlength: [4, "Answer is too short"],
+            maxlength: [1024, "Answer is too long"],
+          },
+        },
+      ],
+      default: [],
+      validate: [(arr) => arr.length <= 10, "Too many FAQs"],
+    },
+    gallery: {
+      type: [String],
+      default: [],
+    },
     features: {
       type: [
         {
@@ -70,6 +132,7 @@ const DirectorySchema = new mongoose.Schema(
         },
       ],
       default: [],
+      validate: [(arr) => arr.length <= 10, "Too many features"],
     },
     details: {
       type: [
@@ -88,6 +151,7 @@ const DirectorySchema = new mongoose.Schema(
         },
       ],
       default: [],
+      validate: [(arr) => arr.length <= 10, "Too many details"],
     },
     directoryImages: {
       type: [String],
@@ -114,7 +178,7 @@ const DirectorySchema = new mongoose.Schema(
     },
     description: {
       type: String,
-      maxlength: [1024, "Description is too long"],
+      maxlength: [4096, "Description is too long"],
       default: "",
     },
     username: {
@@ -123,11 +187,11 @@ const DirectorySchema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
-    ratings: {
+    reviews: {
       type: [
         {
           type: mongoose.SchemaTypes.ObjectId,
-          ref: "DirectoryReview",
+          ref: "Review",
         },
       ],
     },
@@ -163,6 +227,14 @@ DirectorySchema.pre("save", async function (next) {
   // Set approval to false every time the document is updated
   if (!this.isModified("isApproved")) this.isApproved = false;
   next();
+});
+
+// Virtual field for ratings
+DirectorySchema.virtual("rating").get(function () {
+  this.populate("reviews");
+  let rating = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  this.reviews.forEach((review) => rating[review.rating]++);
+  return rating;
 });
 
 const Directory = mongoose.model("Directory", DirectorySchema);

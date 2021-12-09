@@ -2,13 +2,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
-import * as Yup from "yup";
 
 // Components
 import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Config
 import { states } from "config.json";
+
+// Helpers
+import { user as initialValues } from "helpers/initialValues";
+import { user as validationSchema } from "helpers/validationSchemas";
 
 // Actions
 import { addUser } from "redux/actions/user";
@@ -24,27 +27,8 @@ const AddUser = ({ show, onHide }) => {
         <Modal.Title>Add a new user</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={{
-          name: "",
-          email: "",
-          password: "",
-          role: "Customer",
-          storeName: "",
-          number: "",
-          category: [],
-          address: "",
-          state: "Delhi",
-          city: "",
-          pincode: "",
-        }}
-        validationSchema={Yup.object({
-          name: Yup.string().required("Name is required"),
-          email: Yup.string().email("Provide a valid email").required("Email is required"),
-          password: Yup.string()
-            .min(8, "Password should be atleast 8 characters")
-            .required("Password is required"),
-        })}
-        // onSubmit={console.log}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
         onSubmit={(values) => dispatch(addUser(values))}
       >
         {({ values, handleSubmit }) => (

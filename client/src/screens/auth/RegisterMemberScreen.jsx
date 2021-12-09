@@ -18,6 +18,11 @@ import {
 // Config
 import { states } from "config.json";
 
+// Helpers
+import { customerRegistration as firstValidation } from "helpers/validationSchemas";
+import { directoryRegistration as secondValidation } from "helpers/validationSchemas";
+import { clientRegistration as initialValues } from "helpers/initialValues";
+
 // Actions
 import { register, clearErrors } from "redux/actions/user";
 
@@ -27,21 +32,7 @@ const RegisterMemberScreen = () => {
   const user = useSelector((state) => state.user);
 
   // Keeping track of form data and step
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    terms: false,
-    storeName: "",
-    category: [],
-    number: "",
-    address: "",
-    state: "Delhi",
-    city: "",
-    pincode: "",
-    role: "Client",
-  });
+  const [data, setData] = useState(initialValues);
   const [step, setStep] = useState(0);
 
   // Don't let a user with token access this screen
@@ -81,21 +72,6 @@ const RegisterMemberScreen = () => {
 };
 
 // First Step
-const firstValidation = Yup.object({
-  name: Yup.string()
-    .min(3, "Must be atleast 3 characters")
-    .max(32, "Must be 32 characters or less")
-    .required("Name is required"),
-  email: Yup.string().email("Email is invalid").required("Email is required"),
-  password: Yup.string()
-    .min(8, "Password must be at least 8 charaters")
-    .required("Password is required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
-    .required("Re-enter your password"),
-  terms: Yup.bool().oneOf([true], "You are required to check this"),
-});
-
 export const FirstStep = ({ data, next }) => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -133,22 +109,6 @@ export const FirstStep = ({ data, next }) => {
 };
 
 // Second Step
-const secondValidation = Yup.object({
-  storeName: Yup.string()
-    .min(3, "Business Name must contain atleast 3 characters")
-    .max(64, "Business Name is too long")
-    .required("Please provide a business name"),
-  category: Yup.array().min(1, "Pick atleast one category").of(Yup.string()),
-  number: Yup.number("Please provide a valid number").required("Please provide a phone number"),
-  address: Yup.string()
-    .min(8, "Address is too short")
-    .max(256, "Address is too long")
-    .required("Please provide an address"),
-  state: Yup.string().required("Please provide a state"),
-  city: Yup.string().required("Please provide a city"),
-  pincode: Yup.number().required("Please provide a pincode"),
-});
-
 const SecondStep = ({ data, prev, next }) => {
   const dispatch = useDispatch();
   const { directoryCategories } = useSelector((state) => state.category);

@@ -9,6 +9,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { clearErrors, updateProfile } from "redux/actions/user";
 import { useState } from "react";
 
+// Helpers
+import { directoryAdditional as initialValues } from "helpers/initialValues";
+import { directoryAdditional as validationSchema } from "helpers/validationSchemas";
+import { directoryAdditional as submit } from "helpers/handleSubmit";
+
 const AdditionalDetails = () => {
   const dispatch = useDispatch();
   const profile = useSelector((state) => state.profile);
@@ -22,84 +27,12 @@ const AdditionalDetails = () => {
   const MAX_IMAGES = 5;
   const spaceLeft = MAX_IMAGES - directory.directoryImages.length;
 
-  // Deep copying fields from directory state object
-  const features = [...directory.features];
-  const details = JSON.parse(JSON.stringify(directory.details));
-  const website = directory.website;
-  const tagline = directory.tagline;
-  const description = directory.description;
-  const username = directory.username;
-
-  const additionalData = {
-    features,
-    details,
-    directoryImages: [],
-    website,
-    tagline,
-    description,
-    username,
-  };
-  const additionalDataValidate = Yup.object({
-    features: Yup.array()
-      .max(10, "You can only have a maximum of 10 features")
-      .of(
-        Yup.string()
-          .required("This is a required field")
-          .min(4, "This feature is too short")
-          .max(16, "This feature is too long")
-      ),
-    details: Yup.array()
-      .max(10, "You can only have a maximum of 10 details")
-      .of(
-        Yup.object({
-          title: Yup.string()
-            .required("The title is required")
-            .min(4, "This title is too short")
-            .max(12, "This title is too long"),
-          content: Yup.string()
-            .required("The description is required")
-            .min(4, "This description is too short")
-            .max(64, "This description is too long"),
-        })
-      ),
-    website: Yup.string().matches(
-      /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
-      "Please provide a valid website"
-    ),
-    tagline: Yup.string().max(32, "The tagline is too long"),
-    description: Yup.string().max(1024, "The description is too long"),
-    username: Yup.string(),
-  });
-
   return (
     <Formik
-      initialValues={additionalData}
-      validationSchema={additionalDataValidate}
+      initialValues={initialValues(directory)}
+      validationSchema={validationSchema}
       onSubmit={(values) => {
-        // Converting to FormData and updating only modified fields
-        const fd = new FormData();
-
-        // Plain text fields
-        if (values.description !== directory.description)
-          fd.append("description", values.description);
-        if (values.tagline !== directory.tagline) fd.append("tagline", values.tagline);
-        if (values.website !== directory.website) fd.append("website", values.website);
-        if (values.username !== directory.username) fd.append("username", values.username);
-
-        // Details
-        const detailsJSON = JSON.stringify(values.details);
-        if (detailsJSON !== JSON.stringify(directory.details)) fd.append("details", detailsJSON);
-
-        // Features
-        if (values.features.toString() !== directory.features.toString())
-          fd.append("features", values.features);
-
-        // Images
-        const filesLength = values.directoryImages.length;
-        if (filesLength > 0) {
-          for (let i = 0; i < filesLength; i++)
-            fd.append("directoryImages", values.directoryImages[i]);
-        }
+        const fd = submit(values, directory);
         dispatch(updateProfile(fd));
       }}
     >

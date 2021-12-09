@@ -2,13 +2,16 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
-import * as Yup from "yup";
 
 // Components
 import { TextField, SelectField, CheckBoxOptions } from "components/InputFields.jsx";
 
 // Config
 import { states } from "config.json";
+
+// Helpers
+import { directory as initialValues } from "helpers/initialValues";
+import { directoryRegistration as validationSchema } from "helpers/validationSchemas";
 
 // Actions
 import { addDirectory } from "redux/actions/directory";
@@ -24,30 +27,11 @@ const AddDirectory = ({ show, onHide }) => {
         <Modal.Title>Add a new directory</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={{
-          storeName: "",
-          user: "",
-          email: "",
-          number: "",
-          category: [],
-          address: "",
-          state: "Delhi",
-          city: "",
-          pincode: "",
-        }}
-        validationSchema={Yup.object({
-          storeName: Yup.string().required("Business/store is required"),
-          number: Yup.string().required("Phone Number is required"),
-          address: Yup.string().required("Address is required"),
-          state: Yup.string().required("State is required"),
-          city: Yup.string().required("City is required"),
-          pincode: Yup.string().required("Pincode is required"),
-          category: Yup.array().min(1),
-        })}
-        // onSubmit={console.log}
+        initialValues={initialValues}
+        validationSchema={validationSchema}
         onSubmit={(values) => dispatch(addDirectory(values))}
       >
-        {({ values, handleSubmit }) => (
+        {({ handleSubmit }) => (
           <Form>
             <Modal.Body>
               <TextField

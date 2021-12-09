@@ -3,7 +3,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
 import { Formik, Field } from "formik";
-import * as Yup from "yup";
+
+// Helpers
+import { product as initialValues } from "helpers/initialValues";
+import { product as validationSchema } from "helpers/validationSchemas";
+import { productUpdate as handleSubmit } from "helpers/handleSubmit";
 
 // Actions
 import { editProduct } from "redux/actions/product";
@@ -17,93 +21,16 @@ const EditProduct = ({ show, onHide, product, productId }) => {
   const MAX_IMAGES = 7;
   const spaceLeft = MAX_IMAGES - product.productImages.length;
 
-  const initialValues = {
-    name: product.name,
-    petType: [...product.petType],
-    description: product.description,
-    category: product.category,
-    price: product.price,
-    countInStock: product.countInStock,
-    breedType: product.breedType,
-    size: JSON.parse(JSON.stringify(product.size)),
-    ageRange: JSON.parse(JSON.stringify(product.ageRange)),
-    weight: product.weight,
-    isVeg: product.isVeg,
-    productImages: [],
-  };
-
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(5, "Product name is too short")
-      .max(32, "Product name is too long")
-      .required("Please provide a product name"),
-    description: Yup.string()
-      .min(8, "Product description is too short")
-      .max(1024, "Product description is too long")
-      .required("Please provide a product description"),
-    category: Yup.string().required("Pick atleast one category"),
-    price: Yup.number()
-      .positive("Price must be a positive number")
-      .required("Please provide a price"),
-    countInStock: Yup.number()
-      .positive("Please provide a positive count")
-      .required("Please provide a count in stock"),
-    petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
-    breedType: Yup.string().max(32, "Breed Type is too long"),
-    weight: Yup.number().min(0, "Weight must be positive"),
-    size: Yup.object({
-      length: Yup.number().min(0, "Length must be positive"),
-      height: Yup.number().min(0, "Height must be positive"),
-      width: Yup.number().min(0, "Width must be positive"),
-    }),
-    isVeg: Yup.boolean(),
-    ageRange: Yup.object({
-      min: Yup.number().min(0, "Minimum age should be atleast 0"),
-      max: Yup.number().min(0, "Maximum age should be atleast 0"),
-    }),
-  });
-
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
         <Modal.Title>Edit Product</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValues(product)}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          // Converting to FormData and updating only modified fields
-          const fd = new FormData();
-
-          // Plain text fields
-          if (values.name !== product.name) fd.append("name", values.name);
-          if (values.description !== product.description)
-            fd.append("description", values.description);
-          if (values.category !== product.category) fd.append("category", values.category);
-          if (values.price !== product.price) fd.append("price", values.price);
-          if (values.countInStock !== product.countInStock)
-            fd.append("countInStock", values.countInStock);
-          if (values.isVeg !== product.isVeg) fd.append("isVeg", values.isVeg);
-          if (values.weight !== product.weight) fd.append("weight", values.weight);
-          if (values.breedType !== product.breedType) fd.append("breedType", values.breedType);
-
-          // Object fields
-          const sizeJSON = JSON.stringify(values.size);
-          if (sizeJSON !== JSON.stringify(product.size)) fd.append("size", sizeJSON);
-          const ageRangeJSON = JSON.stringify(values.ageRange);
-          if (ageRangeJSON !== JSON.stringify(product.ageRange))
-            fd.append("ageRange", ageRangeJSON);
-
-          // Array fields
-          if (values.petType.toString() !== product.petType.toString())
-            fd.append("petType", values.petType);
-
-          // Images
-          const filesLength = values.productImages.length;
-          if (filesLength > 0) {
-            for (let i = 0; i < filesLength; i++)
-              fd.append("productImages", values.productImages[i]);
-          }
+          const fd = handleSubmit(values, product);
           dispatch(editProduct(fd, productId));
         }}
       >

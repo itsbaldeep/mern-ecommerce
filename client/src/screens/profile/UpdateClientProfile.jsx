@@ -1,11 +1,15 @@
 // Dependencies
 import { Formik, Field } from "formik";
-import * as Yup from "yup";
 import { Row, Col, Form, Alert, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 // Config
 import { states } from "config.json";
+
+// Helpers
+import { clientUpdate as initialValues } from "helpers/initialValues";
+import { clientUpdate as validationSchema } from "helpers/validationSchemas";
+import { clientUpdate as submit } from "helpers/handleSubmit";
 
 // Actions
 import { updateProfile } from "redux/actions/user";
@@ -17,61 +21,12 @@ const UpdateClientProfile = () => {
   const { directoryCategories } = useSelector((state) => state.category);
   const directory = user.directory;
 
-  const clientProfileChangeData = {
-    name: user.name,
-    profileImage: null,
-    storeName: directory.storeName,
-    category: [...directory.category],
-    number: directory.number,
-    address: directory.address,
-    state: directory.state,
-    city: directory.city,
-    pincode: directory.pincode,
-  };
-
-  const clientProfileChangeValidate = Yup.object({
-    name: Yup.string()
-      .min(3, "Must be atleast 3 characters")
-      .max(32, "Must be 32 characters or less")
-      .required("Please enter your new name"),
-    storeName: Yup.string()
-      .min(3, "Business Name must contain atleast 3 characters")
-      .max(64, "Business Name is too long")
-      .required("Please provide a business name"),
-    category: Yup.array().min(1, "Pick atleast one category").of(Yup.string()),
-    number: Yup.string()
-      .matches(
-        /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
-        "Please provide a valid phone number"
-      )
-      .required("Please provide a phone number"),
-    address: Yup.string()
-      .min(8, "Address is too short")
-      .max(256, "Address is too long")
-      .required("Please provide an address"),
-    state: Yup.string().required("Please provide a state"),
-    city: Yup.string().required("Please provide a city"),
-    pincode: Yup.number().required("Please provide a pincode"),
-  });
-
   return (
     <Formik
-      initialValues={clientProfileChangeData}
-      validationSchema={clientProfileChangeValidate}
+      initialValues={initialValues}
+      validationSchema={validationSchema}
       onSubmit={(values) => {
-        // Updating only those fields that have been modified
-        const data = {};
-        for (const value in values) {
-          if (values[value] !== directory[value]) data[value] = values[value];
-        }
-        if (values.name !== user.name) data.name = values.name;
-
-        // Fixing category comparision
-        if (values.category.toString() === directory.category.toString()) delete data.category;
-
-        // Converting to FormData
-        const fd = new FormData();
-        for (const key in data) fd.append(key, data[key]);
+        const fd = submit(values, user, directory);
         dispatch(updateProfile(fd));
       }}
     >

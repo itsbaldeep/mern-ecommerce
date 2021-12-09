@@ -2,10 +2,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
-import * as Yup from "yup";
 
 // Components
 import { TextField, SelectField, CheckBox, CheckBoxOptions } from "components/InputFields.jsx";
+
+// Helpers
+import { product as initialValues } from "helpers/initialValues";
+import { product as validationSchema } from "helpers/validationSchemas";
+import { newProduct as handleSubmit } from "helpers/handleSubmit";
 
 // Actions
 import { addProduct } from "redux/actions/product";
@@ -25,69 +29,10 @@ const AddProduct = ({ show, onHide }) => {
         <Modal.Title>Add a new product</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={{
-          name: "",
-          description: "",
-          category: "",
-          price: 0,
-          countInStock: 0,
-          petType: [],
-          breedType: "",
-          weight: 0,
-          size: {
-            length: 0,
-            height: 0,
-            width: 0,
-          },
-          isVeg: false,
-          ageRange: {
-            min: 0,
-            max: 0,
-          },
-          productImages: [],
-        }}
-        validationSchema={Yup.object({
-          name: Yup.string()
-            .min(5, "Product name is too short")
-            .max(32, "Product name is too long")
-            .required("Please provide a product name"),
-          description: Yup.string()
-            .min(8, "Product description is too short")
-            .max(1024, "Product description is too long")
-            .required("Please provide a product description"),
-          category: Yup.string().required("Pick atleast one category"),
-          price: Yup.number()
-            .positive("Price must be a positive number")
-            .required("Please provide a price"),
-          countInStock: Yup.number()
-            .positive("Please provide a positive count")
-            .required("Please provide a count in stock"),
-          petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
-          breedType: Yup.string(),
-          weight: Yup.number().min(0, "Weight must be positive"),
-          size: Yup.object({
-            length: Yup.number().min(0, "Length must be positive"),
-            height: Yup.number().min(0, "Height must be positive"),
-            width: Yup.number().min(0, "Width must be positive"),
-          }),
-          isVeg: Yup.boolean(),
-          ageRange: Yup.object({
-            min: Yup.number().min(0, "Minimum age should be atleast 0"),
-            max: Yup.number().min(0, "Maximum age should be atleast 0"),
-          }),
-        })}
+        initialValues={initialValues()}
+        validationSchema={validationSchema}
         onSubmit={(values) => {
-          // Converting to FormData
-          const fd = new FormData();
-          for (const key in values) fd.append(key, values[key]);
-          fd.set("size", JSON.stringify(values.size));
-          fd.set("ageRange", JSON.stringify(values.ageRange));
-          // Images
-          const filesLength = values.productImages.length;
-          if (filesLength > 0) {
-            for (let i = 0; i < filesLength; i++)
-              fd.append("productImages", values.productImages[i]);
-          }
+          const fd = handleSubmit(values);
           dispatch(addProduct(fd));
         }}
       >
