@@ -1,7 +1,6 @@
 // Dependencies
 import { Button, Modal, Form, Row, Col, Alert, Card } from "react-bootstrap";
 import { Formik, Field } from "formik";
-import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 

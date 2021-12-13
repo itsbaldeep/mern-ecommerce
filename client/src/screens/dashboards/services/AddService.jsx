@@ -12,7 +12,7 @@ import { days } from "config.json";
 
 // Helpers
 import { service as validationSchema } from "helpers/validationSchemas";
-import { service as initialValues } from "helpers/initialValuess";
+import { service as initialValues } from "helpers/initialValues";
 import { newService as handleSubmit } from "helpers/handleSubmit";
 
 // Actions

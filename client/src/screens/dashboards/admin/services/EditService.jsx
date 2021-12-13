@@ -42,6 +42,7 @@ const EditService = ({ show, onHide, service, serviceId }) => {
       >
         {({ values, errors, touched, handleSubmit, setErrors, setFieldValue }) => (
           <Form>
+            {console.log(values)}
             <Modal.Body>
               <Form.Group className="mb-3">
                 <h4>Images</h4>

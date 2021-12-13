@@ -66,7 +66,7 @@ export const directoryAdditional = (directory) => {
 
 export const directoryUpdate = (directory) => {
   return {
-    ...directoryAdditional(),
+    ...directoryAdditional(directory),
     storeName: directory.storeName,
     user: directory.user,
     email: directory.email,
@@ -93,50 +93,79 @@ export const clientUpdate = (user, directory) => {
   };
 };
 
-export const product = (_product) => {
-  return {
-    name: _product.name || "",
-    description: _product.description || "",
-    category: _product.category || "",
-    price: _product.price || 0,
-    countInStock: _product.countInStock || 0,
-    petType: _product.petType || [],
-    breedType: _product.breedType || "",
-    weight: _product.weight || 0,
-    size: _product.size || {
+export const product = (
+  _product = {
+    name: "",
+    description: "",
+    category: "",
+    price: 0,
+    countInStock: 0,
+    petType: [],
+    breedType: "",
+    weight: 0,
+    size: {
       length: 0,
       height: 0,
       width: 0,
     },
-    isVeg: _product.isVeg || false,
-    ageRange: _product.ageRange || {
+    isVeg: false,
+    ageRange: {
       min: 0,
       max: 0,
     },
+  }
+) => {
+  return {
+    name: _product.name,
+    description: _product.description,
+    category: _product.category,
+    price: _product.price,
+    countInStock: _product.countInStock,
+    petType: _product.petType,
+    breedType: _product.breedType,
+    weight: _product.weight,
+    size: _product.size,
+    isVeg: _product.isVeg,
+    ageRange: _product.ageRange,
     productImages: [],
   };
 };
 
-export const service = (_service) => {
-  return {
-    name: _service.name || "",
-    description: _service.description || "",
-    address: _service.address || "",
-    nameOfIncharge: _service.nameOfIncharge || "",
-    numberOfIncharge: _service.numberOfIncharge || "",
-    timings: _service._timings || {
+export const service = (
+  _service = {
+    name: "",
+    description: "",
+    address: "",
+    nameOfIncharge: "",
+    numberOfIncharge: "",
+    timings: {
       from: "00:00",
       to: "00:00",
     },
-    days: _service ? binaryToArray(_service.days) : [],
-    category: _service.category || "Others",
-    price: _service.price || 0,
-    petType: _service.petType || [],
-    breedType: _service.breedType || "",
-    ageRange: _service.ageRange || {
+    days: [],
+    category: "",
+    price: 0,
+    petType: [],
+    breedType: "",
+    ageRange: {
       min: 0,
       max: 0,
     },
+  }
+) => {
+  return {
+    name: _service.name,
+    description: _service.description,
+    address: _service.address,
+    nameOfIncharge: _service.nameOfIncharge,
+    numberOfIncharge: _service.numberOfIncharge,
+    timings: _service.timings,
+    days: typeof _service.days === "number" ? binaryToArray(_service.days) : _service.days,
+    category: _service.category,
+    price: _service.price,
+    petType: _service.petType,
+    breedType: _service.breedType,
+    ageRange: _service.ageRange,
     serviceImages: [],
   };
 };

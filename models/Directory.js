@@ -85,14 +85,9 @@ const DirectorySchema = new mongoose.Schema(
     timings: {
       type: [
         {
-          type: [
-            {
-              _id: false,
-              from: String,
-              to: String,
-            },
-          ],
-          validate: [(arr) => arr.length <= 2, "You can have at most 2 timings for a single day"],
+          _id: false,
+          from: String,
+          to: String,
         },
       ],
       default: [],

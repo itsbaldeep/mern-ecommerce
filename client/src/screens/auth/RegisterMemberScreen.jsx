@@ -1,7 +1,6 @@
 // Dependencies
 import { Formik } from "formik";
 import { Form, Container, Alert, Row, Col, Button } from "react-bootstrap";
-import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";

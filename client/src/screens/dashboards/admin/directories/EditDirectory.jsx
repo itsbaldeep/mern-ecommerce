@@ -29,7 +29,7 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
         <Modal.Title>Edit Directory</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={initialValues}
+        initialValues={initialValues(directory)}
         validationSchema={validationSchema}
         onSubmit={(values) => {
           const fd = handleSubmit(values, directory);

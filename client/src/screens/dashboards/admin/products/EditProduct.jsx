@@ -7,7 +7,7 @@ import { Formik, Field } from "formik";
 // Helpers
 import { product as initialValues } from "helpers/initialValues";
 import { product as validationSchema } from "helpers/validationSchemas";
-import { productUpdate as handleSubmit } from "helpers/handleSubmit";
+import { updateProduct as handleSubmit } from "helpers/handleSubmit";
 
 // Actions
 import { editProduct } from "redux/actions/product";
