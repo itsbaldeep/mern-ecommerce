@@ -104,24 +104,26 @@ export const directoryAdditional = Yup.object({
   timings: Yup.array()
     .max(7)
     .of(
-      Yup.array()
-        .max(2)
-        .of(
-          Yup.object({
-            from: Yup.string(),
-            to: Yup.string(),
-          })
-        )
+      Yup.object({
+        from: Yup.string(),
+        to: Yup.string(),
+      })
     ),
   faq: Yup.array()
     .max(10)
     .of(
       Yup.object({
-        question: Yup.string().min(2, "Question is too short").max(32, "Question is too long"),
-        answer: Yup.string().min(2, "Answer is too short").max(1024, "Answer is too long"),
+        question: Yup.string()
+          .min(2, "Question is too short")
+          .max(120, "Question is too long")
+          .required("Question is required"),
+        answer: Yup.string()
+          .min(2, "Answer is too short")
+          .max(1024, "Answer is too long")
+          .required("Answer is required"),
       })
     ),
-  gallery: Yup.array().of(Yup.string()),
+  gallery: Yup.array().of(Yup.string().required("Please provide a link to the image")),
 });
 
 export const directoryUpdate = directoryRegistration.concat(directoryAdditional);

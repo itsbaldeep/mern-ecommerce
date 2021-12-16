@@ -78,8 +78,8 @@ const DirectorySchema = new mongoose.Schema(
         lng: Number,
       },
       default: {
-        lat: null,
-        lng: null,
+        lat: 28.7041,
+        lng: 77.1025,
       },
     },
     timings: {
@@ -90,7 +90,7 @@ const DirectorySchema = new mongoose.Schema(
           to: String,
         },
       ],
-      default: [],
+      default: Array(7).fill({ from: "00:00", to: "00:00" }),
       validate: [(arr) => arr.length <= 7, "You can have at most 7 timings"],
     },
     faq: {

@@ -12,7 +12,7 @@ const Directory = require("../models/Directory");
 // This function generates a new JWT token
 const sendToken = async (_user, statusCode, res) => {
   // Refetching the user to make sure private fields aren't sent
-  const user = await User.findById(_user._id);
+  const user = await User.findById(_user._id).populate("directory");
   const token = user.getSignedToken();
   res.status(statusCode).json({
     success: true,
@@ -362,22 +362,28 @@ exports.updateProfile = async (req, res, next) => {
         }
         directory.username = req.body.username;
       }
+      // Plain text fields
       if (req.body.name) user.name = req.body.name;
       if (req.body.storeName) directory.storeName = req.body.storeName;
-      // Category in formdata is in string format instead of array
-      if (req.body.category) directory.category = req.body.category.split(",");
       if (req.body.number) directory.number = req.body.number;
       if (req.body.address) directory.address = req.body.address;
       if (req.body.city) directory.city = req.body.city;
       if (req.body.state) directory.state = req.body.state;
       if (req.body.pincode) directory.pincode = req.body.pincode;
-      // Details in formdata is in JSON stringify format instead of array of objects
-      if (req.body.details) directory.details = JSON.parse(req.body.details);
-      // Features in formdata is in string format instead of array
-      if (req.body.features) directory.features = req.body.features.split(",");
       if (req.body.description) directory.description = req.body.description;
       if (req.body.website) directory.website = req.body.website;
       if (req.body.tagline) directory.tagline = req.body.tagline;
+      // Array fields in formdata are seperated by commas
+      if (req.body.category) directory.category = req.body.category.split(",");
+      if (req.body.features) directory.features = req.body.features.split(",");
+      if (req.body.products) directory.products = req.body.products.split(",");
+      if (req.body.services) directory.services = req.body.services.split(",");
+      if (req.body.gallery) directory.gallery = req.body.gallery.split(",");
+      // Object fields in formdata are in JSON format
+      if (req.body.details) directory.details = JSON.parse(req.body.details);
+      if (req.body.faq) directory.faq = JSON.parse(req.body.faq);
+      if (req.body.location) directory.location = JSON.parse(req.body.location);
+      if (req.body.timings) directory.timings = JSON.parse(req.body.timings);
       // Files contain single profileImage and multiple directoryImages files
       if (req.files) {
         if (req.files.profileImage)

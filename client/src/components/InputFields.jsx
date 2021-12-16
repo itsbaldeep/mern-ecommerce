@@ -1,6 +1,8 @@
 import React from "react";
-import { useField } from "formik";
-import { Form, Button } from "react-bootstrap";
+import { useField, FieldArray, Field } from "formik";
+import { Form, Button, Row, Col } from "react-bootstrap";
+
+import { days } from "config.json";
 
 export const TextField = ({ label, ...props }) => {
   const [field, meta] = useField(props);
@@ -42,12 +44,12 @@ export const CheckBoxOptions = ({ label, options, ...props }) => {
       <Form.Label>{label}</Form.Label>
       <div>
         {options.map((opt, index) => (
-          <Form.Check
-            {...field}
-            {...props}
-            className="form-check-inline"
+          <Field
+            name={props.name}
             key={index}
-            isValid={meta.touched && !meta.error}
+            as={Form.Check}
+            className="form-check-inline"
+            checked={field.value.includes(opt)}
             isInvalid={meta.touched && !!meta.error}
             type="checkbox"
             value={opt}
@@ -82,5 +84,172 @@ export const FormButton = ({ label, ...props }) => {
     <Button style={{ width: "100%" }} className="my-2" {...props}>
       {label}
     </Button>
+  );
+};
+
+const FieldArrayInput = ({ label, size, ...props }) => {
+  const [field, meta] = useField(props);
+  return (
+    <Form.Group className="mb-2">
+      <Form.Control
+        {...field}
+        {...props}
+        rows={1}
+        size={size}
+        isValid={meta.touched && !meta.error}
+        isInvalid={meta.touched && !!meta.error}
+      />
+      <Form.Control.Feedback type="invalid">{meta.error}</Form.Control.Feedback>
+    </Form.Group>
+  );
+};
+
+export const TextArrayField = ({ label, placeholder, message, size = "md", ...props }) => {
+  const [field, meta] = useField(props);
+  return (
+    <Form.Group>
+      <FieldArray name={props.name}>
+        {({ push, remove }) => (
+          <div>
+            <div className="d-flex justify-content-between">
+              <Form.Label>{label}</Form.Label>
+              <Button
+                variant="success"
+                size={size}
+                onClick={(e) => {
+                  e.preventDefault();
+                  push("");
+                }}
+              >
+                Add
+              </Button>
+            </div>
+            <p className="text-danger">{typeof meta.error === "string" ? meta.error : ""}</p>
+            {field.value.map((_, index) => {
+              return (
+                <Row key={index}>
+                  <Col xs={10}>
+                    <FieldArrayInput
+                      name={`${field.name}.${index}`}
+                      placeholder={placeholder}
+                      size={size}
+                    />
+                  </Col>
+                  <Col xs={2} className="d-flex flex-row-reverse">
+                    <Form.Group>
+                      <Button
+                        variant="danger"
+                        size={size}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          remove(index);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              );
+            })}
+          </div>
+        )}
+      </FieldArray>
+      {field.value.length === 0 && <p className="mt-3 text-muted">{message}</p>}
+    </Form.Group>
+  );
+};
+
+export const TextArrayOfObjectsField = ({
+  label,
+  placeholder,
+  message,
+  keys,
+  fieldType,
+  size = "md",
+  ...props
+}) => {
+  const [field, meta] = useField(props);
+  const colSize = 10 / keys.length;
+  return (
+    <Form.Group className="mb-3">
+      <FieldArray name={props.name}>
+        {({ push, remove }) => (
+          <div>
+            <div className="d-flex justify-content-between">
+              <Form.Label>{label}</Form.Label>
+              <Button
+                variant="success"
+                size={size}
+                onClick={(e) => {
+                  e.preventDefault();
+                  push(Object.assign({}, ...Array.from(keys, (k) => ({ [k]: "" }))));
+                }}
+              >
+                Add
+              </Button>
+            </div>
+            <p className="text-danger">{typeof meta.error === "string" ? meta.error : ""}</p>
+            {field.value.map((_, index) => {
+              return (
+                <Row key={index}>
+                  {keys.map((key) => (
+                    <Col xs={colSize} key={key}>
+                      <FieldArrayInput
+                        name={`${field.name}.${index}.${key}`}
+                        placeholder={placeholder?.[key]}
+                        as={fieldType[keys.indexOf(key)] || "input"}
+                        size={size}
+                      />
+                    </Col>
+                  ))}
+                  <Col xs={2} className="d-flex flex-row-reverse">
+                    <Form.Group>
+                      <Button
+                        variant="danger"
+                        size={size}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          remove(index);
+                        }}
+                      >
+                        Remove
+                      </Button>
+                    </Form.Group>
+                  </Col>
+                </Row>
+              );
+            })}
+          </div>
+        )}
+      </FieldArray>
+      {field.value.length === 0 && <p className="mt-3 text-muted">{message}</p>}
+    </Form.Group>
+  );
+};
+
+export const TimingsField = ({ label, size = "md", ...props }) => {
+  const [field] = useField(props);
+  return (
+    <Form.Group className="mb-3">
+      <FieldArray name={props.name}>
+        <>
+          <Form.Label>{label}</Form.Label>
+          {field.value.map((_, index) => (
+            <div key={index}>
+              <p className="mb-1">{days[index]}</p>
+              <Row className="mt-1">
+                <Col md={6}>
+                  <FieldArrayInput name={`${field.name}.${index}.from`} type="time" size={size} />
+                </Col>
+                <Col md={6}>
+                  <FieldArrayInput name={`${field.name}.${index}.to`} type="time" size={size} />
+                </Col>
+              </Row>
+            </div>
+          ))}
+        </>
+      </FieldArray>
+    </Form.Group>
   );
 };

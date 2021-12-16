@@ -4,6 +4,7 @@ import { Container, Row, Col } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
 import { Navigation, Pagination } from "swiper";
+import parse from "html-react-parser";
 
 // Actions
 import { loadDirectory } from "redux/actions/directory";
@@ -54,7 +55,7 @@ const DirectoryProfileScreen = ({ match }) => {
           <Col xs={12} md={6} className="pt-3">
             <h3>{directory.storeName}</h3>
             <h4>About this directory</h4>
-            <p>{directory.description || "No information available"}</p>
+            <p>{parse(directory.description) || "No information available"}</p>
             {directory.tagline && <p>Tagline: {directory.tagline}</p>}
             <p>Address: {directory.address}</p>
             <p>State: {directory.state}</p>

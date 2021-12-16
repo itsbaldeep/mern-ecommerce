@@ -2,7 +2,17 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Form, Alert, Button, Row, Col, Card, Modal } from "react-bootstrap";
-import { Formik, Field, FieldArray } from "formik";
+import { Formik, Field } from "formik";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+// Components
+import {
+  TextField,
+  TextArrayField,
+  TextArrayOfObjectsField,
+  TimingsField,
+} from "components/InputFields.jsx";
 
 // Config
 import { states } from "config.json";
@@ -162,13 +172,10 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
               </Form.Group>
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="description">Description</Form.Label>
-                <Field
-                  name="description"
-                  as="textarea"
-                  rows={4}
-                  className={`form-control ${
-                    touched.description && !!errors.description ? "is-invalid" : ""
-                  }`}
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={values.description}
+                  onChange={(_, editor) => setFieldValue("description", editor.getData())}
                 />
                 <div className="invalid-feedback">{errors.description}</div>
               </Form.Group>
@@ -204,167 +211,65 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
                   }`}
                 />
                 <Form.Text>
-                  Your website will be https://petohub.com/{values.username || "<username>"}{" "}
+                  Your website will be https://petohub.com/{values.username || "<username>"}
                 </Form.Text>
                 <Form.Control.Feedback type="invalid">{errors.username}</Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="mb-3">
-                <FieldArray name="features">
-                  {({ push, remove }) => (
-                    <div>
-                      <div className="d-flex justify-content-between">
-                        <h4>Features</h4>
-                        <button
-                          className="btn btn-success"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            push("");
-                          }}
-                        >
-                          Add
-                        </button>
-                      </div>
-                      <p className="text-danger">
-                        {typeof errors.features === "string" ? errors.features : ""}
-                      </p>
-                      {values.features.map((feature, index) => {
-                        return (
-                          <Row className="mt-3" key={index}>
-                            <Col md={10}>
-                              <Form.Group>
-                                <Field
-                                  name={`features.${index}`}
-                                  placeholder="Describe your feature briefly"
-                                  className={`form-control ${
-                                    touched.features?.[index] && !!errors.features?.[index]
-                                      ? "is-invalid"
-                                      : ""
-                                  }`}
-                                ></Field>
-                                <Form.Control.Feedback type="invalid">
-                                  {typeof errors.features === "object"
-                                    ? errors.features?.[index]
-                                    : ""}
-                                </Form.Control.Feedback>
-                              </Form.Group>
-                            </Col>
-                            <Col md={2} className="d-flex flex-row-reverse">
-                              <Form.Group>
-                                <button
-                                  className="btn btn-danger"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    remove(index);
-                                  }}
-                                >
-                                  Remove
-                                </button>
-                              </Form.Group>
-                            </Col>
-                          </Row>
-                        );
-                      })}
-                    </div>
-                  )}
-                </FieldArray>
-                {values.features.length === 0 && <p className="mt-3">No features added!</p>}
-              </Form.Group>
-              <Form.Group className="mb-3">
-                <FieldArray name="details">
-                  {({ push, remove }) => (
-                    <div>
-                      <div className="d-flex justify-content-between">
-                        <h4>Details</h4>
-                        <button
-                          className="btn btn-success"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            push({
-                              title: "",
-                              content: "",
-                            });
-                          }}
-                        >
-                          Add
-                        </button>
-                      </div>
-                      <p className="text-danger">
-                        {typeof errors.details === "string" ? errors.details : ""}
-                      </p>
-                      {values.details.map((detail, index) => {
-                        const title = `details.${index}.title`;
-                        const content = `details.${index}.content`;
-                        const containsError = touched.details?.[index] && !!errors.details?.[index];
-                        const titleError =
-                          containsError &&
-                          touched.details[index].title &&
-                          !!errors.details[index].title;
-                        const contentError =
-                          containsError &&
-                          touched.details[index].content &&
-                          !!errors.details[index].content;
-                        return (
-                          <Row key={index} className="mt-1">
-                            <Col md={5}>
-                              <Form.Group>
-                                <Form.Label>Title</Form.Label>
-                                <Field
-                                  name={title}
-                                  placeholder="Name of the function"
-                                  className={`form-control ${
-                                    containsError || titleError ? "is-invalid" : ""
-                                  }`}
-                                ></Field>
-                                <Form.Control.Feedback type="invalid">
-                                  {typeof errors.details === "object"
-                                    ? errors.details?.[index]?.title
-                                    : ""}
-                                </Form.Control.Feedback>
-                              </Form.Group>
-                            </Col>
-                            <Col md={5}>
-                              <Form.Group>
-                                <Form.Label>Description</Form.Label>
-                                <Field
-                                  name={content}
-                                  as="textarea"
-                                  rows={1}
-                                  placeholder="Describe the function broadly"
-                                  className={`form-control ${
-                                    containsError || contentError ? "is-invalid" : ""
-                                  }`}
-                                ></Field>
-                                <div className="invalid-feedback">
-                                  {typeof errors.details === "object"
-                                    ? errors.details?.[index]?.content
-                                    : ""}
-                                </div>
-                              </Form.Group>
-                            </Col>
-                            <Col md={2} className="d-flex align-items-end flex-row-reverse">
-                              <Form.Group>
-                                <button
-                                  className="btn btn-danger"
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    remove(index);
-                                  }}
-                                >
-                                  Remove
-                                </button>
-                              </Form.Group>
-                            </Col>
-                            <Form.Control.Feedback type="invalid" tooltip>
-                              <pre>{JSON.stringify(errors.details)}</pre>
-                            </Form.Control.Feedback>
-                          </Row>
-                        );
-                      })}
-                    </div>
-                  )}
-                </FieldArray>
-                {values.details.length === 0 && <p className="mt-3">No details added!</p>}
-              </Form.Group>
+              <Row>
+                <Col xs={12} sm={6}>
+                  <TextField name="location.lat" label="Latitude" type="number" />
+                </Col>
+                <Col xs={12} sm={6}>
+                  <TextField name="location.lng" label="Longitude" type="number" />
+                </Col>
+              </Row>
+              <TextArrayField
+                name="gallery"
+                label="Gallery"
+                placeholder="Enter the link to the image"
+                message="No images added!"
+                size="sm"
+              />
+              <TextArrayField
+                name="products"
+                label="Products"
+                placeholder="Enter product's name"
+                message="No products added!"
+                size="sm"
+              />
+              <TextArrayField
+                name="services"
+                label="Services"
+                placeholder="Enter service's name"
+                message="No services added!"
+                size="sm"
+              />
+              <TextArrayField
+                name="features"
+                label="Features"
+                placeholder="Describe the feature briefly"
+                message="No features added!"
+                size="sm"
+              />
+              <TextArrayOfObjectsField
+                name="details"
+                label="Details"
+                placeholder={{ title: "Title", content: "Description" }}
+                keys={["title", "content"]}
+                fieldType={["", "textarea"]}
+                message="No details added!"
+                size="sm"
+              />
+              <TextArrayOfObjectsField
+                name="faq"
+                label="FAQs"
+                placeholder={{ question: "Question", answer: "Answer" }}
+                keys={["question", "answer"]}
+                fieldType={["", "textarea"]}
+                message="No FAQs added!"
+                size="sm"
+              />
+              <TimingsField name="timings" label="Timings (From - To)" size="sm" />
               {error && (
                 <Alert className="my-1" variant="danger">
                   {error}

@@ -1,10 +1,13 @@
 // Dependencies
-import { Formik, Field } from "formik";
+import { Formik } from "formik";
 import { Row, Col, Form, Alert, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 
 // Config
 import { states } from "config.json";
+
+// Components
+import { TextField, CheckBoxOptions, SelectField } from "components/InputFields.jsx";
 
 // Helpers
 import { clientUpdate as initialValues } from "helpers/initialValues";
@@ -23,7 +26,7 @@ const UpdateClientProfile = () => {
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={initialValues(user, directory)}
       validationSchema={validationSchema}
       onSubmit={(values) => {
         const fd = submit(values, user, directory);
@@ -40,107 +43,33 @@ const UpdateClientProfile = () => {
               className="form-control"
               values={values.profileImage}
               onChange={(e) => setFieldValue("profileImage", e.currentTarget.files[0])}
-              isInvalid={!!errors.profileImage}
             />
             <Form.Control.Feedback type="invalid" tooltip>
               {errors.profileImage}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="name">Your Name</Form.Label>
-            <Field
-              name="name"
-              as={Form.Control}
-              value={values.name}
-              isInvalid={touched.name && !!errors.name}
-            />
-            <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="storeName">Business/Store Name</Form.Label>
-            <Field
-              name="storeName"
-              as={Form.Control}
-              value={values.storeName}
-              isInvalid={touched.storeName && !!errors.storeName}
-            />
-            <Form.Control.Feedback type="invalid">{errors.storeName}</Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="category">Category</Form.Label>
-            <div>
-              {directoryCategories.map((category, index) => (
-                <Field
-                  name="category"
-                  key={index}
-                  as={Form.Check}
-                  className="form-check-inline"
-                  checked={values.category.includes(category.name)}
-                  isInvalid={touched.category && !!errors.category}
-                  type="checkbox"
-                  value={category.name}
-                  label={category.name}
-                />
-              ))}
-            </div>
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="number">Phone Number</Form.Label>
-            <Field
-              name="number"
-              as={Form.Control}
-              value={values.number}
-              isInvalid={touched.number && !!errors.number}
-            />
-            <Form.Control.Feedback type="invalid">{errors.number}</Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label htmlFor="address">Address</Form.Label>
-            <Field
-              name="address"
-              as={Form.Control}
-              value={values.address}
-              isInvalid={touched.address && !!errors.address}
-            />
-            <Form.Control.Feedback type="invalid">{errors.address}</Form.Control.Feedback>
-          </Form.Group>
+          <TextField name="name" label="Your Name" placeholder="Enter your name" />
+          <TextField
+            name="storeName"
+            label="Business/Store Name"
+            placeholder="Enter your business/store name"
+          />
+          <CheckBoxOptions
+            name="category"
+            label="Category"
+            options={directoryCategories?.map((category) => category.name)}
+          />
+          <TextField name="number" label="Phone Number" placeholder="9876543210" />
+          <TextField name="address" label="Address" placeholder="Enter your address" />
           <Row>
             <Col xs={12} sm={4}>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="city">City</Form.Label>
-                <Field
-                  name="city"
-                  as={Form.Control}
-                  value={values.city}
-                  isInvalid={touched.city && !!errors.city}
-                />
-                <Form.Control.Feedback type="invalid">{errors.city}</Form.Control.Feedback>
-              </Form.Group>
+              <TextField name="city" label="City" placeholder="City" />
             </Col>
             <Col xs={12} sm={4}>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="state">State</Form.Label>
-                <Field as="select" name="state" className="form-control">
-                  {states.map((opt) => (
-                    <option key={opt} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </Field>
-                <Form.Control.Feedback type="invalid">{errors.state}</Form.Control.Feedback>
-              </Form.Group>
+              <SelectField name="state" label="State" options={states} />
             </Col>
             <Col xs={12} sm={4}>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="pincode">Pincode</Form.Label>
-                <Field
-                  name="pincode"
-                  as={Form.Control}
-                  value={values.pincode}
-                  isInvalid={touched.pincode && !!errors.pincode}
-                />
-                <Form.Control.Feedback type="invalid">{errors.pincode}</Form.Control.Feedback>
-              </Form.Group>
+              <TextField name="pincode" label="Pincode" placeholder="Pincode" />
             </Col>
           </Row>
           {profile.isUpdatedProfile && (

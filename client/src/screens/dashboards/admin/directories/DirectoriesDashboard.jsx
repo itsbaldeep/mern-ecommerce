@@ -52,6 +52,7 @@ const DirectoriesDashboard = () => {
             style={{ width: "100px", height: "40px" }}
           >
             <option value="storeName">Name</option>
+            <option value="_id">Directory ID</option>
             <option value="email">Email</option>
             <option value="number">Number</option>
             <option value="address">Address</option>
