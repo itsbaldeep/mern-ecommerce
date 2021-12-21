@@ -3,6 +3,142 @@
   grid-template-columns: 1fr 3fr;
 }
 
+.dir-slider-container {
+  width: 100%;
+  position: relative;
+  border-radius: 20px;
+  background-color: black;
+  height: 400px;
+}
+
+.dir-slider-img {
+  background-color: black;
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  height: 100%;
+  border-radius: 20px;
+  opacity: 90%;
+  box-shadow: 0px 0px 8px var(--bs-dark);
+}
+
+.dir-slider-info {
+  color: white;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  z-index: 10;
+  text-shadow: 1px 1px 3px black;
+}
+
+.dir-slider-info svg {
+  color: var(--bs-primary);
+  filter: drop-shadow(1px 1px 1px var(--bs-dark));
+}
+
+.dir-slider-ratings svg {
+  filter: drop-shadow(1px 1px 1px var(--bs-dark));
+}
+
+.dir-slider-buttons {
+  position: absolute;
+  bottom: 20px;
+  left: 10px;
+  z-index: 10;
+  display: flex;
+}
+
+.dir-slider-button {
+  background-color: var(--bs-primary);
+  transition: all 0.2s linear;
+  color: white;
+  padding: 12px;
+  margin-inline: 8px;
+  border-radius: 50%;
+  box-shadow: 1px 2px 4px black;
+}
+
+.dir-slider-button:hover {
+  background-color: white;
+  color: var(--bs-primary);
+}
+
+.dir-gallery-and-info {
+  background-color: #eeddee;
+}
+
+.dir-gallery-images img,
+.dir-add-photo {
+  width: 125px;
+}
+
+.dir-gallery-images img {
+  transition: all 0.2s linear;
+}
+
+.dir-gallery-images img:hover {
+  opacity: 50%;
+}
+
+.dir-gallery-images div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dir-add-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: all 0.2s linear;
+  border-radius: 100%;
+}
+
+.dir-add-photo:hover {
+  cursor: pointer;
+  background-color: var(--bs-primary);
+  color: white;
+}
+
+.dir-add-photo span {
+  font-size: 2rem;
+}
+
+.dir-store-info p {
+  margin-bottom: 0;
+}
+
+.dir-inquiry-form {
+  background-color: #ededed;
+  border-radius: 30px;
+}
+
+.dir-inquiry-form div {
+  text-align: center;
+}
+
+.dir-inquiry-form button {
+  width: 100%;
+}
+
+.dir-review-image img {
+  border-radius: 100%;
+}
+
+.dir-review-content {
+  width: 100%;
+}
+
+.dir-review-content p {
+  margin-bottom: 0;
+}
+
+.dir-business-info div {
+  max-width: 100%;
+  word-wrap: break-word;
+}
+
 @media (max-width: 768px) {
   .directory-screen {
     display: grid;

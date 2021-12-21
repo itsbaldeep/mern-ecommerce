@@ -1,6 +1,9 @@
 // Models
 const Directory = require("../models/Directory");
 const User = require("../models/User");
+const Product = require("../models/Product");
+const Service = require("../models/Service");
+const Review = require("../models/Review");
 const ErrorResponse = require("../utils/errorResponse");
 
 /*
@@ -9,7 +12,10 @@ const ErrorResponse = require("../utils/errorResponse");
 
 // GET /api/directory
 exports.getDirectories = async (req, res, next) => {
-  const directories = await Directory.find({ isApproved: true });
+  const directories = await Directory.find({ isApproved: true }).populate({
+    path: "reviews",
+    populate: { path: "reviewer" },
+  });
   return res.status(200).json({
     success: true,
     directories,
@@ -21,6 +27,9 @@ exports.getDirectory = async (req, res, next) => {
   const directory = await Directory.findOne({
     isApproved: true,
     username: req.params.username,
+  }).populate({
+    path: "reviews",
+    populate: { path: "reviewer" },
   });
   if (!directory) return next(new ErrorResponse("Directory not found", 404));
 
@@ -28,6 +37,120 @@ exports.getDirectory = async (req, res, next) => {
     success: true,
     directory,
   });
+};
+
+// GET /api/directory/products/:username
+exports.getDirectoryProducts = async (req, res, next) => {
+  try {
+    const directory = await Directory.findOne({
+      isApproved: true,
+      username: req.params.username,
+    });
+    if (!directory) return next(new ErrorResponse("Directory not found", 404));
+    const products = await Product.find().where("seller").equals(directory.id);
+    return res.status(200).json({
+      success: true,
+      products,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/directory/services/:username
+exports.getDirectoryServices = async (req, res, next) => {
+  try {
+    const directory = await Directory.findOne({
+      isApproved: true,
+      username: req.params.username,
+    });
+    if (!directory) return next(new ErrorResponse("Directory not found", 404));
+    const services = await Service.find().where("seller").equals(directory.id);
+    return res.status(200).json({
+      success: true,
+      services,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/*
+ * Review route - user is authenticated
+ */
+
+// POST /api/directory/review/:username
+exports.reviewDirectory = async (req, res, next) => {
+  try {
+    // Checking if the directory exists
+    const directory = await Directory.findOne({
+      isApproved: true,
+      username: req.params.username,
+    });
+    if (!directory) return next(new ErrorResponse("Cannot find the directory", 404));
+
+    // Checking if the user has already reviewed the directory
+    const reviewer = req.user._id;
+    const revieweeModel = "Directory";
+    const revieweeId = directory._id;
+    if (await Review.findOne({ reviewer, revieweeId }))
+      return next(
+        new ErrorResponse(
+          `User (${req.user.name}) has already reviewed the directory (${directory.storeName})`,
+          400
+        )
+      );
+
+    // Creating the review and sending it
+    const review = await Review.create({
+      reviewer,
+      revieweeModel,
+      revieweeId,
+      subject: req.body.subject,
+      comment: req.body.comment,
+      rating: req.body.rating,
+    });
+    await review.populate("reviewer");
+    return res.status(200).json({
+      success: true,
+      review,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DEL /api/directory/review/remove/:username
+exports.removeReview = async (req, res, next) => {
+  try {
+    // Checking if the directory exists
+    const directory = await Directory.findOne({
+      isApproved: true,
+      username: req.params.username,
+    });
+    if (!directory) return next(new ErrorResponse("Cannot find the directory", 404));
+
+    // Checking if the user has reviewed
+    const reviewer = req.user._id;
+    const revieweeId = directory._id;
+    const review = await Review.findOne({ reviewer, revieweeId });
+    if (!review)
+      return next(
+        new ErrorResponse(
+          `User (${req.user.name}) has not reviewed the directory (${directory.storeName})`,
+          400
+        )
+      );
+
+    // Removing the review and returning it
+    await review.remove();
+    return res.status(200).json({
+      success: true,
+      review,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 /*

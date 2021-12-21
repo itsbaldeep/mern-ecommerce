@@ -4,6 +4,7 @@ const ReviewSchema = mongoose.Schema(
   {
     reviewer: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
     revieweeModel: {
@@ -34,7 +35,7 @@ const ReviewSchema = mongoose.Schema(
       max: [5, "Rating should be between 0 and 5"],
     },
   },
-  { timestamps: true, toObject: { virtuals: true } }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
 
 // Virtual function to allow dynamic refs to Product, Service, Directory models
@@ -45,5 +46,5 @@ ReviewSchema.virtual("reviewee", {
   justOne: true,
 });
 
-const Review = mongoose.Model("Review", ReviewSchema);
+const Review = mongoose.model("Review", ReviewSchema);
 module.exports = Review;

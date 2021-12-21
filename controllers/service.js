@@ -67,7 +67,7 @@ exports.getOwnServiceById = async (req, res, next) => {
 exports.addService = async (req, res, next) => {
   try {
     const service = await Service.create({
-      seller: req.user.role === "Client" ? req.user._id : null,
+      seller: req.user.role === "Client" ? req.user.directory : null,
       name: req.body.name,
       address: req.body.address,
       nameOfIncharge: req.body.nameOfIncharge,

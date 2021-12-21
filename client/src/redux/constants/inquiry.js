@@ -1,0 +1,49 @@
+/*
+ * Public actions
+ */
+
+// POST /api/inquiry/add
+export const ADD_INQUIRY_REQUEST = "ADD_INQUIRY_REQUEST";
+export const ADD_INQUIRY_SUCCESS = "ADD_INQUIRY_SUCCESS";
+export const ADD_INQUIRY_FAIL = "ADD_INQUIRY_FAIL";
+
+/*
+ * Client Actions
+ */
+
+// GET /api/inquiry/own
+export const GET_OWN_INQUIRIES_REQUEST = "GET_OWN_INQUIRIES_REQUEST";
+export const GET_OWN_INQUIRIES_SUCCESS = "GET_OWN_INQUIRIES_SUCCESS";
+export const GET_OWN_INQUIRIES_FAIL = "GET_OWN_INQUIRIES_FAIL";
+
+// GET /api/inquiry/own/:id
+export const GET_OWN_INQUIRY_REQUEST = "GET_OWN_INQUIRY_REQUEST";
+export const GET_OWN_INQUIRY_SUCCESS = "GET_OWN_INQUIRY_SUCCESS";
+export const GET_OWN_INQUIRY_FAIL = "GET_OWN_INQUIRY_FAIL";
+
+/*
+ * Admin Actions
+ */
+
+// GET /api/inquiry
+export const GET_INQUIRIES_REQUEST = "GET_INQUIRIES_REQUEST";
+export const GET_INQUIRIES_SUCCESS = "GET_INQUIRIES_SUCCESS";
+export const GET_INQUIRIES_FAIL = "GET_INQUIRIES_FAIL";
+
+// GET /api/inquiry/:id
+export const GET_INQUIRY_REQUEST = "GET_INQUIRY_REQUEST";
+export const GET_INQUIRY_SUCCESS = "GET_INQUIRY_SUCCESS";
+export const GET_INQUIRY_FAIL = "GET_INQUIRY_FAIL";
+
+// PUT /api/inquiry/edit/:id
+export const EDIT_INQUIRY_REQUEST = "EDIT_INQUIRY_REQUEST";
+export const EDIT_INQUIRY_SUCCESS = "EDIT_INQUIRY_SUCCESS";
+export const EDIT_INQUIRY_FAIL = "EDIT_INQUIRY_FAIL";
+
+// DEL /api/inquiry/remove/:id
+export const REMOVE_INQUIRY_REQUEST = "REMOVE_INQUIRY_REQUEST";
+export const REMOVE_INQUIRY_SUCCESS = "REMOVE_INQUIRY_SUCCESS";
+export const REMOVE_INQUIRY_FAIL = "REMOVE_INQUIRY_FAIL";
+
+// Clear errors
+export const CLEAR_ERRORS = "CLEAR_ERRORS";

@@ -205,3 +205,36 @@ export const service = Yup.object({
     max: Yup.number().min(0, "Maximum age should be atleast 0"),
   }),
 });
+
+export const directoryInquiry = Yup.object({
+  name: Yup.string()
+    .required("Please provide your name")
+    .min(3, "Name is too short")
+    .max(64, "Name is too long"),
+  email: Yup.string().email("Please provide a valid email"),
+  number: Yup.string()
+    .matches(
+      /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
+      "Please provide a valid phone number"
+    )
+    .required("Please provide your phone number"),
+  message: Yup.string()
+    .required("Please enter your inquiry message")
+    .min(4, "Message is too short")
+    .max(1024, "Message is too long"),
+});
+
+export const directoryReview = Yup.object({
+  subject: Yup.string()
+    .required("Please provide a subject")
+    .min(6, "Subject is too short")
+    .max(32, "Subject is too long"),
+  comment: Yup.string()
+    .required("Please provide a comment")
+    .min(6, "Comment is too short")
+    .max(1024, "Comment is too long"),
+  rating: Yup.number()
+    .required("Please provide a rating")
+    .min(1, "Rating should be between 1 and 5")
+    .max(5, "Rating should be between 1 and 5"),
+});

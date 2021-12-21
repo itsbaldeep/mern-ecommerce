@@ -17,7 +17,7 @@ const ServiceSchema = new mongoose.Schema(
     },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Directory",
     },
     address: {
       type: String,

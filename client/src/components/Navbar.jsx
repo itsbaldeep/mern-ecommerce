@@ -12,7 +12,6 @@ import {
   FaCogs,
   FaConnectdevelop,
   FaFirstAid,
-  FaHandsHelping,
   FaHome,
   FaMapPin,
   FaPowerOff,
@@ -49,10 +48,6 @@ const PetohubNavbar = () => {
             <Link to="/directories" className="nav-link">
               <FaMapPin /> Directories
             </Link>
-            <Link to="/ngo" className="nav-link">
-              <FaHandsHelping /> NGOs
-            </Link>
-
             {user.isAuthenticated ? (
               <>
                 {user.user.role === "Admin" && (

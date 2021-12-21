@@ -24,7 +24,6 @@ import ShopScreen from "./screens/shop/ShopScreen.jsx";
 import ProductScreen from "./screens/shop/ProductScreen.jsx";
 import ServicesScreen from "./screens/services/ServicesScreen.jsx";
 import ServiceScreen from "screens/services/ServiceScreen.jsx";
-import NGOScreen from "./screens/NGOScreen.jsx";
 
 // Directory Screens
 import DirectoriesScreen from "./screens/directory/DirectoriesScreen.jsx";
@@ -70,7 +69,6 @@ function App() {
         <Route exact path="/shop/:productId" component={ProductScreen} />
         <Route exact path="/services" component={ServicesScreen} />
         <Route exact path="/services/:serviceId" component={ServiceScreen} />
-        <Route exact path="/ngo" component={NGOScreen} />
 
         {/* Auth Routes */}
         <Route exact path="/login" component={LoginScreen} />

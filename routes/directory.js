@@ -3,12 +3,15 @@ const express = require("express");
 const router = express.Router();
 
 // Directory controller functions
-const { getDirectories, getDirectory } = require("../controllers/directory");
-
-// Admin directory controller functions
 const {
   getAllDirectories,
   getAnyDirectoryById,
+  getDirectories,
+  getDirectory,
+  getDirectoryProducts,
+  getDirectoryServices,
+  reviewDirectory,
+  removeReview,
   addDirectory,
   editDirectory,
   approveDirectory,
@@ -31,7 +34,13 @@ router
 router.route("/approve/:id").put(protect, roles("Admin"), approveDirectory);
 router.route("/remove/:id").delete(protect, roles("Admin"), removeDirectory);
 
+// Review routes
+router.route("/review/:username").post(protect, reviewDirectory);
+router.route("/review/remove/:username").delete(protect, removeReview);
+
 // Public routes
+router.route("/products/:username").get(getDirectoryProducts);
+router.route("/services/:username").get(getDirectoryServices);
 router.route("/").get(getDirectories);
 router.route("/:username").get(getDirectory); // this route must be at the end
 

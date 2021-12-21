@@ -160,7 +160,11 @@ const DirectoryRow = ({ directory, index }) => {
       <td>{directory.number}</td>
       <td>{directory.category.join(", ")}</td>
       <td>{directory.email}</td>
-      <td>{directory.description}</td>
+      <td>
+        {directory.description.length > 50
+          ? `${directory.description.substring(0, 50)}...`
+          : directory.description}
+      </td>
       <td>
         {directory.website && (
           <a href={directory.website} target="_blank" rel="noreferrer">

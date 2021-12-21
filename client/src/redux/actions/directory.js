@@ -23,6 +23,53 @@ export const loadDirectory = (username) => async (dispatch) => {
   }
 };
 
+// POST /api/directory/review/:username
+export const reviewDirectory = (review, username) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.REVIEW_DIRECTORY_REQUEST });
+    const { data } = await axios.post(`/api/directory/review/${username}`, review);
+    dispatch({ type: actionTypes.REVIEW_DIRECTORY_SUCCESS, payload: data.review });
+  } catch (error) {
+    dispatch({ type: actionTypes.REVIEW_DIRECTORY_FAIL, payload: error.response.data.error });
+  }
+};
+
+// DEL /api/directory/review/remove/:username
+export const removeReview = (username) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.REMOVE_DIRECTORY_REVIEW_REQUEST });
+    const { data } = await axios.delete(`/api/directory/review/remove/${username}`);
+    dispatch({ type: actionTypes.REMOVE_DIRECTORY_REVIEW_SUCCESS, payload: data.review });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.REMOVE_DIRECTORY_REVIEW_FAIL,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// GET /api/directory/products/:username
+export const loadDirectoryProducts = (username) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_DIRECTORY_PRODUCTS_REQUEST });
+    const { data } = await axios.get(`/api/directory/products/${username}`);
+    dispatch({ type: actionTypes.GET_DIRECTORY_PRODUCTS_SUCCESS, payload: data.products });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_DIRECTORY_PRODUCTS_FAIL, payload: error.response.data.error });
+  }
+};
+
+// GET /api/directory/services/:username
+export const loadDirectoryServices = (username) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.GET_DIRECTORY_SERVICES_REQUEST });
+    const { data } = await axios.get(`/api/directory/services/${username}`);
+    dispatch({ type: actionTypes.GET_DIRECTORY_SERVICES_SUCCESS, payload: data.services });
+  } catch (error) {
+    dispatch({ type: actionTypes.GET_DIRECTORY_SERVICES_FAIL, payload: error.response.data.error });
+  }
+};
+
 /*
  * Admin Routes
  */

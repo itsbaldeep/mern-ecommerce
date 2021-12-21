@@ -182,14 +182,6 @@ const DirectorySchema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
-    reviews: {
-      type: [
-        {
-          type: mongoose.SchemaTypes.ObjectId,
-          ref: "Review",
-        },
-      ],
-    },
     isApproved: {
       type: Boolean,
       default: false,
@@ -198,7 +190,7 @@ const DirectorySchema = new mongoose.Schema(
       type: Date,
     },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
 
 DirectorySchema.pre("save", async function (next) {
@@ -224,12 +216,27 @@ DirectorySchema.pre("save", async function (next) {
   next();
 });
 
-// Virtual field for ratings
+// Virtual field for reviews and ratings
+DirectorySchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "revieweeId",
+});
+
 DirectorySchema.virtual("rating").get(function () {
   this.populate("reviews");
   let rating = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  if (!this.reviews) return rating;
   this.reviews.forEach((review) => rating[review.rating]++);
   return rating;
+});
+
+DirectorySchema.virtual("averageRating").get(function () {
+  this.populate("reviews");
+  if (!this.reviews || this.reviews.length === 0) return 0;
+  let total = 0;
+  for (const num in this.rating) total += num * this.rating[num];
+  return total / this.reviews.length;
 });
 
 const Directory = mongoose.model("Directory", DirectorySchema);

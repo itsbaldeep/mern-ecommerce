@@ -24,6 +24,7 @@ app.use("/api/user", require("./routes/user"));
 
 // Directory routes
 app.use("/api/directory", require("./routes/directory"));
+app.use("/api/inquiry", require("./routes/inquiry"));
 
 // Product and Service routes
 app.use("/api/product", require("./routes/product"));

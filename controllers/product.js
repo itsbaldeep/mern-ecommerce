@@ -67,7 +67,7 @@ exports.getOwnProductById = async (req, res, next) => {
 exports.addProduct = async (req, res, next) => {
   try {
     const product = await Product.create({
-      seller: req.user.role === "Client" ? req.user._id : null,
+      seller: req.user.role === "Client" ? req.user.directory : null,
       name: req.body.name,
       category: req.body.category,
       petType: req.body.petType?.split(","),

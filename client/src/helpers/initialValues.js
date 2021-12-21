@@ -169,3 +169,16 @@ export const service = (
     serviceImages: [],
   };
 };
+
+export const directoryInquiry = {
+  name: "",
+  number: "",
+  email: "",
+  message: "",
+};
+
+export const directoryReview = {
+  subject: "",
+  comment: "",
+  rating: 1,
+};
