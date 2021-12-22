@@ -114,7 +114,6 @@ const ServicesScreen = () => {
               <h3>Loading</h3>
             ) : services.length > 0 ? (
               <Row>
-                <Col sm={12} md={6} lg={4}></Col>
                 {services.map((service, index) => (
                   <Col sm={12} md={6} lg={4} key={index}>
                     <Service service={service} />

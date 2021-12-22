@@ -20,7 +20,7 @@ import { addService, clearErrors } from "redux/actions/service";
 
 const AddService = ({ show, onHide }) => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.service);
+  const { loading, error, isAdded } = useSelector((state) => state.service);
   const { serviceCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
 
@@ -37,7 +37,7 @@ const AddService = ({ show, onHide }) => {
         <Modal.Title>Add a new service</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={initialValues()}
+        initialValues={{ ...initialValues(), category: serviceCategories[0].name }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
           const fd = handleSubmit(values);
@@ -84,7 +84,6 @@ const AddService = ({ show, onHide }) => {
                     label="Category"
                     options={serviceCategories.map((category) => category.name)}
                     name="category"
-                    defaultValue="Others"
                   />
                 </Col>
               </Row>
@@ -147,7 +146,7 @@ const AddService = ({ show, onHide }) => {
                   {error}
                 </Alert>
               )}
-              {success && (
+              {isAdded && (
                 <Alert className="my-3" variant="success">
                   Service successfully added
                 </Alert>

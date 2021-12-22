@@ -42,7 +42,9 @@ import { directoryReview as dirRevValidationSchema } from "helpers/validationSch
 import Ratings from "components/Ratings";
 import Review from "components/Review";
 import ReviewGraph from "components/ReviewGraph";
-import { TextField } from "components/InputFields.jsx";
+import Product from "screens/shop/Product";
+import Service from "screens/services/Service";
+import { TextField, SelectField } from "components/InputFields.jsx";
 
 // Config
 import { days } from "config.json";
@@ -109,7 +111,12 @@ const BannerButtons = ({ directory }) => {
 
 const DirectoryProfileScreen = ({ match }) => {
   const dispatch = useDispatch();
-  const { loading: directoryLoading, directory } = useSelector((state) => state.directory);
+  const {
+    loading: directoryLoading,
+    directory,
+    products,
+    services,
+  } = useSelector((state) => state.directory);
   const { loading: inquiryLoading, success } = useSelector((state) => state.inquiry);
   const { isAuthenticated, user } = useSelector((state) => state.user);
 
@@ -117,7 +124,7 @@ const DirectoryProfileScreen = ({ match }) => {
     dispatch(loadDirectory(match.params.username));
     dispatch(loadDirectoryProducts(match.params.username));
     dispatch(loadDirectoryServices(match.params.username));
-  }, []);
+  }, [dispatch, match.params.username]);
 
   const existingReview = directory.reviews?.filter(
     (review) => review?.reviewer._id.toString() === user?._id.toString()
@@ -198,7 +205,7 @@ const DirectoryProfileScreen = ({ match }) => {
                   <a href={`tel:${directory.number}`}>{directory.number}</a>
                 </p>
                 <div>
-                  <p>Ratings: {directory.averageRating}</p>
+                  <p>Ratings: {directory.averageRating} stars</p>
                   <Ratings rating={directory.averageRating} size={20} />
                   <a href="#dir-reviews">View all reviews</a>
                 </div>
@@ -294,6 +301,42 @@ const DirectoryProfileScreen = ({ match }) => {
                 </div>
               </Col>
             </Row>
+            {products && (
+              <section className="dir-products">
+                <h3>Products showcase</h3>
+                <Swiper
+                  loop
+                  slidesPerView={3}
+                  modules={[Pagination]}
+                  pagination={{ clickable: true, dynamicBullets: true }}
+                  className="dir-products-swiper"
+                >
+                  {products.map((product, index) => (
+                    <SwiperSlide key={index}>
+                      <Product product={product} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </section>
+            )}
+            {services && (
+              <section className="dir-services">
+                <h3>Services showcase</h3>
+                <Swiper
+                  loop
+                  slidesPerView={3}
+                  modules={[Pagination]}
+                  pagination={{ clickable: true, dynamicBullets: true }}
+                  className="dir-services-swiper"
+                >
+                  {services.map((service, index) => (
+                    <SwiperSlide key={index}>
+                      <Service service={service} key={index} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </section>
+            )}
             <section id="dir-reviews" className="dir-reviews pt-3">
               <Tabs defaultActiveKey="read" className="mb-3">
                 <Tab
@@ -340,12 +383,8 @@ const DirectoryProfileScreen = ({ match }) => {
                               rows={3}
                               placeholder="Enter review comment here"
                             />
-                            <TextField
-                              name="rating"
-                              label="Rating"
-                              type="number"
-                              placeholder="1-5"
-                            />
+                            <SelectField name="rating" label="Rating" options={[1, 2, 3, 4, 5]} />
+
                             <div className="text-center">
                               <Button
                                 variant="primary"
@@ -422,7 +461,7 @@ const DirectoryProfileScreen = ({ match }) => {
               </Accordion>
             </section>
             <section className="dir-business-info py-3">
-              <h3>Business Information</h3>
+              <h1>Business Information</h1>
               <div>
                 {parse(directory.description || "<p>No information available at the moment</p>")}
               </div>

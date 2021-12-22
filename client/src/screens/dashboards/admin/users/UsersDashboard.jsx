@@ -52,6 +52,7 @@ const UsersDashboard = () => {
             style={{ width: "100px", height: "40px" }}
           >
             <option value="name">Name</option>
+            <option value="_id">User ID</option>
             <option value="email">Email</option>
             <option value="number">Number</option>
             <option value="role">Role</option>

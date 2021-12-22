@@ -20,7 +20,7 @@ import { editService, clearErrors } from "redux/actions/service";
 
 const EditService = ({ show, onHide, service }) => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.service);
+  const { loading, error, isUpdated } = useSelector((state) => state.service);
   const { serviceCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
 
@@ -249,7 +249,7 @@ const EditService = ({ show, onHide, service }) => {
                   {error}
                 </Alert>
               )}
-              {success && (
+              {isUpdated && (
                 <Alert className="my-3" variant="success">
                   Service successfully updated
                 </Alert>

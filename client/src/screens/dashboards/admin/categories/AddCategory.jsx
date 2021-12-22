@@ -33,7 +33,6 @@ const AddCategory = ({ show, onHide }) => {
           type: Yup.string().required("Category type is required"),
           pet: Yup.array().min(1, "Please pick atleast one pet type"),
         })}
-        // onSubmit={console.log}
         onSubmit={(values) => dispatch(addCategory(values))}
       >
         {({ errors, handleSubmit }) => (

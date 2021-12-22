@@ -29,7 +29,6 @@ const EditPet = ({ show, onHide, petId, pet }) => {
         validationSchema={Yup.object({
           name: Yup.string().required("Pet name is required"),
         })}
-        // onSubmit={console.log}
         onSubmit={(values) => dispatch(editPet(values, petId))}
       >
         {({ values, touched, errors, handleSubmit }) => (

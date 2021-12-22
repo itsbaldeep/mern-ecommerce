@@ -39,7 +39,7 @@ exports.getProductById = async (req, res, next) => {
 // GET /api/product/own
 exports.getOwnProducts = async (req, res, next) => {
   try {
-    const products = await Product.find().where("seller").equals(req.user.id);
+    const products = await Product.find().where("seller").equals(req.user.directory);
     return res.status(200).json({
       success: true,
       products,
@@ -52,7 +52,9 @@ exports.getOwnProducts = async (req, res, next) => {
 // GET /api/product/own/:id
 exports.getOwnProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).where("seller").equals(req.user.id);
+    const product = await Product.findById(req.params.id)
+      .where("seller")
+      .equals(req.user.directory);
     if (!product) return next(new ErrorResponse("Product not found", 404));
     return res.status(200).json({
       success: true,

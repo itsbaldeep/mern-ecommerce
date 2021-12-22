@@ -47,7 +47,10 @@ exports.getDirectoryProducts = async (req, res, next) => {
       username: req.params.username,
     });
     if (!directory) return next(new ErrorResponse("Directory not found", 404));
-    const products = await Product.find().where("seller").equals(directory.id);
+    const products = await Product.find({
+      isApproved: true,
+      seller: directory.id,
+    });
     return res.status(200).json({
       success: true,
       products,
@@ -65,7 +68,10 @@ exports.getDirectoryServices = async (req, res, next) => {
       username: req.params.username,
     });
     if (!directory) return next(new ErrorResponse("Directory not found", 404));
-    const services = await Service.find().where("seller").equals(directory.id);
+    const services = await Service.find({
+      isApproved: true,
+      seller: directory.id,
+    });
     return res.status(200).json({
       success: true,
       services,

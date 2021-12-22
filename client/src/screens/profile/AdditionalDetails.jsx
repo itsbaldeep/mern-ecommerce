@@ -91,7 +91,7 @@ const AdditionalDetails = () => {
                   onChange={(_, editor) => setFieldValue("description", editor.getData())}
                   style={{ height: "500px" }}
                 />
-                <div className="invalid-feedback">{errors.description}</div>
+                {errors.description && <div className="text-danger">{errors.description}</div>}
               </Form.Group>
             </Col>
             <Col md={6} sm={12}>

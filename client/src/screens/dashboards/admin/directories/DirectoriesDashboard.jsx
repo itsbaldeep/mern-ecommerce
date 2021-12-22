@@ -53,6 +53,7 @@ const DirectoriesDashboard = () => {
           >
             <option value="storeName">Name</option>
             <option value="_id">Directory ID</option>
+            <option value="username">Username</option>
             <option value="email">Email</option>
             <option value="number">Number</option>
             <option value="address">Address</option>

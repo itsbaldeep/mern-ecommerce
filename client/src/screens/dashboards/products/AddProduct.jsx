@@ -17,7 +17,7 @@ import { addProduct, clearErrors } from "redux/actions/product";
 
 const AddProduct = ({ show, onHide }) => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.product);
+  const { loading, error, isAdded } = useSelector((state) => state.product);
   const { categories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
 
@@ -154,7 +154,7 @@ const AddProduct = ({ show, onHide }) => {
                   {error}
                 </Alert>
               )}
-              {success && (
+              {isAdded && (
                 <Alert className="my-3" variant="success">
                   Product successfully added
                 </Alert>

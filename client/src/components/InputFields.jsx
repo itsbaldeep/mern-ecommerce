@@ -63,13 +63,15 @@ export const CheckBoxOptions = ({ label, options, ...props }) => {
 
 export const SelectField = ({ label, options, ...props }) => {
   const [field, meta] = useField(props);
-  const classes = `form-control ${meta.touched && !meta.error ? "is-valid" : ""}`;
+  const classes = `form-control ${
+    meta.touched && meta.error ? "is-invalid" : `${meta.touched && !meta.error ? "is-valid" : ""}`
+  }`;
   return (
     <Form.Group className="mb-3">
       <Form.Label htmlFor={field.name}>{label}</Form.Label>
       <select className={classes} {...field} {...props}>
-        {options.map((opt) => (
-          <option key={opt} value={opt}>
+        {options.map((opt, index) => (
+          <option key={index} value={opt}>
             {opt}
           </option>
         ))}
@@ -199,6 +201,7 @@ export const TextArrayOfObjectsField = ({
                         name={`${field.name}.${index}.${key}`}
                         placeholder={placeholder?.[key]}
                         as={fieldType[keys.indexOf(key)] || "input"}
+                        rows={3}
                         size={size}
                       />
                     </Col>

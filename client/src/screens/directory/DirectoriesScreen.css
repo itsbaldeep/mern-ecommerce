@@ -97,8 +97,7 @@
 
 .dir-add-photo:hover {
   cursor: pointer;
-  background-color: var(--bs-primary);
-  color: white;
+  color: var(--bs-primary);
 }
 
 .dir-add-photo span {
@@ -137,6 +136,10 @@
 .dir-business-info div {
   max-width: 100%;
   word-wrap: break-word;
+}
+
+.dir-business-info {
+  font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {

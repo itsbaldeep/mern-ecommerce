@@ -39,7 +39,7 @@ exports.getServiceById = async (req, res, next) => {
 // GET /api/service/own
 exports.getOwnServices = async (req, res, next) => {
   try {
-    const services = await Service.find().where("seller").equals(req.user.id);
+    const services = await Service.find().where("seller").equals(req.user.directory);
     return res.status(200).json({
       success: true,
       services,
@@ -52,7 +52,9 @@ exports.getOwnServices = async (req, res, next) => {
 // GET /api/service/own/:id
 exports.getOwnServiceById = async (req, res, next) => {
   try {
-    const service = await Service.findById(req.params.id).where("seller").equals(req.user.id);
+    const service = await Service.findById(req.params.id)
+      .where("seller")
+      .equals(req.user.directory);
     if (!service) return next(new ErrorResponse("Service not found", 404));
     return res.status(200).json({
       success: true,

@@ -14,7 +14,7 @@ import { editProduct, clearErrors } from "redux/actions/product";
 
 const EditProduct = ({ show, onHide, product }) => {
   const dispatch = useDispatch();
-  const { loading, error, success } = useSelector((state) => state.product);
+  const { loading, error, isUpdated } = useSelector((state) => state.product);
   const { categories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
 
@@ -279,7 +279,7 @@ const EditProduct = ({ show, onHide, product }) => {
                   {error}
                 </Alert>
               )}
-              {success && (
+              {isUpdated && (
                 <Alert className="my-3" variant="success">
                   Product successfully updated
                 </Alert>
