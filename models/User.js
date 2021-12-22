@@ -52,6 +52,7 @@ const UserSchema = new mongoose.Schema(
     directory: {
       type: mongoose.SchemaTypes.ObjectId,
       ref: "Directory",
+      default: null,
     },
     isVerified: {
       type: Boolean,

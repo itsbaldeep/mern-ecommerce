@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Directory = require("../models/Directory");
 const ErrorResponse = require("../utils/errorResponse");
 
 /*
@@ -131,11 +132,23 @@ exports.editProduct = async (req, res, next) => {
 
     // Check if the current user is editing a non-seller product
     if (req.user.role !== "Admin" && !product.seller)
-      return next(new ErrorResponse("Unable to remove product", 403));
+      return next(new ErrorResponse("Unable to edit product", 401));
 
     // Check if the current user is the seller of that product or an admin
-    if (req.user.role !== "Admin" && product.seller.toString() != req.user._id.toString())
-      return next(new ErrorResponse("Unable to remove product", 403));
+    if (req.user.role !== "Admin" && product.seller.toString() !== req.user._id.toString())
+      return next(new ErrorResponse("Unable to edit product", 401));
+
+    // Check if the seller ref is passed
+    if (req.user.role === "Admin" && req.body.seller !== undefined) {
+      // To remove the seller ref
+      if (req.body.seller === "") product.seller = null;
+      // To add or update the seller ref
+      else {
+        if (!(await Directory.findById(req.body.seller)))
+          return next(new ErrorResponse("Cannot find the directory", 404));
+        product.seller = req.body.seller;
+      }
+    }
 
     // Updating the product
     if (req.body.name) product.name = req.body.name;

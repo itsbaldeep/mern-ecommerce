@@ -132,11 +132,23 @@ exports.editService = async (req, res, next) => {
 
     // Check if the current user is editing a non-seller service
     if (req.user.role !== "Admin" && !service.seller)
-      return next(new ErrorResponse("Unable to remove service", 403));
+      return next(new ErrorResponse("Unable to edit service", 401));
 
     // Check if the current user is the seller of that service or an admin
-    if (req.user.role !== "Admin" && service.seller.toString() != req.user._id.toString())
-      return next(new ErrorResponse("Unable to remove service", 403));
+    if (req.user.role !== "Admin" && service.seller.toString() !== req.user._id.toString())
+      return next(new ErrorResponse("Unable to edit service", 401));
+
+    // Check if the seller ref is passed
+    if (req.user.role === "Admin" && req.body.seller !== undefined) {
+      // To remove the seller ref
+      if (req.body.seller === "") service.seller = null;
+      // To add or update the seller ref
+      else {
+        if (!(await Directory.findById(req.body.seller)))
+          return next(new ErrorResponse("Cannot find the directory", 404));
+        service.seller = req.body.seller;
+      }
+    }
 
     // Updating the service
     if (req.body.name) service.name = req.body.name;

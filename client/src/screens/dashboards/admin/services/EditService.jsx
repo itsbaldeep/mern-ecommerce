@@ -47,18 +47,13 @@ const EditService = ({ show, onHide, service, serviceId }) => {
                 <h4>Images</h4>
                 {service.serviceImages.length > 0 ? (
                   <Row>
-                    {service.serviceImages.map((image, index, array) => (
+                    {service.serviceImages.map((image, index) => (
                       <Col
                         key={image}
                         xs={6}
                         className="my-2 d-flex align-items-center justify-content-center"
                       >
-                        <ImageCard
-                          image={image}
-                          index={index}
-                          _serviceImages={array}
-                          id={service._id}
-                        />
+                        <ImageCard image={image} index={index} service={service} />
                       </Col>
                     ))}
                   </Row>

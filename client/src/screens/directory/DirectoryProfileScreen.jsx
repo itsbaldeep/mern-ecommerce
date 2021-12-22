@@ -81,7 +81,7 @@ const BannerInfo = ({ directory }) => {
 const BannerButtons = ({ directory }) => {
   return (
     <div className="dir-slider-buttons">
-      <div className="dir-slider-button">
+      <div className="dir-slider-button p-2 mx-1">
         <a
           target="_blank"
           rel="noreferrer"
@@ -90,17 +90,17 @@ const BannerButtons = ({ directory }) => {
           <FaGoogle size={25} />
         </a>
       </div>
-      <div className="dir-slider-button">
+      <div className="dir-slider-button p-2 mx-1">
         <a href={`tel:${directory.number}`}>
           <FaPhone size={25} />
         </a>
       </div>
-      <div className="dir-slider-button">
+      <div className="dir-slider-button p-2 mx-1">
         <a href={`mailto:${directory.email}`}>
           <FaEnvelope size={25} />
         </a>
       </div>
-      <div className="dir-slider-button">
+      <div className="dir-slider-button p-2 mx-1">
         <a href={`https://api.whatsapp.com/send?phone=${directory.number}`}>
           <FaWhatsapp size={25} />
         </a>
@@ -147,7 +147,7 @@ const DirectoryProfileScreen = ({ match }) => {
             {directory.directoryImages?.length > 0 ? (
               directory.directoryImages?.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <div className="dir-slider-container">
+                  <div className="dir-slider-container p-3">
                     <BannerInfo directory={directory} />
                     <img
                       className="dir-slider-img"
@@ -174,7 +174,7 @@ const DirectoryProfileScreen = ({ match }) => {
           </Swiper>
           <Container fluid>
             <Row className="dir-gallery-and-info p-3">
-              <Col md="6" sm="12">
+              <Col md="6" sm="12" className="py-2">
                 <h3 className="px-4">Gallery</h3>
                 <Row className="dir-gallery-images">
                   {directory.gallery?.map((image, index) => (
@@ -189,7 +189,7 @@ const DirectoryProfileScreen = ({ match }) => {
                   </Col>
                 </Row>
               </Col>
-              <Col md="6" sm="12" className="dir-store-info">
+              <Col md="6" sm="12" className="dir-store-info py-3">
                 <h3>Store Information</h3>
                 <h4>{directory.storeName}</h4>
                 <p>
@@ -209,8 +209,6 @@ const DirectoryProfileScreen = ({ match }) => {
                   <Ratings rating={directory.averageRating} size={20} />
                   <a href="#dir-reviews">View all reviews</a>
                 </div>
-                <br />
-                <br />
                 <p>Listed in the following categories:</p>
                 {directory.category?.map((category, index) => (
                   <p key={index}>
@@ -301,12 +299,20 @@ const DirectoryProfileScreen = ({ match }) => {
                 </div>
               </Col>
             </Row>
-            {products && (
-              <section className="dir-products">
+            {products.length > 0 && (
+              <section className="dir-products py-4">
                 <h3>Products showcase</h3>
                 <Swiper
                   loop
-                  slidesPerView={3}
+                  slidesPerView={1}
+                  breakpoints={{
+                    576: {
+                      slidesPerView: 2,
+                    },
+                    992: {
+                      slidesPerView: 3,
+                    },
+                  }}
                   modules={[Pagination]}
                   pagination={{ clickable: true, dynamicBullets: true }}
                   className="dir-products-swiper"
@@ -319,12 +325,20 @@ const DirectoryProfileScreen = ({ match }) => {
                 </Swiper>
               </section>
             )}
-            {services && (
-              <section className="dir-services">
+            {services.length > 0 && (
+              <section className="dir-services py-4">
                 <h3>Services showcase</h3>
                 <Swiper
                   loop
-                  slidesPerView={3}
+                  slidesPerView={1}
+                  breakpoints={{
+                    576: {
+                      slidesPerView: 2,
+                    },
+                    992: {
+                      slidesPerView: 3,
+                    },
+                  }}
                   modules={[Pagination]}
                   pagination={{ clickable: true, dynamicBullets: true }}
                   className="dir-services-swiper"

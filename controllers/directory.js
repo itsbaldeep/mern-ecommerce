@@ -239,8 +239,35 @@ exports.addDirectory = async (req, res, next) => {
 exports.editDirectory = async (req, res, next) => {
   try {
     // Checking if the directory exists
-    const directory = await Directory.findById(req.params.id);
+    const directory = await Directory.findById(req.params.id).select("+user").populate("user");
     if (!directory) return next(new ErrorResponse("Cannot find the directory", 404));
+
+    // If user ref is passed
+    if (req.body.user !== undefined) {
+      // Removing user from directory
+      if (req.body.user === "") {
+        delete directory.user.directory;
+        directory.user.role = "Customer";
+        await directory.user.save();
+        directory.user = null;
+      }
+      // Adding or updating user of directory
+      else {
+        const user = await User.findById(req.body.user);
+        if (!user) return next(new ErrorResponse("Unable to find the user", 404));
+        if (user.directory)
+          return next(
+            new ErrorResponse(
+              `The user is already linked to directory with ID ${user.directory}`,
+              400
+            )
+          );
+        user.directory = directory._id;
+        user.role = "Client";
+        await user.save();
+        directory.user = user._id;
+      }
+    }
 
     // Updating fields
     if (req.body.username) {

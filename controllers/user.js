@@ -502,7 +502,29 @@ exports.editUser = async (req, res, next) => {
     if (req.body.password) user.password = req.body.password;
     if (req.body.role) user.role = req.body.role;
     if (req.body.number) user.number = req.body.number;
-    if (req.body.directory) user.directory = req.body.directory;
+    if (req.body.directory !== undefined) {
+      // Removing directory from user
+      if (req.body.directory === "") {
+        user.directory = null;
+        user.role = "Customer";
+      }
+      // Adding or updating directory of user
+      else {
+        const directory = await Directory.findById(req.body.directory);
+        if (!directory) return next(new ErrorResponse("Unable to find the directory", 404));
+        if (directory.user)
+          return next(
+            new ErrorResponse(
+              `The directory is already linked to user with ID ${directory.user}`,
+              400
+            )
+          );
+        user.directory = req.body.directory;
+        user.role = "Client";
+        directory.user = user._id;
+        await directory.save();
+      }
+    }
     if (req.file) user.profileImage = `/uploads/${req.file.filename}`;
 
     // Saving and returning the user

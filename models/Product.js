@@ -18,6 +18,7 @@ const ProductSchema = new mongoose.Schema(
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Directory",
+      default: null,
     },
     category: {
       type: String,
