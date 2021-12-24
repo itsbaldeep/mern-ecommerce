@@ -246,10 +246,12 @@ exports.editDirectory = async (req, res, next) => {
     if (req.body.user !== undefined) {
       // Removing user from directory
       if (req.body.user === "") {
-        directory.user.directory = null;
-        directory.user.role = "Customer";
-        await directory.user.save();
-        directory.user = null;
+        if (directory.user !== null) {
+          directory.user.directory = null;
+          directory.user.role = "Customer";
+          await directory.user.save();
+          directory.user = null;
+        }
       }
       // Adding or updating user of directory
       else {

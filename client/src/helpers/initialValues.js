@@ -119,7 +119,7 @@ export const product = (
   return {
     name: _product.name,
     description: _product.description,
-    seller: _product.seller,
+    seller: _product.seller || "",
     category: _product.category,
     price: _product.price,
     countInStock: _product.countInStock,
