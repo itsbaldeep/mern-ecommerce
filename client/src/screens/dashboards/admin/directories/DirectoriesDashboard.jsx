@@ -181,13 +181,16 @@ const DirectoryRow = ({ directory, index }) => {
       </td>
       <td>
         {directory.user && (
-          <p
-            className="text-secondary"
-            style={{ cursor: "pointer", width: "90px" }}
-            onClick={() => navigator.clipboard.writeText(directory.user._id)}
-          >
-            <FaCopy /> Copy ID
-          </p>
+          <div>
+            <p className="text-warning mb-0">{directory.user.name}</p>
+            <p
+              className="text-secondary"
+              style={{ cursor: "pointer", width: "90px" }}
+              onClick={() => navigator.clipboard.writeText(directory.user._id)}
+            >
+              <FaCopy /> Copy ID
+            </p>
+          </div>
         )}
       </td>
       <td>

@@ -96,23 +96,39 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                 />
                 <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="category">Category</Form.Label>
-                <Field
-                  as="select"
-                  name="category"
-                  className={`form-control ${
-                    touched.category && !!errors.category ? "is-invalid" : ""
-                  }`}
-                >
-                  {productCategories.map((category, index) => (
-                    <option key={index} value={category.name}>
-                      {category.name}
-                    </option>
-                  ))}
-                </Field>
-                <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
-              </Form.Group>
+              <Row>
+                <Col xs={12} sm={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="category">Category</Form.Label>
+                    <Field
+                      as="select"
+                      name="category"
+                      className={`form-control ${
+                        touched.category && !!errors.category ? "is-invalid" : ""
+                      }`}
+                    >
+                      {productCategories.map((category, index) => (
+                        <option key={index} value={category.name}>
+                          {category.name}
+                        </option>
+                      ))}
+                    </Field>
+                    <Form.Control.Feedback type="invalid">{errors.category}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+                <Col xs={12} sm={6}>
+                  <Form.Group className="mb-3">
+                    <Form.Label htmlFor="seller">Seller ref (Directory only)</Form.Label>
+                    <Field
+                      name="seller"
+                      className={`form-control ${
+                        touched.seller && !!errors.seller ? "is-invalid" : ""
+                      }`}
+                    />
+                    <Form.Control.Feedback type="invalid">{errors.seller}</Form.Control.Feedback>
+                  </Form.Group>
+                </Col>
+              </Row>
               <Row>
                 <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">
@@ -123,7 +139,6 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                         touched.price && !!errors.price ? "is-invalid" : ""
                       }`}
                       type="number"
-                      value={values.price}
                     />
                     <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
                   </Form.Group>
@@ -137,7 +152,6 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                         touched.countInStock && !!errors.countInStock ? "is-invalid" : ""
                       }`}
                       type="number"
-                      value={values.countInStock}
                     />
                     <Form.Control.Feedback type="invalid">
                       {errors.countInStock}

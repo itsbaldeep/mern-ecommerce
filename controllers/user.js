@@ -493,7 +493,7 @@ exports.addUser = async (req, res, next) => {
 exports.editUser = async (req, res, next) => {
   try {
     // Checking if the user exists
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).populate("directory");
     if (!user) return next(new ErrorResponse("Unable to find the user", 404));
 
     // Updating fields
@@ -505,6 +505,8 @@ exports.editUser = async (req, res, next) => {
     if (req.body.directory !== undefined) {
       // Removing directory from user
       if (req.body.directory === "") {
+        user.directory.user = null;
+        await user.directory.save();
         user.directory = null;
         user.role = "Customer";
       }

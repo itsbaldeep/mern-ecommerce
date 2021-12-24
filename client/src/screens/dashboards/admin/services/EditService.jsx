@@ -96,6 +96,7 @@ const EditService = ({ show, onHide, service, serviceId }) => {
                 />
                 <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
               </Form.Group>
+              <TextField name="seller" label="Seller ref (Directory only)" />
               <Row>
                 <Col xs={12} sm={6}>
                   <Form.Group className="mb-3">

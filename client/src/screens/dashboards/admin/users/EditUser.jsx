@@ -1,6 +1,6 @@
 // Dependencies
 import { useDispatch, useSelector } from "react-redux";
-import { Form, Modal, Alert, Button } from "react-bootstrap";
+import { Form, Modal, Alert, Button, Row, Col } from "react-bootstrap";
 import { Formik } from "formik";
 import * as Yup from "yup";
 
@@ -35,6 +35,7 @@ const EditUser = ({ show, onHide, user, userId }) => {
           number: user.number,
           password: "",
           profileImage: null,
+          directory: user.directory?.id || "",
         }}
         validationSchema={Yup.object({
           name: Yup.string()
@@ -50,6 +51,7 @@ const EditUser = ({ show, onHide, user, userId }) => {
           if (user.name !== values.name) fd.append("name", values.name);
           if (user.email !== values.email) fd.append("email", values.email);
           if (user.number !== values.number) fd.append("number", values.number);
+          if (user.directory?._id !== values.directory) fd.append("directory", values.directory);
           if (values.password !== "") fd.append("password", values.password);
           if (values.profileImage !== null) fd.append("profileImage", values.profileImage);
           dispatch(editUser(fd, userId));
@@ -79,12 +81,23 @@ const EditUser = ({ show, onHide, user, userId }) => {
                 placeholder="Enter the user's password"
                 type="password"
               />
-              <TextField
-                name="number"
-                label="Phone Number"
-                placeholder="9876543210"
-                type="number"
-              />
+              <Row>
+                <Col xs={12} sm={6}>
+                  <TextField
+                    name="directory"
+                    label="Directory ref"
+                    placeholder="Link a directory"
+                  />
+                </Col>
+                <Col xs={12} sm={6}>
+                  <TextField
+                    name="number"
+                    label="Phone Number"
+                    placeholder="9876543210"
+                    type="number"
+                  />
+                </Col>
+              </Row>
               {error && (
                 <Alert className="my-1" variant="danger">
                   {error}

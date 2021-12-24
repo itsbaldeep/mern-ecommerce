@@ -303,7 +303,6 @@ const DirectoryProfileScreen = ({ match }) => {
               <section className="dir-products py-4">
                 <h3>Products showcase</h3>
                 <Swiper
-                  loop
                   slidesPerView={1}
                   breakpoints={{
                     576: {
@@ -329,7 +328,6 @@ const DirectoryProfileScreen = ({ match }) => {
               <section className="dir-services py-4">
                 <h3>Services showcase</h3>
                 <Swiper
-                  loop
                   slidesPerView={1}
                   breakpoints={{
                     576: {

@@ -77,16 +77,20 @@ const EditDirectory = ({ show, onHide, directory, directoryId }) => {
                   ))}
                 </div>
               </Form.Group>
-              <Form.Group className="mb-3">
-                <Form.Label htmlFor="number">Phone Number</Form.Label>
-                <Field
-                  name="number"
-                  as={Form.Control}
-                  value={values.number}
-                  isInvalid={touched.number && !!errors.number}
-                />
-                <Form.Control.Feedback type="invalid">{errors.number}</Form.Control.Feedback>
-              </Form.Group>
+              <Row>
+                <Col xs={12} sm={6}>
+                  <TextField name="user" label="User ref" placeholder="Link a user account" />
+                </Col>
+                <Col xs={12} sm={6}>
+                  <TextField
+                    name="number"
+                    label="Phone Number"
+                    placeholder="9876543210"
+                    type="number"
+                  />
+                </Col>
+              </Row>
+
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="address">Address</Form.Label>
                 <Field

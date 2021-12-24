@@ -46,6 +46,7 @@ export const directoryUpdate = (values, directory) => {
   if (values.city !== directory.city) fd.append("city", values.city);
   if (values.pincode !== directory.pincode) fd.append("pincode", values.pincode);
   if (values.number !== directory.number) fd.append("number", values.number);
+  if (values.user !== directory.user?._id) fd.append("user", values.user);
   if (values.category.toString() !== directory.category.toString())
     fd.append("category", values.category);
   return fd;
@@ -89,6 +90,7 @@ export const updateProduct = (values, product) => {
   // Plain text fields
   if (values.name !== product.name) fd.append("name", values.name);
   if (values.description !== product.description) fd.append("description", values.description);
+  if (values.seller !== product.seller) fd.append("seller", values.seller);
   if (values.category !== product.category) fd.append("category", values.category);
   if (values.price !== product.price) fd.append("price", values.price);
   if (values.countInStock !== product.countInStock) fd.append("countInStock", values.countInStock);
@@ -141,6 +143,7 @@ export const updateService = (values, service) => {
   // Plain text fields
   if (values.name !== service.name) fd.append("name", values.name);
   if (values.description !== service.description) fd.append("description", values.description);
+  if (values.seller !== service.seller) fd.append("seller", values.seller);
   if (values.category !== service.category) fd.append("category", values.category);
   if (values.price !== service.price) fd.append("price", values.price);
   if (values.address !== service.address) fd.append("address", values.address);

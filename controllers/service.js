@@ -1,4 +1,5 @@
 const Service = require("../models/Service");
+const Directory = require("../models/Directory");
 const ErrorResponse = require("../utils/errorResponse");
 
 /*

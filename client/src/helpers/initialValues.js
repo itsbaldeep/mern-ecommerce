@@ -68,7 +68,7 @@ export const directoryUpdate = (directory) => {
   return {
     ...directoryAdditional(directory),
     storeName: directory.storeName,
-    user: directory.user,
+    user: directory.user?._id || "",
     email: directory.email,
     number: directory.number,
     address: directory.address,
@@ -98,6 +98,7 @@ export const product = (
     name: "",
     description: "",
     category: "",
+    seller: "",
     price: 0,
     countInStock: 0,
     petType: [],
@@ -118,6 +119,7 @@ export const product = (
   return {
     name: _product.name,
     description: _product.description,
+    seller: _product.seller,
     category: _product.category,
     price: _product.price,
     countInStock: _product.countInStock,
@@ -134,6 +136,7 @@ export const product = (
 export const service = (
   _service = {
     name: "",
+    seller: "",
     description: "",
     address: "",
     nameOfIncharge: "",
@@ -155,6 +158,7 @@ export const service = (
 ) => {
   return {
     name: _service.name,
+    seller: _service.seller,
     description: _service.description,
     address: _service.address,
     nameOfIncharge: _service.nameOfIncharge,
