@@ -13,6 +13,7 @@ import { states } from "config.json";
 
 // Components
 import MainSlider from "components/MainSlider.jsx";
+import Ratings from "components/Ratings";
 
 // Custom CSS
 import "./DirectoriesScreen.css";
@@ -114,10 +115,13 @@ const DirectoryCard = ({ directory }) => {
         />
         <Card.Body>
           <Card.Title>{directory.storeName}</Card.Title>
+          <Ratings rating={directory.averageRating} size={18} className="d-inline" />
+          <span className="px-1">{directory.averageRating} stars</span>
+
           <Card.Text>
-            <FaBookmark className="text-secondary" /> {directory.category.join(", ")}
+            <FaBookmark className="text-primary" /> {directory.category.join(", ")}
             <br />
-            <FaMapMarker className="text-secondary" /> {directory.address}, {directory.state},{" "}
+            <FaMapMarker className="text-primary" /> {directory.address}, {directory.state},{" "}
             {directory.pincode}
           </Card.Text>
         </Card.Body>

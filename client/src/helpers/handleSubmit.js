@@ -46,7 +46,7 @@ export const directoryUpdate = (values, directory) => {
   if (values.city !== directory.city) fd.append("city", values.city);
   if (values.pincode !== directory.pincode) fd.append("pincode", values.pincode);
   if (values.number !== directory.number) fd.append("number", values.number);
-  if (values.user !== directory.user?._id) fd.append("user", values.user);
+  if (values.user !== (directory.user?._id || "")) fd.append("user", values.user);
   if (values.category.toString() !== directory.category.toString())
     fd.append("category", values.category);
   return fd;
@@ -119,7 +119,7 @@ export const updateProduct = (values, product) => {
 export const newService = (values) => {
   // Converting to FormData
   const fd = new FormData();
-  for (const key in values) fd.append(key, values[key]);
+  for (const key in values) if (values[key] !== "") fd.append(key, values[key]);
   fd.set("timings", JSON.stringify(values.timings));
   fd.set("ageRange", JSON.stringify(values.ageRange));
   // Converting days to binary number

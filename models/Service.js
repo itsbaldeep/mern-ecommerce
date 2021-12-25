@@ -18,22 +18,20 @@ const ServiceSchema = new mongoose.Schema(
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Directory",
+      default: null,
     },
     address: {
       type: String,
-      required: [true, "Please provide an address for this service"],
       minlength: [8, "Address is too short"],
       maxlength: [128, "Address is too long"],
     },
     nameOfIncharge: {
       type: String,
-      required: [true, "Please provide name of the person in charge"],
       minlength: [3, "Incharge name is too short"],
       maxlength: [32, "Incharge name is too long"],
     },
     numberOfIncharge: {
       type: String,
-      required: [true, "Please provide number of the person in charge"],
       match: [
         /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
         "Please provide a valid phone number",

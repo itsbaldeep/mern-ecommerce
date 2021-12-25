@@ -9,7 +9,7 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please provie a product name"],
       minlength: [5, "Product name is too short"],
-      maxlength: [32, "Product name is too long"],
+      maxlength: [128, "Product name is too long"],
       trim: true,
     },
     alias: {

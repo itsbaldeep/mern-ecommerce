@@ -67,7 +67,7 @@ const ServiceScreen = ({ match }) => {
               Timings: {service.timings?.from} to {service.timings?.to}
             </p>
             <p>Days: {binaryToArray(service.days).join(", ")}</p>
-            <p>Address: {service.address}</p>
+            {service.address && <p>Address: {service.address}</p>}
             {service.link && (
               <div className="d-flex justify-content-around">
                 <Link to={{ pathname: service.link }} target="_blank" className="btn btn-primary">

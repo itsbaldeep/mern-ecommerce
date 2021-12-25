@@ -73,8 +73,6 @@ const ServicesDashboard = () => {
               <th>Description</th>
               <th>Seller</th>
               <th>Price</th>
-              <th>Name of Incharge</th>
-              <th>Number of Incharge</th>
               <th>Days</th>
               <th>Link</th>
               <th>Category</th>
@@ -82,7 +80,6 @@ const ServicesDashboard = () => {
               <th>Breed Type</th>
               <th>Timings</th>
               <th>Age Range</th>
-              <th>Approved</th>
               <th>Date of Approval</th>
               <th>Date of Creation</th>
               <th>Date of Updation</th>
@@ -120,7 +117,7 @@ const ServiceRow = ({ service, index }) => {
     <tr>
       <td>{index}</td>
       <td>
-        <div style={{ width: "90px" }}>
+        <div style={{ width: "110px" }}>
           <p className="text-success" style={{ cursor: "pointer" }} onClick={showEditDialog}>
             <FaPencilAlt /> Edit
           </p>
@@ -146,6 +143,27 @@ const ServiceRow = ({ service, index }) => {
           >
             <FaCopy /> Copy ID
           </p>
+          {service.isApproved ? (
+            <div className="text-success">
+              <FaCheck /> Approved
+            </div>
+          ) : (
+            <>
+              <div
+                onClick={showApproveDialog}
+                className="text-danger"
+                style={{ cursor: "pointer" }}
+              >
+                <FaTimes /> Approve
+              </div>
+              <ApproveService
+                show={approveDialog}
+                onHide={hideApproveDialog}
+                serviceId={service._id}
+                name={service.name}
+              />
+            </>
+          )}
         </div>
       </td>
       <td>
@@ -158,7 +176,11 @@ const ServiceRow = ({ service, index }) => {
         </a>
       </td>
       <td>{service.name}</td>
-      <td>{service.description}</td>
+      <td>
+        {service.description.length > 60
+          ? `${service.description.substring(0, 60)}...`
+          : service.description}
+      </td>
       <td>
         {service.seller && (
           <p
@@ -171,9 +193,9 @@ const ServiceRow = ({ service, index }) => {
         )}
       </td>
       <td>₹{service.price}</td>
-      <td>{service.nameOfIncharge}</td>
-      <td>{service.numberOfIncharge}</td>
-      <td style={{ width: "150px" }}>{binaryToArray(service.days).join(", ")}</td>
+      <td style={{ width: "150px" }}>
+        {service.days === 127 ? "Everyday" : binaryToArray(service.days).join(", ")}
+      </td>
       <td>
         {service.link && (
           <a href={service.link} target="_blank" rel="noreferrer">
@@ -188,26 +210,9 @@ const ServiceRow = ({ service, index }) => {
         {service.timings?.from} to {service.timings?.to}
       </td>
       <td>
-        {service.ageRange?.min}-{service.ageRange?.max} yrs
-      </td>
-      <td>
-        {service.isApproved ? (
-          <div className="text-success">
-            <FaCheck /> Approved
-          </div>
-        ) : (
-          <>
-            <div onClick={showApproveDialog} className="text-danger" style={{ cursor: "pointer" }}>
-              <FaTimes /> Approve Now
-            </div>
-            <ApproveService
-              show={approveDialog}
-              onHide={hideApproveDialog}
-              serviceId={service._id}
-              name={service.name}
-            />
-          </>
-        )}
+        {service.ageRange.min === 0 && service.ageRange.max === 0
+          ? "All ages"
+          : `${service.ageRange?.min}-${service.ageRange?.max} yrs`}
       </td>
       <td>{convertTime(service.approvedAt)}</td>
       <td>{convertTime(service.createdAt)}</td>

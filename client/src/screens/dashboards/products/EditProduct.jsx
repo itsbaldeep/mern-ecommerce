@@ -15,7 +15,7 @@ import { editProduct, clearErrors } from "redux/actions/product";
 const EditProduct = ({ show, onHide, product }) => {
   const dispatch = useDispatch();
   const { loading, error, isUpdated } = useSelector((state) => state.product);
-  const { categories } = useSelector((state) => state.category);
+  const { productCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const EditProduct = ({ show, onHide, product }) => {
                   className="form-control"
                   defaultValue={values.category}
                 >
-                  {categories.map((category, index) => (
+                  {productCategories.map((category, index) => (
                     <option key={index} value={category.name}>
                       {category.name}
                     </option>

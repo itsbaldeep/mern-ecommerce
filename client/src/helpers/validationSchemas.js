@@ -79,7 +79,7 @@ export const directoryAdditional = Yup.object({
     "Please provide a valid website"
   ),
   tagline: Yup.string().max(32, "The tagline is too long"),
-  description: Yup.string().max(1024, "The description is too long"),
+  description: Yup.string().max(4096, "The description is too long"),
   username: Yup.string(),
   products: Yup.array()
     .max(25, "You can only have a maximum of 25 products")
@@ -138,7 +138,7 @@ export const clientUpdate = Yup.object({
 export const product = Yup.object({
   name: Yup.string()
     .min(5, "Product name is too short")
-    .max(32, "Product name is too long")
+    .max(128, "Product name is too long")
     .required("Please provide a product name"),
   description: Yup.string()
     .min(8, "Product description is too short")
@@ -179,20 +179,14 @@ export const service = Yup.object({
   price: Yup.number()
     .positive("Price must be a positive number")
     .required("Please provide a price"),
-  address: Yup.string()
-    .min(8, "Address is too short")
-    .max(128, "Address is too long")
-    .required("Please provide address"),
+  address: Yup.string().min(8, "Address is too short").max(128, "Address is too long"),
   nameOfIncharge: Yup.string()
     .min(3, "Name of incharge is too short")
-    .max(32, "Name of incharge is too long")
-    .required("Please provide a name of the incharge for this service"),
-  numberOfIncharge: Yup.string()
-    .matches(
-      /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
-      "Please provide a valid phone number of the incharge"
-    )
-    .required("Please provide a phone number of the incharge"),
+    .max(32, "Name of incharge is too long"),
+  numberOfIncharge: Yup.string().matches(
+    /((\+*)((0[ -]*)*|((91 )*))((\d{12})+|(\d{10})+))|\d{5}([- ]*)\d{6}/g,
+    "Please provide a valid phone number of the incharge"
+  ),
   timings: Yup.object({
     from: Yup.string().required("Please provide timings of this service"),
     to: Yup.string().required("Please provide timings of this service"),

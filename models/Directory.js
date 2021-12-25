@@ -7,6 +7,7 @@ const DirectorySchema = new mongoose.Schema(
   {
     storeName: {
       type: String,
+      trim: true,
       required: [true, "Please provide a business/store name"],
       maxlength: [64, "Store name is too long"],
       minlength: [3, "Store name is too short"],
@@ -29,6 +30,7 @@ const DirectorySchema = new mongoose.Schema(
     address: {
       type: String,
       required: [true, "Please provide an address"],
+      trim: true,
       minlength: [8, "Address is too short"],
       maxlength: [256, "Address is too long"],
     },
@@ -45,6 +47,7 @@ const DirectorySchema = new mongoose.Schema(
     city: {
       type: String,
       required: [true, "Please provide a city"],
+      trim: true,
       minlength: [2, "City name is too short"],
       maxlength: [16, "City name is too long"],
     },
@@ -62,12 +65,22 @@ const DirectorySchema = new mongoose.Schema(
       ],
     },
     products: {
-      type: [String],
+      type: [
+        {
+          type: String,
+          trim: true,
+        },
+      ],
       default: [],
       validate: [(arr) => arr.length <= 25, "Too many products"],
     },
     services: {
-      type: [String],
+      type: [
+        {
+          type: String,
+          trim: true,
+        },
+      ],
       default: [],
       validate: [(arr) => arr.length <= 25, "Too many services"],
     },
@@ -100,12 +113,14 @@ const DirectorySchema = new mongoose.Schema(
           question: {
             type: String,
             required: true,
+            trim: true,
             minlength: [4, "Question is too short"],
             maxlength: [120, "Question is too long"],
           },
           answer: {
             type: String,
             required: true,
+            trim: true,
             minlength: [4, "Answer is too short"],
             maxlength: [1024, "Answer is too long"],
           },
@@ -122,6 +137,7 @@ const DirectorySchema = new mongoose.Schema(
       type: [
         {
           type: String,
+          trim: true,
           minlength: [4, "Feature length is too short"],
           maxlength: [16, "Feature length is too long"],
         },
@@ -134,11 +150,13 @@ const DirectorySchema = new mongoose.Schema(
         {
           title: {
             type: String,
+            trim: true,
             minlength: [4, "Details title is too short"],
             maxlength: [12, "Details title is too long"],
           },
           content: {
             type: String,
+            trim: true,
             minlength: [4, "Details content is too short"],
             maxlength: [64, "Details content is too long"],
           },
@@ -168,6 +186,7 @@ const DirectorySchema = new mongoose.Schema(
     },
     tagline: {
       type: String,
+      trim: true,
       maxlength: [32, "Tagline is too long"],
       default: "",
     },
@@ -236,7 +255,7 @@ DirectorySchema.virtual("averageRating").get(function () {
   if (!this.reviews || this.reviews.length === 0) return 0;
   let total = 0;
   for (const num in this.rating) total += num * this.rating[num];
-  return total / this.reviews.length;
+  return (total / this.reviews.length).toFixed(1);
 });
 
 const Directory = mongoose.model("Directory", DirectorySchema);

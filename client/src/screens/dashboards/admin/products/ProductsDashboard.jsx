@@ -85,7 +85,6 @@ const ProductsDashboard = () => {
               <th>Size</th>
               <th>Age Range</th>
               <th>Vegetarian</th>
-              <th>Approved</th>
               <th>Date of Approval</th>
               <th>Date of Creation</th>
               <th>Date of Updation</th>
@@ -123,7 +122,7 @@ const ProductRow = ({ product, index }) => {
     <tr>
       <td>{index}</td>
       <td>
-        <div style={{ width: "90px" }}>
+        <div style={{ width: "110px" }}>
           <p className="text-success" style={{ cursor: "pointer" }} onClick={showEditDialog}>
             <FaPencilAlt /> Edit
           </p>
@@ -149,6 +148,27 @@ const ProductRow = ({ product, index }) => {
           >
             <FaCopy /> Copy ID
           </p>
+          {product.isApproved ? (
+            <div className="text-success">
+              <FaCheck /> Approved
+            </div>
+          ) : (
+            <>
+              <div
+                onClick={showApproveDialog}
+                className="text-danger"
+                style={{ cursor: "pointer" }}
+              >
+                <FaTimes /> Approve
+              </div>
+              <ApproveProduct
+                show={approveDialog}
+                onHide={hideApproveDialog}
+                productId={product._id}
+                name={product.name}
+              />
+            </>
+          )}
         </div>
       </td>
       <td>
@@ -189,37 +209,24 @@ const ProductRow = ({ product, index }) => {
       <td>{product.category}</td>
       <td style={{ minWidth: "110px" }}>{product.petType?.join(", ")}</td>
       <td>{product.breedType}</td>
-      <td style={{ minWidth: "110px" }}>{product.weight} grams</td>
       <td style={{ minWidth: "110px" }}>
-        {product.size?.length}cm x {product.size?.height}cm x {product.size?.width}cm
+        {product.weight === 0 ? "N/A" : `${product.weight} grams`}
+      </td>
+      <td style={{ minWidth: "110px" }}>
+        {product.size.length === 0 && product.size.height === 0 && product.size.width === 0
+          ? "N/A"
+          : `${product.size?.length}cm x ${product.size?.height}cm x ${product.size?.width}cm`}
       </td>
       <td>
-        {product.ageRange?.min}-{product.ageRange?.max} yrs
+        {product.ageRange.min === 0 && product.ageRange.max === 0
+          ? "All ages"
+          : `${product.ageRange?.min}-${product.ageRange?.max} yrs`}
       </td>
       <td>
         {product.isVeg ? (
           <FaDotCircle className="text-success" />
         ) : (
           <FaDotCircle className="text-danger" />
-        )}
-      </td>
-      <td>
-        {product.isApproved ? (
-          <div className="text-success">
-            <FaCheck /> Approved
-          </div>
-        ) : (
-          <>
-            <div onClick={showApproveDialog} className="text-danger" style={{ cursor: "pointer" }}>
-              <FaTimes /> Approve Now
-            </div>
-            <ApproveProduct
-              show={approveDialog}
-              onHide={hideApproveDialog}
-              productId={product._id}
-              name={product.name}
-            />
-          </>
         )}
       </td>
       <td>{convertTime(product.approvedAt)}</td>

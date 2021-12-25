@@ -80,7 +80,6 @@ const DirectoriesDashboard = () => {
               <th>Tagline</th>
               <th>Username</th>
               <th>User</th>
-              <th>Approval</th>
               <th>Date of Approval</th>
               <th>Date of Creation</th>
               <th>Date of Updation</th>
@@ -118,7 +117,7 @@ const DirectoryRow = ({ directory, index }) => {
     <tr>
       <td>{index}</td>
       <td>
-        <div style={{ width: "90px" }}>
+        <div style={{ width: "110px" }}>
           <p className="text-success" style={{ cursor: "pointer" }} onClick={showEditDialog}>
             <FaPencilAlt /> Edit
           </p>
@@ -144,9 +143,29 @@ const DirectoryRow = ({ directory, index }) => {
           >
             <FaCopy /> Copy ID
           </p>
+          {directory.isApproved ? (
+            <div className="text-success">
+              <FaCheck /> Approved
+            </div>
+          ) : (
+            <>
+              <div
+                onClick={showApproveDialog}
+                className="text-danger"
+                style={{ cursor: "pointer" }}
+              >
+                <FaTimes /> Approve
+              </div>
+              <ApproveDirectory
+                show={approveDialog}
+                onHide={hideApproveDialog}
+                directoryId={directory._id}
+                name={directory.name}
+              />
+            </>
+          )}
         </div>
       </td>
-
       <td>
         <a href={directory.directoryImages[0]}>
           <img
@@ -156,7 +175,13 @@ const DirectoryRow = ({ directory, index }) => {
           />
         </a>
       </td>
-      <td>{directory.storeName}</td>
+      <td>
+        {directory.isApproved ? (
+          <a href={`/${directory.username}`}>{directory.storeName}</a>
+        ) : (
+          directory.storeName
+        )}
+      </td>
       <td>{address.length > 60 ? `${address.substring(0, 60)}...` : address}</td>
       <td>{directory.number}</td>
       <td>{directory.category.join(", ")}</td>
@@ -175,9 +200,12 @@ const DirectoryRow = ({ directory, index }) => {
       </td>
       <td>{directory.tagline}</td>
       <td>
-        {directory.username !== directory._id && (
-          <a href={`/${directory.username}`}>{directory.username}</a>
-        )}
+        {directory.username !== directory._id &&
+          (directory.isApproved ? (
+            <a href={`/${directory.username}`}>{directory.username}</a>
+          ) : (
+            directory.username
+          ))}
       </td>
       <td>
         {directory.user && (
@@ -191,25 +219,6 @@ const DirectoryRow = ({ directory, index }) => {
               <FaCopy /> Copy ID
             </p>
           </div>
-        )}
-      </td>
-      <td>
-        {directory.isApproved ? (
-          <div className="text-success">
-            <FaCheck /> Approved
-          </div>
-        ) : (
-          <>
-            <div onClick={showApproveDialog} className="text-danger" style={{ cursor: "pointer" }}>
-              <FaTimes /> Approve Now
-            </div>
-            <ApproveDirectory
-              show={approveDialog}
-              onHide={hideApproveDialog}
-              directoryId={directory._id}
-              name={directory.name}
-            />
-          </>
         )}
       </td>
       <td>{convertTime(directory.approvedAt)}</td>

@@ -23,6 +23,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         ...state,
         loading: false,
         success: true,
+        error: null,
         products: action.payload,
       };
     case actionTypes.GET_PRODUCT_SUCCESS:
@@ -32,6 +33,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         ...state,
         loading: false,
         success: true,
+        error: null,
         product: action.payload,
       };
     case actionTypes.ADD_PRODUCT_SUCCESS:
@@ -40,6 +42,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         loading: false,
         success: true,
         isAdded: true,
+        error: null,
         products: state.products.concat([action.payload]),
       };
     case actionTypes.REMOVE_PRODUCT_SUCCESS:
@@ -49,6 +52,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         ...state,
         isRemoved: true,
         loading: false,
+        error: null,
         success: true,
       };
     case actionTypes.EDIT_PRODUCT_SUCCESS:
@@ -59,6 +63,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         ...state,
         isUpdated: true,
         loading: false,
+        error: null,
         success: true,
       };
     case actionTypes.GET_PRODUCTS_FAIL:

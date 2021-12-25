@@ -18,7 +18,7 @@ import { addProduct, clearErrors } from "redux/actions/product";
 const AddProduct = ({ show, onHide }) => {
   const dispatch = useDispatch();
   const { loading, error, isAdded } = useSelector((state) => state.product);
-  const { categories } = useSelector((state) => state.category);
+  const { productCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const AddProduct = ({ show, onHide }) => {
         <Modal.Title>Add a new product</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={initialValues()}
+        initialValues={{ ...initialValues(), category: productCategories[0].name }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
           const fd = handleSubmit(values);
@@ -69,7 +69,7 @@ const AddProduct = ({ show, onHide }) => {
               />
               <SelectField
                 label="Category"
-                options={categories.map((category) => category.name)}
+                options={productCategories.map((category) => category.name)}
                 name="category"
                 defaultValue="Others"
               />

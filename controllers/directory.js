@@ -313,7 +313,7 @@ exports.editDirectory = async (req, res, next) => {
         "api",
       ];
       for (const lookup of lookups) {
-        if (req.body.username.toLowerCase().indexOf(lookup) !== -1)
+        if (req.body.username.toLowerCase() === lookup)
           return next(new ErrorResponse("Invalid username. Try another one", 400));
       }
       directory.username = req.body.username;
@@ -330,10 +330,15 @@ exports.editDirectory = async (req, res, next) => {
     if (req.body.tagline) directory.tagline = req.body.tagline;
     // Array fields in formdata are seperated by commas
     if (req.body.category) directory.category = req.body.category.split(",");
+    if (req.body.category === "") directory.category = [];
     if (req.body.features) directory.features = req.body.features.split(",");
+    if (req.body.features === "") directory.features = [];
     if (req.body.products) directory.products = req.body.products.split(",");
+    if (req.body.products === "") directory.products = [];
     if (req.body.services) directory.services = req.body.services.split(",");
+    if (req.body.services === "") directory.services = [];
     if (req.body.gallery) directory.gallery = req.body.gallery.split(",");
+    if (req.body.gallery === "") directory.gallery = [];
     // Object fields in formdata are in JSON format
     if (req.body.details) directory.details = JSON.parse(req.body.details);
     if (req.body.faq) directory.faq = JSON.parse(req.body.faq);

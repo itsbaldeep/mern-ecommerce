@@ -138,7 +138,7 @@ const DirectoryProfileScreen = ({ match }) => {
         <>
           <Swiper
             loop
-            autoplay={{ delay: 2000 }}
+            autoplay={{ delay: 5000 }}
             slidesPerView={"auto"}
             modules={[Pagination, Autoplay]}
             pagination={{ clickable: true, dynamicBullets: true }}
@@ -147,7 +147,7 @@ const DirectoryProfileScreen = ({ match }) => {
             {directory.directoryImages?.length > 0 ? (
               directory.directoryImages?.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <div className="dir-slider-container p-3">
+                  <div className="dir-slider-container">
                     <BannerInfo directory={directory} />
                     <img
                       className="dir-slider-img"
@@ -454,11 +454,18 @@ const DirectoryProfileScreen = ({ match }) => {
                   <Accordion.Header>What are the timings of this store?</Accordion.Header>
                   <Accordion.Body>
                     {directory.timings?.map((timing, index) => {
-                      const from = tConvert(timing.from);
-                      const to = tConvert(timing.to);
+                      let message = "";
+                      if (timing.from === "00:00" && timing.to === "00:00")
+                        message = "All Day (24 hours)";
+                      else if (timing.from === "" && timing.to === "") message = "Closed";
+                      else {
+                        const from = tConvert(timing.from);
+                        const to = tConvert(timing.to);
+                        message = `${from} to ${to}`;
+                      }
                       return (
                         <p key={index}>
-                          {days[index]}: {from && to ? `${from} to ${to}` : `Closed`}
+                          {days[index]}: {message}
                         </p>
                       );
                     })}
