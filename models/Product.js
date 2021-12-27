@@ -65,8 +65,8 @@ const ProductSchema = new mongoose.Schema(
     },
     countInStock: {
       type: Number,
-      min: [1, "There should be atleast 1 item in stock"],
-      required: [true, "Please provide a count in stock"],
+      default: 0,
+      min: [0, "There should be atleast 1 item in stock"],
     },
     price: {
       type: Number,
@@ -101,9 +101,16 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    rating: {
-      type: Number,
-      select: false,
+    affiliateLinks: {
+      type: [
+        {
+          _id: false,
+          productId: String,
+          productLink: String,
+          productProvider: String,
+        },
+      ],
+      default: [],
     },
     isApproved: {
       type: Boolean,
@@ -112,16 +119,8 @@ const ProductSchema = new mongoose.Schema(
     approvedAt: {
       type: Date,
     },
-    numOfReviews: {
-      type: Number,
-      default: 0,
-      select: false,
-    },
-    reviews: {
-      type: [Object],
-    },
   },
-  { timestamps: true }
+  { timestamps: true, toObject: { virtuals: true }, toJSON: { virtuals: true } }
 );
 
 ProductSchema.pre("save", async function (next) {
@@ -153,6 +152,29 @@ ProductSchema.pre("remove", async function (next) {
     }
   }
   next();
+});
+
+// Virtual field for reviews and ratings
+ProductSchema.virtual("reviews", {
+  ref: "Review",
+  localField: "_id",
+  foreignField: "revieweeId",
+});
+
+ProductSchema.virtual("rating").get(function () {
+  this.populate("reviews");
+  let rating = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+  if (!this.reviews) return rating;
+  this.reviews.forEach((review) => rating[review.rating]++);
+  return rating;
+});
+
+ProductSchema.virtual("averageRating").get(function () {
+  this.populate("reviews");
+  if (!this.reviews || this.reviews.length === 0) return 0;
+  let total = 0;
+  for (const num in this.rating) total += num * this.rating[num];
+  return (total / this.reviews.length).toFixed(1);
 });
 
 const Product = mongoose.model("Product", ProductSchema);

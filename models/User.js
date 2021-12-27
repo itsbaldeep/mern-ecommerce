@@ -47,7 +47,7 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       default: "Customer",
-      enum: ["Customer", "Client", "Admin"],
+      enum: ["Customer", "Client", "Employee", "Admin"],
     },
     directory: {
       type: mongoose.SchemaTypes.ObjectId,
