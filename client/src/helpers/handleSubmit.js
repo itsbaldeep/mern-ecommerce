@@ -75,10 +75,17 @@ export const newProduct = (values) => {
   for (const key in values) fd.append(key, values[key]);
   fd.set("size", JSON.stringify(values.size));
   fd.set("ageRange", JSON.stringify(values.ageRange));
-  // Images
-  const filesLength = values.productImages.length;
+  fd.set("affiliateLinks", JSON.stringify(values.affiliateLinks));
+  fd.delete("productImagesUpload");
+
+  // Prioritizing links first
+  if (values.productImages.length > 0) return fd;
+
+  // Move productImagesUpload to productImages in form data
+  fd.delete("productImages");
+  const filesLength = values.productImagesUpload.length;
   if (filesLength > 0) {
-    for (let i = 0; i < filesLength; i++) fd.append("productImages", values.productImages[i]);
+    for (let i = 0; i < filesLength; i++) fd.append("productImages", values.productImagesUpload[i]);
   }
   return fd;
 };
@@ -103,15 +110,24 @@ export const updateProduct = (values, product) => {
   if (sizeJSON !== JSON.stringify(product.size)) fd.append("size", sizeJSON);
   const ageRangeJSON = JSON.stringify(values.ageRange);
   if (ageRangeJSON !== JSON.stringify(product.ageRange)) fd.append("ageRange", ageRangeJSON);
+  const affiliateLinksJSON = JSON.stringify(values.affiliateLinks);
+  if (affiliateLinksJSON !== JSON.stringify(product.affiliateLinks))
+    fd.append("affiliateLinks", affiliateLinksJSON);
 
   // Array fields
   if (values.petType.toString() !== product.petType.toString())
     fd.append("petType", values.petType);
 
-  // Images
-  const filesLength = values.productImages.length;
+  // If image links are modified, update the links and ignore file uploads
+  if (values.productImages.toString() !== product.productImages.toString()) {
+    fd.append("productImages", values.productImages);
+    return fd;
+  }
+
+  // If image links are not modified, add files to the formdata
+  const filesLength = values.productImagesUpload.length;
   if (filesLength > 0) {
-    for (let i = 0; i < filesLength; i++) fd.append("productImages", values.productImages[i]);
+    for (let i = 0; i < filesLength; i++) fd.append("productImages", values.productImagesUpload[i]);
   }
   return fd;
 };

@@ -149,7 +149,7 @@ export const product = Yup.object({
     .positive("Price must be a positive number")
     .required("Please provide a price"),
   countInStock: Yup.number()
-    .positive("Please provide a positive count")
+    .min(0, "Please provide a positive count")
     .required("Please provide a count in stock"),
   petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
   breedType: Yup.string(),
@@ -164,6 +164,17 @@ export const product = Yup.object({
     min: Yup.number().min(0, "Minimum age should be atleast 0"),
     max: Yup.number().min(0, "Maximum age should be atleast 0"),
   }),
+  productImages: Yup.array()
+    .max(7, "You can have a maximum of 7 product images")
+    .of(Yup.string().required("Please provide a link")),
+  affiliateLinks: Yup.array().of(
+    Yup.object({
+      productId: Yup.string().required("ID is required"),
+      productLink: Yup.string().required("Link is required"),
+      productProvider: Yup.string().required("Provider is required"),
+      productPrice: Yup.number().required("Price is required").min(0, "Provide a valid price"),
+    })
+  ),
 });
 
 export const service = Yup.object({

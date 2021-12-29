@@ -66,7 +66,7 @@ const ProductSchema = new mongoose.Schema(
     countInStock: {
       type: Number,
       default: 0,
-      min: [0, "There should be atleast 1 item in stock"],
+      min: [0, "There should be a positive amount of stock"],
     },
     price: {
       type: Number,
@@ -108,6 +108,7 @@ const ProductSchema = new mongoose.Schema(
           productId: String,
           productLink: String,
           productProvider: String,
+          productPrice: Number,
         },
       ],
       default: [],

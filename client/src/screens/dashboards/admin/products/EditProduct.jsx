@@ -9,6 +9,9 @@ import { product as initialValues } from "helpers/initialValues";
 import { product as validationSchema } from "helpers/validationSchemas";
 import { updateProduct as handleSubmit } from "helpers/handleSubmit";
 
+// Components
+import { TextArrayField, TextArrayOfObjectsField } from "components/InputFields.jsx";
+
 // Actions
 import { editProduct } from "redux/actions/product";
 
@@ -22,7 +25,7 @@ const EditProduct = ({ show, onHide, product, productId }) => {
   const spaceLeft = MAX_IMAGES - product.productImages.length;
 
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} size="xl">
       <Modal.Header>
         <Modal.Title>Edit Product</Modal.Title>
       </Modal.Header>
@@ -39,12 +42,18 @@ const EditProduct = ({ show, onHide, product, productId }) => {
             <Modal.Body>
               <Form.Group className="mb-3">
                 <h4>Images</h4>
+                <Form.Text>
+                  Choose between either uploading images or putting links. If you choose both, the
+                  links will get priority
+                </Form.Text>
                 {product.productImages.length > 0 ? (
                   <Row>
                     {product.productImages.map((image, index) => (
                       <Col
                         key={image}
                         xs={6}
+                        md={4}
+                        lg={3}
                         className="my-2 d-flex align-items-center justify-content-center"
                       >
                         <ImageCard image={image} index={index} product={product} />
@@ -58,23 +67,30 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                   <>
                     <input
                       type="file"
-                      name="productImages"
-                      className={`form-control ${!!errors.productImages ? "is-invalid" : ""}`}
+                      name="productImagesUpload"
+                      className={`form-control ${!!errors.productImagesUpload ? "is-invalid" : ""}`}
                       multiple
                       onChange={(e) => {
                         if (e.currentTarget.files.length > spaceLeft)
                           return setErrors({
-                            productImages: `You can only upload ${spaceLeft} more images`,
+                            productImagesUpload: `You can only upload ${spaceLeft} more images`,
                           });
-                        setFieldValue("productImages", e.currentTarget.files);
+                        setFieldValue("productImagesUpload", e.currentTarget.files);
                       }}
                     />
-                    <div className="invalid-feedback">{errors.productImages}</div>
+                    <div className="invalid-feedback">{errors.productImagesUpload}</div>
                   </>
                 ) : (
                   <p>You can't upload any more images</p>
                 )}
               </Form.Group>
+              <TextArrayField
+                name="productImages"
+                label="Product Images"
+                placeholder="Enter link for product image"
+                message="No image links added yet"
+                size="sm"
+              />
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="name">Product Name</Form.Label>
                 <Field
@@ -159,6 +175,22 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                   </Form.Group>
                 </Col>
               </Row>
+              <TextArrayOfObjectsField
+                name="affiliateLinks"
+                label="Affiliate Links"
+                message="No links added"
+                fieldType={{ productPrice: "input" }}
+                fieldProps={{
+                  productPrice: { type: "number" },
+                }}
+                placeholder={{
+                  productProvider: "Provider's Name",
+                  productId: "Product ID, eg. ASIN",
+                  productLink: "Affiliate Link",
+                  productPrice: "Price at Provider's Website",
+                }}
+                keys={["productProvider", "productLink", "productId", "productPrice"]}
+              />
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="petType">Pet Type</Form.Label>
                 <div>

@@ -109,6 +109,8 @@ export const product = (
       height: 0,
       width: 0,
     },
+    productImages: [],
+    affiliateLinks: [],
     isVeg: false,
     ageRange: {
       min: 0,
@@ -129,7 +131,9 @@ export const product = (
     size: _product.size,
     isVeg: _product.isVeg,
     ageRange: _product.ageRange,
-    productImages: [],
+    affiliateLinks: _product.affiliateLinks,
+    productImages: _product.productImages,
+    productImagesUpload: [],
   };
 };
 

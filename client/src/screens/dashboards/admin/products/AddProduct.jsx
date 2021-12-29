@@ -4,7 +4,14 @@ import { Form, Modal, Row, Col, Alert, Button } from "react-bootstrap";
 import { Formik } from "formik";
 
 // Components
-import { TextField, SelectField, CheckBox, CheckBoxOptions } from "components/InputFields.jsx";
+import {
+  TextField,
+  SelectField,
+  CheckBox,
+  CheckBoxOptions,
+  TextArrayField,
+  TextArrayOfObjectsField,
+} from "components/InputFields.jsx";
 
 // Helpers
 import { product as initialValues } from "helpers/initialValues";
@@ -24,7 +31,7 @@ const AddProduct = ({ show, onHide }) => {
   const spaceLeft = MAX_IMAGES;
 
   return (
-    <Modal show={show} onHide={onHide}>
+    <Modal show={show} onHide={onHide} size="xl">
       <Modal.Header>
         <Modal.Title>Add a new product</Modal.Title>
       </Modal.Header>
@@ -40,21 +47,32 @@ const AddProduct = ({ show, onHide }) => {
           <Form>
             <Modal.Body>
               <Form.Group className="mb-3">
+                <Form.Text>
+                  Choose between either uploading images or putting links. If you choose both, the
+                  links will get priority
+                </Form.Text>
                 <input
                   type="file"
-                  name="productImages"
-                  className={`form-control ${!!errors.productImages ? "is-invalid" : ""}`}
+                  name="productImagesUpload"
+                  className={`form-control ${!!errors.productImagesUpload ? "is-invalid" : ""}`}
                   multiple
                   onChange={(e) => {
                     if (e.currentTarget.files.length > spaceLeft)
                       return setErrors({
-                        productImages: `You can only upload upto ${spaceLeft} images`,
+                        productImagesUpload: `You can only upload upto ${spaceLeft} images`,
                       });
-                    setFieldValue("productImages", e.currentTarget.files);
+                    setFieldValue("productImagesUpload", e.currentTarget.files);
                   }}
                 />
-                <div className="invalid-feedback">{errors.productImages}</div>
+                <div className="invalid-feedback">{errors.productImagesUpload}</div>
               </Form.Group>
+              <TextArrayField
+                name="productImages"
+                label="Product Images"
+                placeholder="Enter link for product image"
+                message="No image links added yet"
+                size="sm"
+              />
               <TextField name="name" label="Product Name" placeholder="Enter the product name" />
               <TextField
                 name="description"
@@ -86,6 +104,22 @@ const AddProduct = ({ show, onHide }) => {
                   />
                 </Col>
               </Row>
+              <TextArrayOfObjectsField
+                name="affiliateLinks"
+                label="Affiliate Links"
+                message="No links added"
+                fieldType={{ productPrice: "input" }}
+                fieldProps={{
+                  productPrice: { type: "number" },
+                }}
+                placeholder={{
+                  productProvider: "Provider's Name",
+                  productId: "ID, eg. ASIN",
+                  productLink: "Affiliate Link",
+                  productPrice: "Provider's price",
+                }}
+                keys={["productProvider", "productLink", "productId", "productPrice"]}
+              />
               <CheckBoxOptions
                 label="Pet Type"
                 options={pets.map((pet) => pet.name)}

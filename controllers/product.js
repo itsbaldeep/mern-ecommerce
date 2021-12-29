@@ -82,6 +82,8 @@ exports.addProduct = async (req, res, next) => {
       price: req.body.price,
       isVeg: req.body.isVeg,
       ageRange: JSON.parse(req.body.ageRange || "{}"),
+      affiliateLinks: JSON.parse(req.body.affiliateLinks || "{}"),
+      productImages: req.body.productImages?.split(","),
     });
     if (req.files) {
       const newImages = req.files.map((image) => `/uploads/${image.filename}`);
@@ -162,6 +164,7 @@ exports.editProduct = async (req, res, next) => {
     if (req.body.price) product.price = req.body.price;
     if (req.body.isVeg) product.isVeg = req.body.isVeg;
     if (req.body.ageRange) product.ageRange = JSON.parse(req.body.ageRange);
+    if (req.body.affiliateLinks) product.affiliateLinks = JSON.parse(req.body.affiliateLinks);
     if (req.files) {
       const newImages = req.files.map((image) => `/uploads/${image.filename}`);
       product.productImages = product.productImages.concat(newImages);

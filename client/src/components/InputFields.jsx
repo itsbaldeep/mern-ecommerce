@@ -172,7 +172,7 @@ export const TextArrayOfObjectsField = ({
   ...props
 }) => {
   const [field, meta] = useField(props);
-  const colSize = 10 / keys.length;
+  const colSize = Math.ceil(10 / keys.length);
   return (
     <Form.Group className="mb-3">
       <FieldArray name={props.name}>
@@ -196,17 +196,21 @@ export const TextArrayOfObjectsField = ({
               return (
                 <Row key={index}>
                   {keys.map((key) => (
-                    <Col xs={colSize} key={key}>
+                    <Col xs={12} sm={colSize} key={key}>
                       <FieldArrayInput
                         name={`${field.name}.${index}.${key}`}
                         placeholder={placeholder?.[key]}
-                        as={fieldType[keys.indexOf(key)] || "input"}
+                        as={fieldType?.[key] || "input"}
                         rows={3}
                         size={size}
                       />
                     </Col>
                   ))}
-                  <Col xs={2} className="d-flex flex-row-reverse">
+                  <Col
+                    xs={12}
+                    sm={colSize * 4 <= 12 ? 12 : 2}
+                    className="d-flex flex-row-reverse mb-2"
+                  >
                     <Form.Group>
                       <Button
                         variant="danger"
