@@ -26,6 +26,7 @@ const AddProduct = ({ show, onHide }) => {
   const { loading, error, isAdded } = useSelector((state) => state.product);
   const { productCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
+  const { brands } = useSelector((state) => state.brand);
 
   const MAX_IMAGES = 7;
   const spaceLeft = MAX_IMAGES;
@@ -36,7 +37,11 @@ const AddProduct = ({ show, onHide }) => {
         <Modal.Title>Add a new product</Modal.Title>
       </Modal.Header>
       <Formik
-        initialValues={initialValues()}
+        initialValues={{
+          ...initialValues(),
+          category: productCategories[0]?.name || "",
+          brand: brands[0]?.name || "",
+        }}
         validationSchema={validationSchema}
         onSubmit={(values) => {
           const fd = handleSubmit(values);
@@ -86,7 +91,7 @@ const AddProduct = ({ show, onHide }) => {
                 name="category"
               />
               <Row>
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={4}>
                   <TextField
                     name="price"
                     label="Price (in Rs.)"
@@ -94,13 +99,19 @@ const AddProduct = ({ show, onHide }) => {
                     type="number"
                   />
                 </Col>
-
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={4}>
                   <TextField
                     name="countInStock"
                     label="Count in stock"
                     placeholder="Available quantity"
                     type="number"
+                  />
+                </Col>
+                <Col xs={12} sm={4}>
+                  <SelectField
+                    label="Brand"
+                    options={brands.map((brand) => brand.name)}
+                    name="brand"
                   />
                 </Col>
               </Row>
@@ -133,7 +144,7 @@ const AddProduct = ({ show, onHide }) => {
                 placeholder="Weight"
               />
               <Row>
-                <Col sm={12} md={4}>
+                <Col xs={12} sm={4}>
                   <TextField
                     name="size.length"
                     type="number"
@@ -141,7 +152,7 @@ const AddProduct = ({ show, onHide }) => {
                     placeholder="Length"
                   />
                 </Col>
-                <Col sm={12} md={4}>
+                <Col xs={12} sm={4}>
                   <TextField
                     name="size.height"
                     type="number"
@@ -149,7 +160,7 @@ const AddProduct = ({ show, onHide }) => {
                     placeholder="Height"
                   />
                 </Col>
-                <Col sm={12} md={4}>
+                <Col xs={12} sm={4}>
                   <TextField
                     name="size.width"
                     type="number"
@@ -159,7 +170,7 @@ const AddProduct = ({ show, onHide }) => {
                 </Col>
               </Row>
               <Row>
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={6}>
                   <TextField
                     name="ageRange.min"
                     type="number"
@@ -167,7 +178,7 @@ const AddProduct = ({ show, onHide }) => {
                     placeholder="Minimum Age"
                   />
                 </Col>
-                <Col sm={12} md={6}>
+                <Col xs={12} sm={6}>
                   <TextField
                     name="ageRange.max"
                     type="number"

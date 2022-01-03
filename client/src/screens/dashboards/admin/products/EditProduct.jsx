@@ -10,7 +10,7 @@ import { product as validationSchema } from "helpers/validationSchemas";
 import { updateProduct as handleSubmit } from "helpers/handleSubmit";
 
 // Components
-import { TextArrayField, TextArrayOfObjectsField } from "components/InputFields.jsx";
+import { SelectField, TextArrayField, TextArrayOfObjectsField } from "components/InputFields.jsx";
 
 // Actions
 import { editProduct } from "redux/actions/product";
@@ -20,6 +20,7 @@ const EditProduct = ({ show, onHide, product, productId }) => {
   const { loading, error, isUpdated } = useSelector((state) => state.product);
   const { productCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
+  const { brands } = useSelector((state) => state.brand);
 
   const MAX_IMAGES = 7;
   const spaceLeft = MAX_IMAGES - product.productImages.length;
@@ -146,7 +147,7 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                 </Col>
               </Row>
               <Row>
-                <Col xs={12} sm={6}>
+                <Col xs={12} sm={4}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="price">Price</Form.Label>
                     <Field
@@ -159,7 +160,7 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                     <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>
                   </Form.Group>
                 </Col>
-                <Col xs={12} sm={6}>
+                <Col xs={12} sm={4}>
                   <Form.Group className="mb-3">
                     <Form.Label htmlFor="countInStock">Count in stock</Form.Label>
                     <Field
@@ -173,6 +174,13 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                       {errors.countInStock}
                     </Form.Control.Feedback>
                   </Form.Group>
+                </Col>
+                <Col xs={12} sm={4}>
+                  <SelectField
+                    label="Brand"
+                    options={brands.map((brand) => brand.name)}
+                    name="brand"
+                  />
                 </Col>
               </Row>
               <TextArrayOfObjectsField

@@ -19,20 +19,15 @@ mongoose
   .then(() => console.log("Connected to the database."))
   .catch(console.error);
 
-// User routes
+// API routes
 app.use("/api/user", require("./routes/user"));
-
-// Directory routes
 app.use("/api/directory", require("./routes/directory"));
 app.use("/api/inquiry", require("./routes/inquiry"));
-
-// Product and Service routes
 app.use("/api/product", require("./routes/product"));
 app.use("/api/service", require("./routes/service"));
-
-// Category and Pet routes
 app.use("/api/category", require("./routes/category"));
 app.use("/api/pet", require("./routes/pet"));
+app.use("/api/brand", require("./routes/brand"));
 
 // Middlewares
 app.use(require("./middleware/errorHandler"));

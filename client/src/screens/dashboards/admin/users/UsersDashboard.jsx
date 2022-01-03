@@ -33,8 +33,8 @@ const UsersDashboard = () => {
 
   return (
     <div className="users-dashboard">
-      <div className="d-flex justify-content-between">
-        <Button onClick={showAddDialog} className="mb-3">
+      <div className="d-sm-flex justify-content-between mb-3">
+        <Button onClick={showAddDialog} className="mb-3 mb-sm-0">
           Add a new user
         </Button>
         <div className="d-flex my-auto">
@@ -44,7 +44,6 @@ const UsersDashboard = () => {
             placeholder="Search for..."
             onChange={(e) => setSearchValue(e.currentTarget.value)}
             style={{ width: "200px", height: "40px" }}
-            className="mx-2"
           />
           <Form.Select
             value={searchKey}

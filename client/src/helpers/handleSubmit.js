@@ -104,6 +104,7 @@ export const updateProduct = (values, product) => {
   if (values.isVeg !== product.isVeg) fd.append("isVeg", values.isVeg);
   if (values.weight !== product.weight) fd.append("weight", values.weight);
   if (values.breedType !== product.breedType) fd.append("breedType", values.breedType);
+  if (values.brand !== product.brand) fd.append("brand", values.brand);
 
   // Object fields
   const sizeJSON = JSON.stringify(values.size);

@@ -1,6 +1,14 @@
 // Dependencies
 import { Tab, Row, Col, Nav, Container } from "react-bootstrap";
-import { FaBars, FaBoxOpen, FaDna, FaDog, FaMapMarkerAlt, FaUsersCog } from "react-icons/fa";
+import {
+  FaBars,
+  FaBoxOpen,
+  FaDna,
+  FaDog,
+  FaIcons,
+  FaMapMarkerAlt,
+  FaUsersCog,
+} from "react-icons/fa";
 
 // Screens
 import UsersDashboard from "./users/UsersDashboard.jsx";
@@ -9,6 +17,7 @@ import ProductsDashboard from "./products/ProductsDashboard.jsx";
 import ServicesDashboard from "./services/ServicesDashboard.jsx";
 import CategoriesDashboard from "./categories/CategoriesDashboard.jsx";
 import PetsDashboard from "./pets/PetsDashboard.jsx";
+import BrandsDashboard from "./brands/BrandsDashboard.jsx";
 
 // Custom CSS
 import "./AdminDashboard.css";
@@ -51,6 +60,11 @@ const AdminDashboard = () => {
                   <FaDog /> Pets
                 </Nav.Link>
               </Nav.Item>
+              <Nav.Item>
+                <Nav.Link eventKey="seventh">
+                  <FaIcons /> Brands
+                </Nav.Link>
+              </Nav.Item>
             </Nav>
           </Col>
           <Col sm={9}>
@@ -72,6 +86,9 @@ const AdminDashboard = () => {
               </Tab.Pane>
               <Tab.Pane eventKey="sixth">
                 <PetsDashboard />
+              </Tab.Pane>
+              <Tab.Pane eventKey="seventh">
+                <BrandsDashboard />
               </Tab.Pane>
             </Tab.Content>
           </Col>

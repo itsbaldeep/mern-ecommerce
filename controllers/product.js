@@ -72,6 +72,7 @@ exports.addProduct = async (req, res, next) => {
     const product = await Product.create({
       seller: req.user.role === "Client" ? req.user.directory : null,
       name: req.body.name,
+      brand: req.body.brand,
       category: req.body.category,
       petType: req.body.petType?.split(","),
       breedType: req.body.breedType,
@@ -154,6 +155,7 @@ exports.editProduct = async (req, res, next) => {
 
     // Updating the product
     if (req.body.name) product.name = req.body.name;
+    if (req.body.brand) product.brand = req.body.brand;
     if (req.body.category) product.category = req.body.category;
     if (req.body.petType) product.petType = req.body.petType.split(",");
     if (req.body.breedType) product.breedType = req.body.breedType;

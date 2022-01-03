@@ -2,12 +2,9 @@
 import ReactDOM from "react-dom";
 import reportWebVitals from "./reportWebVitals";
 
-// Main app component
+// Main app component and css file
 import App from "./App";
-
-// CSS files
-import "./custom.scss";
-import "./index.css";
+import "./index.scss";
 
 // Redux
 import { Provider } from "react-redux";

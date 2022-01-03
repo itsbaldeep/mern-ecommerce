@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 // Actions
-import { loadUser } from "./redux/actions/user.js";
+import { loadUser } from "redux/actions/user.js";
 import {
   getDirectoryCategories,
   getProductCategories,
@@ -12,39 +12,42 @@ import {
   getCategories,
 } from "redux/actions/category.js";
 import { getPets } from "redux/actions/pet.js";
+import { getBrands } from "redux/actions/brand.js";
 
 // Components
-import PrivateRoute from "./components/PrivateRoute.jsx";
-import Navbar from "./components/Navbar.jsx";
-import Footer from "./components/Footer.jsx";
+import PrivateRoute from "components/PrivateRoute.jsx";
+import Navbar from "components/Navbar.jsx";
+import Footer from "components/Footer.jsx";
 
 // Main Screens
-import HomeScreen from "./screens/HomeScreen.jsx";
-import ShopScreen from "./screens/shop/ShopScreen.jsx";
-import ProductScreen from "./screens/shop/ProductScreen.jsx";
-import ServicesScreen from "./screens/services/ServicesScreen.jsx";
+import HomeScreen from "screens/HomeScreen.jsx";
+import ShopScreen from "screens/shop/ShopScreen.jsx";
+import ProductScreen from "screens/shop/ProductScreen.jsx";
+import ServicesScreen from "screens/services/ServicesScreen.jsx";
 import ServiceScreen from "screens/services/ServiceScreen.jsx";
+import AboutScreen from "screens/AboutScreen.jsx";
+import ContactScreen from "screens/ContactScreen.jsx";
 
 // Directory Screens
-import DirectoriesScreen from "./screens/directory/DirectoriesScreen.jsx";
-import DirectoryProfileScreen from "./screens/directory/DirectoryProfileScreen.jsx";
+import DirectoriesScreen from "screens/directory/DirectoriesScreen.jsx";
+import DirectoryProfileScreen from "screens/directory/DirectoryProfileScreen.jsx";
 
 // Auth Screens
-import LoginScreen from "./screens/auth/LoginScreen.jsx";
-import RegisterScreen from "./screens/auth/RegisterScreen.jsx";
-import RegisterMemberScreen from "./screens/auth/RegisterMemberScreen.jsx";
-import VerifyAccountScreen from "./screens/auth/VerifyAccountScreen.jsx";
-import ForgotPasswordScreen from "./screens/auth/ForgotPasswordScreen.jsx";
-import ResetPasswordScreen from "./screens/auth/ResetPasswordScreen.jsx";
+import LoginScreen from "screens/auth/LoginScreen.jsx";
+import RegisterScreen from "screens/auth/RegisterScreen.jsx";
+import RegisterMemberScreen from "screens/auth/RegisterMemberScreen.jsx";
+import VerifyAccountScreen from "screens/auth/VerifyAccountScreen.jsx";
+import ForgotPasswordScreen from "screens/auth/ForgotPasswordScreen.jsx";
+import ResetPasswordScreen from "screens/auth/ResetPasswordScreen.jsx";
 
 // Account Screens
-import AccountScreen from "./screens/AccountScreen.jsx";
-import ProfileScreen from "./screens/profile/ProfileScreen.jsx";
+import AccountScreen from "screens/AccountScreen.jsx";
+import ProfileScreen from "screens/profile/ProfileScreen.jsx";
 
 // Dashboard Screens
-import ProductDashboard from "./screens/dashboards/products/ProductDashboard.jsx";
-import ServiceDashboard from "./screens/dashboards/services/ServiceDashboard.jsx";
-import AdminDashboard from "./screens/dashboards/admin/AdminDashboard.jsx";
+import ProductDashboard from "screens/dashboards/products/ProductDashboard.jsx";
+import ServiceDashboard from "screens/dashboards/services/ServiceDashboard.jsx";
+import AdminDashboard from "screens/dashboards/admin/AdminDashboard.jsx";
 
 function App() {
   // Checking for user token
@@ -55,6 +58,7 @@ function App() {
     dispatch(getProductCategories());
     dispatch(getCategories());
     dispatch(getPets());
+    dispatch(getBrands());
     const listener = window.addEventListener("storage", (() => dispatch(loadUser()))());
     return () => window.removeEventListener("storage", listener);
   }, [dispatch]);
@@ -69,6 +73,8 @@ function App() {
         <Route exact path="/shop/:productId" component={ProductScreen} />
         <Route exact path="/services" component={ServicesScreen} />
         <Route exact path="/services/:serviceId" component={ServiceScreen} />
+        <Route exact path="/about" component={AboutScreen} />
+        <Route exact path="/contact" component={ContactScreen} />
 
         {/* Auth Routes */}
         <Route exact path="/login" component={LoginScreen} />

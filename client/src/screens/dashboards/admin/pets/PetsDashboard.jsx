@@ -24,8 +24,8 @@ const PetsDashboard = () => {
 
   return (
     <div className="pets-dashboard">
-      <div className="d-flex justify-content-between">
-        <Button onClick={showAddDialog} className="mb-3">
+      <div className="d-sm-flex justify-content-between mb-3">
+        <Button onClick={showAddDialog} className="mb-3 mb-sm-0">
           Add a new pet
         </Button>
         <div className="d-flex my-auto">
@@ -35,7 +35,6 @@ const PetsDashboard = () => {
             placeholder="Search for..."
             onChange={(e) => setSearchValue(e.currentTarget.value)}
             style={{ width: "200px", height: "40px" }}
-            className="mx-2"
           />
           <Form.Select
             value={searchKey}
@@ -114,7 +113,7 @@ const PetRow = ({ pet, index }) => {
         </div>
       </td>
       <td>
-        <a href={pet.image}>
+        <a href={pet.image || null}>
           <img src={pet.image || "/assets/placeholders/pet.png"} alt="Pet" height="60px" />
         </a>
       </td>

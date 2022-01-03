@@ -24,8 +24,8 @@ const CategoriesDashboard = () => {
 
   return (
     <div className="categories-dashboard">
-      <div className="d-flex justify-content-between">
-        <Button onClick={showAddDialog} className="mb-3">
+      <div className="d-sm-flex justify-content-between mb-3">
+        <Button onClick={showAddDialog} className="mb-3 mb-sm-0">
           Add a new category
         </Button>
         <div className="d-flex my-auto">
@@ -35,7 +35,6 @@ const CategoriesDashboard = () => {
             placeholder="Search for..."
             onChange={(e) => setSearchValue(e.currentTarget.value)}
             style={{ width: "200px", height: "40px" }}
-            className="mx-2"
           />
           <Form.Select
             value={searchKey}
@@ -124,7 +123,7 @@ const CategoryRow = ({ category, index }) => {
         </div>
       </td>
       <td>
-        <a href={category.image}>
+        <a href={category.image || null}>
           <img
             src={category.image || "/assets/placeholders/category.png"}
             alt="Category"

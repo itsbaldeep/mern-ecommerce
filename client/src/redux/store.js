@@ -10,6 +10,7 @@ import { servicesReducer } from "./reducers/service";
 import { directoryReducer } from "./reducers/directory";
 import { categoryReducer } from "./reducers/category";
 import { petReducer } from "./reducers/pet";
+import { brandReducer } from "./reducers/brand";
 import { inquiryReducer } from "./reducers/inquiry";
 
 // Combining reducers
@@ -23,6 +24,7 @@ const reducer = combineReducers({
   directory: directoryReducer,
   category: categoryReducer,
   pet: petReducer,
+  brand: brandReducer,
   inquiry: inquiryReducer,
 });
 

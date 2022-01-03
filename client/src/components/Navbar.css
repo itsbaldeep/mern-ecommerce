@@ -1,27 +1,138 @@
-.navbar-brand {
-  background-color: white;
-  border-radius: 15px;
-}
-
-.navbar-brand:hover {
-  background-color: whitesmoke;
-}
-
-.navbar {
-  font-size: 17px;
+.header {
+  background: var(--bs-light);
+  width: 100%;
+  height: 70px;
+  transition: 0.3s ease all;
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2);
 }
 
-.navbar-nav a {
+.header-bar {
+  min-height: 40px;
+  background-color: black;
+  color: white;
+}
+
+.header-bar div svg {
+  margin-left: 0.25rem !important;
+  margin-right: 0.25rem !important;
+}
+
+.header-content {
+  overflow: hidden;
+  color: var(--bs-light);
+  margin: 0 auto;
+  max-width: 1920px;
+  padding: 0 1.5rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 100;
+}
+
+.header-content-logo {
+  transition: 0.3s ease all;
+}
+
+.header-content-logo:hover {
+  background-color: whitesmoke;
+  transform: scale(110%);
+}
+
+.header-content-nav {
+  top: 0;
+  right: 100%;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  transform: translate(0);
+  transition: 0.3s ease transform;
+}
+
+.nav-link-container {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.header-nav-link svg {
+  filter: drop-shadow(1px 1px 1px black);
+}
+
+.header-nav-link {
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-size: 1.3rem;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+  transition: 0.3s ease all;
+  text-shadow: 1px 1px 1px black;
 }
 
-.dropdown-item {
-  flex-direction: row !important;
+.header-nav-link:hover {
+  opacity: 0.66;
 }
 
-.dropdown-item svg {
-  margin-right: 8px;
+.isMenu {
+  transform: translate(100%);
+}
+
+.header-content-toggle {
+  cursor: pointer;
+  background-color: var(--bs-primary);
+  padding: 0.5rem;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  font-size: 1.66rem;
+  transition: 0.3s ease all;
+  position: relative;
+}
+
+.header-content-toggle:hover {
+  transform: scale(130%);
+}
+
+@media (min-width: 768px) {
+  .header-content-nav {
+    transform: none;
+    flex-direction: row;
+    background: transparent;
+    width: auto;
+    height: 100%;
+    position: static;
+  }
+
+  .nav-link-container {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 0;
+  }
+
+  .header-nav-link {
+    color: var(--bs-primary);
+    font-size: 1.1rem;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    text-shadow: none;
+    font-weight: 600;
+  }
+
+  .header-content-toggle {
+    display: none;
+  }
+
+  .header-nav-link svg {
+    filter: none;
+  }
 }
