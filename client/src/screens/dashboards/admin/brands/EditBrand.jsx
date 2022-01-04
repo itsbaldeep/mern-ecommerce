@@ -24,7 +24,7 @@ const EditBrand = ({ show, onHide, brandId, brand }) => {
           name: brand.name,
           logo: brand.logo,
           description: brand.description,
-          sellers: [...brand.sellers],
+          sellers: brand.sellers.map((brand) => brand._id),
           images: [...brand.images],
         }}
         validationSchema={Yup.object({

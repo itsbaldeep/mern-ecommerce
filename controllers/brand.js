@@ -65,6 +65,12 @@ exports.addBrand = async (req, res, next) => {
 // PUT /api/brand/edit/:id
 exports.editBrand = async (req, res, next) => {
   try {
+    // Validating sellers
+    if (req.body.sellers.length > 0)
+      for (const seller of req.body.sellers)
+        if (!(await Directory.findById(seller)))
+          return next(new ErrorResponse(`Cannot find seller with id ${seller}`, 404));
+
     const brand = await Brand.findById(req.params.id);
     if (!brand) return next(new ErrorResponse("Brand not found", 404));
     if (req.body.name) brand.name = req.body.name;

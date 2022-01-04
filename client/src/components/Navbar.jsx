@@ -43,6 +43,7 @@ const PetohubNavbar = () => {
         height: window.innerHeight,
       });
     };
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -125,7 +126,7 @@ const PetohubNavbar = () => {
                     <FaUserAlt /> {user.user.name}
                   </Link>
                   <Link
-                    href="/"
+                    to="/"
                     className="header-nav-link"
                     onClick={() => dispatch(logout()) && setMenuOpen((p) => !p)}
                   >
