@@ -136,10 +136,7 @@
   padding-top: 2rem !important;
 }
 
-.our-company-section h3,
-.our-company-section h5,
-.about-section h3,
-.about-section h2 {
+.gradient-heading {
   background: linear-gradient(90deg, var(--bs-primary), #f83292);
   color: transparent;
   -webkit-background-clip: text;
@@ -200,7 +197,8 @@
 
 .newsletter img {
   width: 100%;
-  max-height: 300px;
+  min-height: 300px;
+  max-height: 400px;
   object-fit: cover;
   object-position: center;
   filter: opacity(66%);

@@ -1,3 +1,15 @@
+.shop-swiper-container img {
+  box-shadow: 1px 3px 4px rgba(0, 0, 0, 0.4);
+}
+
+.shop-swiper-container {
+  cursor: pointer;
+}
+
+.shop-swiper-info {
+  text-transform: uppercase;
+}
+
 .shop-screen {
   display: grid;
   grid-template-columns: 1fr 3fr;

@@ -3,15 +3,14 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import { FaFilter } from "react-icons/fa";
+import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
+import { Autoplay, Pagination } from "swiper";
 
 // Components
-import MainSlider from "components/MainSlider.jsx";
 import Product from "./Product.jsx";
 
 // Actions
 import { getProducts } from "redux/actions/product";
-import { getProductCategories } from "redux/actions/category";
-import { getPets } from "redux/actions/pet";
 
 // Custom CSS
 import "./ShopScreen.css";
@@ -23,19 +22,51 @@ const CheckBox = ({ label }) => (
   </Form.Group>
 );
 
+const SwiperSection = ({ heading, array, placeholder, clickHandler }) => {
+  return (
+    <section className="py-3 text-center">
+      <h1 className="gradient-heading">{heading}</h1>
+      <Swiper
+        loop
+        slidesPerView={1}
+        breakpoints={{
+          576: {
+            slidesPerView: 2,
+          },
+          992: {
+            slidesPerView: 3,
+          },
+        }}
+        autoplay={{ delay: 5000 }}
+        modules={[Pagination, Autoplay]}
+        // pagination={{ clickable: true, dynamicBullets: true }}
+        className="shop-swiper"
+      >
+        {array.map((item, index) => (
+          <SwiperSlide key={index}>
+            <div className="shop-swiper-container" onClick={() => clickHandler(item)}>
+              <img src={item.image || item.logo || placeholder} height="200px" alt="item" />
+              <div className="shop-swiper-info py-2">{item.name}</div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </section>
+  );
+};
+
 const ShopScreen = () => {
   const dispatch = useDispatch();
   const { loading, products } = useSelector((state) => state.product);
   const { productCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
+  const { brands } = useSelector((state) => state.brand);
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
   const [showFilter, setShowFilter] = useState(window.innerWidth > 768);
 
   useEffect(() => {
     dispatch(getProducts());
-    dispatch(getProductCategories());
-    dispatch(getPets());
     const handleResize = () => setShowFilter(window.innerWidth > 768);
     const listener = window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", listener);
@@ -43,7 +74,40 @@ const ShopScreen = () => {
 
   return (
     <>
-      <MainSlider />
+      <SwiperSection
+        heading="Shop by category"
+        array={productCategories}
+        placeholder="/assets/placeholders/category.png"
+        clickHandler={(category) => console.log(category.docs)}
+      />
+      <SwiperSection
+        heading="Shop by brands"
+        array={brands}
+        placeholder="/assets/placeholders/brand.png"
+        clickHandler={(brand) => console.log(brand.products)}
+      />
+      <SwiperSection
+        heading="Shop by pet"
+        array={pets}
+        placeholder="/assets/placeholders/pet.png"
+        clickHandler={(pet) => console.log(pet.categories)}
+      />
+      {/* <Row>
+          {brands.map((brand, index) => (
+            <Col xs={12} sm={6} md={4} key={index}>
+              <p>{brand.name}</p>
+              <img src={brand.logo || brandPlaceholder} height="50px" alt="brand" />
+            </Col>
+          ))}
+        </Row>
+        <Row>
+          {pets.map((pet, index) => (
+            <Col xs={12} sm={6} md={4} key={index}>
+              <p>{pet.name}</p>
+              <img src={pet.image || petPlaceholder} height="50px" alt="pet" />
+            </Col>
+          ))}
+        </Row> */}
       <Container fluid>
         <div className="shop-screen py-2">
           <div

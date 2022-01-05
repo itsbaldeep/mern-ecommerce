@@ -99,11 +99,11 @@ exports.editCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
     if (!category) return next(new ErrorResponse("Category not found", 404));
-    if (req.body.name) category.name = req.body.name;
-    if (req.body.description) category.description = req.body.description;
-    if (req.body.image) category.image = req.body.image;
-    if (req.body.pet) category.pet = req.body.pet;
-    if (req.body.type) category.type = req.body.type;
+    if (req.body.name !== undefined) category.name = req.body.name;
+    if (req.body.description !== undefined) category.description = req.body.description;
+    if (req.body.image !== undefined) category.image = req.body.image;
+    if (req.body.pet !== undefined) category.pet = req.body.pet;
+    if (req.body.type !== undefined) category.type = req.body.type;
     await category.save();
     return res.status(200).json({
       success: true,

@@ -73,11 +73,11 @@ exports.editBrand = async (req, res, next) => {
 
     const brand = await Brand.findById(req.params.id);
     if (!brand) return next(new ErrorResponse("Brand not found", 404));
-    if (req.body.name) brand.name = req.body.name;
-    if (req.body.description) brand.description = req.body.description;
-    if (req.body.images) brand.images = req.body.images;
-    if (req.body.logo) brand.logo = req.body.logo;
-    if (req.body.sellers) brand.sellers = req.body.sellers;
+    if (req.body.name !== undefined) brand.name = req.body.name;
+    if (req.body.description !== undefined) brand.description = req.body.description;
+    if (req.body.images !== undefined) brand.images = req.body.images;
+    if (req.body.logo !== undefined) brand.logo = req.body.logo;
+    if (req.body.sellers !== undefined) brand.sellers = req.body.sellers;
     await brand.save();
     return res.status(200).json({
       success: true,

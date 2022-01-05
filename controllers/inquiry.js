@@ -54,11 +54,11 @@ exports.editInquiry = async (req, res, next) => {
   try {
     const inquiry = await Inquiry.findById(req.params.id);
     if (!inquiry) return next(new ErrorResponse("Inquiry not found", 404));
-    if (req.body.name) inquiry.name = req.body.name;
-    if (req.body.directory) inquiry.directory = req.body.directory;
-    if (req.body.message) inquiry.message = req.body.message;
-    if (req.body.email) inquiry.email = req.body.email;
-    if (req.body.number) inquiry.number = req.body.number;
+    if (req.body.name !== undefined) inquiry.name = req.body.name;
+    if (req.body.directory !== undefined) inquiry.directory = req.body.directory;
+    if (req.body.message !== undefined) inquiry.message = req.body.message;
+    if (req.body.email !== undefined) inquiry.email = req.body.email;
+    if (req.body.number !== undefined) inquiry.number = req.body.number;
     await inquiry.save();
     return res.status(200).json({
       success: true,

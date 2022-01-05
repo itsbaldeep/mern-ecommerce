@@ -31,7 +31,7 @@ const HomeScreen = () => {
       <Container>
         <Row className="my-4">
           <Col xs={12} md={6} className="our-company-section">
-            <h3>Our Company</h3>
+            <h3 className="gradient-heading">Our Company</h3>
             <p>
               We provide specialised and personalised care catered for your and your pet's needs in
               a fast and reliable manner.
@@ -44,12 +44,12 @@ const HomeScreen = () => {
             <Row className="text-center mt-2">
               <Col xs={12} sm={6} className="px-3">
                 <FaBuilding />
-                <h5 className="my-3">Our Office</h5>
+                <h5 className="my-3 gradient-heading">Our Office</h5>
                 <p>Mukhram Garden, Tilak Nagar, New Delhi, 110018</p>
               </Col>
               <Col xs={12} sm={6} className="px-3">
                 <FaPhone />
-                <h5 className="my-3">Our Contact</h5>
+                <h5 className="my-3 gradient-heading">Our Contact</h5>
                 <p style={{ wordWrap: "break-word" }}>
                   (+91) 7011923045 <br /> petohubofficial@gmail.com
                 </p>
@@ -76,8 +76,8 @@ const HomeScreen = () => {
       </Container>
       <section className="about-section py-2">
         <Container className="d-flex align-items-center justify-content-center flex-column">
-          <h3>About Us</h3>
-          <h2>Why choose us?</h2>
+          <h3 className="gradient-heading">About Us</h3>
+          <h2 className="gradient-heading">Why choose us?</h2>
           <Row>
             <Col sm={12} md={6}>
               <div className="about-section-image py-2">
