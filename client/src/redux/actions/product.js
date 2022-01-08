@@ -23,6 +23,81 @@ export const getProduct = (id) => async (dispatch) => {
   }
 };
 
+// POST /api/product/review/:id
+export const reviewProduct = (review, id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.REVIEW_PRODUCT_REQUEST });
+    const { data } = await axios.post(`/api/product/review/${id}`, review);
+    dispatch({ type: actionTypes.REVIEW_PRODUCT_SUCCESS, payload: data.review });
+  } catch (error) {
+    dispatch({ type: actionTypes.REVIEW_PRODUCT_FAIL, payload: error.response.data.error });
+  }
+};
+
+// DEL /api/product/review/remove/:id
+export const removeReview = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.REMOVE_PRODUCT_REVIEW_REQUEST });
+    const { data } = await axios.delete(`/api/product/review/remove/${id}`);
+    dispatch({ type: actionTypes.REMOVE_PRODUCT_REVIEW_SUCCESS, payload: data.review });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.REMOVE_PRODUCT_REVIEW_FAIL,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// POST /api/product/question/:id
+export const addQuestion = (question, id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.QUESTION_PRODUCT_REQUEST });
+    const { data } = await axios.post(`/api/product/question/${id}`, question);
+    dispatch({ type: actionTypes.QUESTION_PRODUCT_SUCCESS, payload: data.question });
+  } catch (error) {
+    dispatch({ type: actionTypes.QUESTION_PRODUCT_FAIL, payload: error.response.data.error });
+  }
+};
+
+// DEL /api/product/question/remove/:id
+export const removeQuestion = (id) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.REMOVE_PRODUCT_QUESTION_REQUEST });
+    const { data } = await axios.delete(`/api/product/question/remove/${id}`);
+    dispatch({ type: actionTypes.REMOVE_PRODUCT_QUESTION_SUCCESS, payload: data.question });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.REMOVE_PRODUCT_QUESTION_FAIL,
+      payload: error.response.data.error,
+    });
+  }
+};
+
+// POST /api/product/answer/:id/:qid
+export const addAnswer = (answer, id, qid) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.ANSWER_PRODUCT_REQUEST });
+    const { data } = await axios.post(`/api/product/answer/${id}/${qid}`, answer);
+    dispatch({ type: actionTypes.ANSWER_PRODUCT_SUCCESS, payload: data.question });
+  } catch (error) {
+    dispatch({ type: actionTypes.ANSWER_PRODUCT_FAIL, payload: error.response.data.error });
+  }
+};
+
+// DEL /api/product/answer/remove/:id/:qid
+export const removeAnswer = (id, qid) => async (dispatch) => {
+  try {
+    dispatch({ type: actionTypes.REMOVE_PRODUCT_ANSWER_REQUEST });
+    const { data } = await axios.delete(`/api/product/answer/remove/${id}/${qid}`);
+    dispatch({ type: actionTypes.REMOVE_PRODUCT_ANSWER_SUCCESS, payload: data.question });
+  } catch (error) {
+    dispatch({
+      type: actionTypes.REMOVE_PRODUCT_ANSWER_FAIL,
+      payload: error.response.data.error,
+    });
+  }
+};
+
 /*
  * Client routes
  */

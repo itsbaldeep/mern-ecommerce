@@ -30,6 +30,17 @@ const ProductSchema = new mongoose.Schema(
       ref: "Brand",
       default: "",
     },
+    keywords: {
+      type: [
+        {
+          type: String,
+          minlength: [3, "Keyword is too short"],
+          maxlength: [16, "Keyword is too long"],
+        },
+      ],
+      default: [],
+      validate: [(arr) => arr.length <= 32, "Too many keywords"],
+    },
     petType: {
       type: [{ type: String, ref: "Pet" }],
       min: [1, "Please provide atleast one pet type for this product"],
@@ -158,6 +169,13 @@ ProductSchema.pre("remove", async function (next) {
     }
   }
   next();
+});
+
+// Virtual field for questions
+ProductSchema.virtual("questions", {
+  ref: "Question",
+  localField: "_id",
+  foreignField: "product",
 });
 
 // Virtual field for reviews and ratings

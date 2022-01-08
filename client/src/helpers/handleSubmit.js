@@ -118,6 +118,8 @@ export const updateProduct = (values, product) => {
   // Array fields
   if (values.petType.toString() !== product.petType.toString())
     fd.append("petType", values.petType);
+  if (values.keywords.toString() !== product.keywords.toString())
+    fd.append("keywords", values.keywords);
 
   // If image links are modified, update the links and ignore file uploads
   if (values.productImages.toString() !== product.productImages.toString()) {

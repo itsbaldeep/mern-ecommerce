@@ -115,6 +115,12 @@ const AddProduct = ({ show, onHide }) => {
                   />
                 </Col>
               </Row>
+              <TextArrayField
+                name="keywords"
+                label="Keywords"
+                placeholder="Enter keyword"
+                message="No keywords added yet"
+              />
               <TextArrayOfObjectsField
                 name="affiliateLinks"
                 label="Affiliate Links"

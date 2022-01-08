@@ -152,6 +152,9 @@ export const product = Yup.object({
     .min(0, "Please provide a positive count")
     .required("Please provide a count in stock"),
   petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
+  keywords: Yup.array()
+    .max(32, "Too many keywords")
+    .of(Yup.string().min(3, "Keyword is too short").max(16, "Keyword is too long")),
   breedType: Yup.string(),
   weight: Yup.number().min(0, "Weight must be positive"),
   size: Yup.object({
@@ -229,7 +232,7 @@ export const directoryInquiry = Yup.object({
     .max(1024, "Message is too long"),
 });
 
-export const directoryReview = Yup.object({
+export const review = Yup.object({
   subject: Yup.string()
     .required("Please provide a subject")
     .min(6, "Subject is too short")

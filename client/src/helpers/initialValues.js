@@ -102,6 +102,7 @@ export const product = (
     price: 0,
     countInStock: 0,
     petType: [],
+    keywords: [],
     breedType: "",
     weight: 0,
     size: {
@@ -127,6 +128,7 @@ export const product = (
     price: _product.price,
     countInStock: _product.countInStock,
     petType: _product.petType,
+    keywords: _product.keywords,
     breedType: _product.breedType,
     weight: _product.weight,
     size: _product.size,
@@ -187,7 +189,7 @@ export const directoryInquiry = {
   message: "",
 };
 
-export const directoryReview = {
+export const review = {
   subject: "",
   comment: "",
   rating: 1,

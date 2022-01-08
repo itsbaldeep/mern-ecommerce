@@ -199,6 +199,12 @@ const EditProduct = ({ show, onHide, product, productId }) => {
                 }}
                 keys={["productProvider", "productLink", "productId", "productPrice"]}
               />
+              <TextArrayField
+                name="keywords"
+                label="Keywords"
+                placeholder="Enter keyword"
+                message="No keywords added yet"
+              />
               <Form.Group className="mb-3">
                 <Form.Label htmlFor="petType">Pet Type</Form.Label>
                 <div>

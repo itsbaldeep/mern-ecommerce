@@ -73,6 +73,7 @@ const ProductsDashboard = () => {
               <th>Product Images</th>
               <th>Product Name</th>
               <th>Description</th>
+              <th>Keywords</th>
               <th>Seller</th>
               <th>Price</th>
               <th>Count in stock</th>
@@ -185,6 +186,7 @@ const ProductRow = ({ product, index }) => {
           ? `${product.description.substring(0, 60)}...`
           : product.description}
       </td>
+      <td>{product.keywords?.join(", ")}</td>
       <td>
         {product.seller && (
           <p

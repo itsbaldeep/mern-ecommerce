@@ -1,5 +1,7 @@
 const Product = require("../models/Product");
 const Directory = require("../models/Directory");
+const Review = require("../models/Review");
+const Question = require("../models/Question");
 const ErrorResponse = require("../utils/errorResponse");
 
 /*
@@ -9,7 +11,10 @@ const ErrorResponse = require("../utils/errorResponse");
 // GET /api/product/
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isApproved: true });
+    const products = await Product.find({ isApproved: true }).populate({
+      path: "reviews",
+      populate: { path: "reviewer" },
+    });
     return res.status(200).json({
       success: true,
       products,
@@ -22,11 +27,224 @@ exports.getProducts = async (req, res, next) => {
 // GET /api/product/:id
 exports.getProductById = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    const product = await Product.findById(req.params.id)
+      .where("isApproved")
+      .equals(true)
+      .populate({
+        path: "reviews",
+        populate: { path: "reviewer" },
+      });
     if (!product) return next(new ErrorResponse("Product not found", 404));
     return res.status(200).json({
       success: true,
       product,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/*
+ * Review route - user is authenticated
+ */
+
+// POST /api/product/review/:id
+exports.reviewProduct = async (req, res, next) => {
+  try {
+    // Checking if the product exists
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    if (!product)
+      return next(new ErrorResponse("Cannot find the product or it isn't approved", 404));
+
+    // Checking if the user has already reviewed the product
+    const reviewer = req.user._id;
+    const revieweeModel = "Product";
+    const revieweeId = product._id;
+    if (await Review.findOne({ reviewer, revieweeId }))
+      return next(
+        new ErrorResponse(
+          `User (${req.user.name}) has already reviewed the product (${product.name})`,
+          400
+        )
+      );
+
+    // Creating the review and sending it
+    const review = await Review.create({
+      reviewer,
+      revieweeModel,
+      revieweeId,
+      subject: req.body.subject,
+      comment: req.body.comment,
+      rating: req.body.rating,
+    });
+    await review.populate("reviewer");
+    return res.status(200).json({
+      success: true,
+      review,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DEL /api/product/review/remove/:id
+exports.removeReview = async (req, res, next) => {
+  try {
+    // Checking if the product exists
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    if (!product)
+      return next(new ErrorResponse("Cannot find the product or it isn't approved", 404));
+
+    // Checking if the user has reviewed
+    const reviewer = req.user._id;
+    const revieweeId = product._id;
+    const review = await Review.findOne({ reviewer, revieweeId });
+    if (!review)
+      return next(
+        new ErrorResponse(
+          `User (${req.user.name}) has not reviewed the product (${product.name})`,
+          400
+        )
+      );
+
+    // Removing the review and returning it
+    await review.remove();
+    return res.status(200).json({
+      success: true,
+      review,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /api/product/question/:id
+exports.addQuestion = async (req, res, next) => {
+  try {
+    // Checking if the product exists
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    if (!product)
+      return next(new ErrorResponse("Cannot find the product or it isn't approved", 404));
+
+    // Checking if the user already posed a question on product
+    const askedBy = req.user._id;
+    if (await Question.findOne({ askedBy, product: product._id }))
+      return next(
+        new ErrorResponse(
+          `User (${req.user.name}) has already questioned the product (${product.name})`,
+          400
+        )
+      );
+
+    // Creating a question and sending it back
+    const question = await Question.create({
+      askedBy,
+      product: product._id,
+      question: req.body.question,
+    });
+    return res.status(200).json({
+      success: true,
+      question,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DEL /api/product/question/remove/:id
+exports.removeQuestion = async (req, res, next) => {
+  try {
+    // Checking if the product exists
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    if (!product)
+      return next(new ErrorResponse("Cannot find the product or it isn't approved", 404));
+
+    // Checking if the user already posed a question on product
+    const askedBy = req.user._id;
+    const question = await Question.findOne({ askedBy, product: product._id });
+    if (!question)
+      return next(
+        new ErrorResponse(
+          `User (${req.user.name}) has not questioned the product (${product.name})`,
+          400
+        )
+      );
+
+    // Removing the question and returning it
+    await question.remove();
+    return res.status(200).json({
+      success: true,
+      question,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// POST /api/product/answer/:id/:qid
+exports.addAnswer = async (req, res, next) => {
+  try {
+    // Checking if the product exists
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    if (!product)
+      return next(new ErrorResponse("Cannot find the product or it isn't approved", 404));
+
+    // Checking if the question exists
+    const question = await Question.findById(req.params.qid);
+    if (!question) return next(new ErrorResponse("Cannot find the question on this product", 404));
+
+    // Checking if the user already posted an answer on product
+    for (const answer of question.answers)
+      if (answer.answeredBy.toString() === req.user._id.toString())
+        return next(
+          new ErrorResponse(
+            `User (${req.user.name}) has already answered the question (${question.question})`,
+            400
+          )
+        );
+
+    // Adding the answer and sending back the question
+    question.answers.push({ answer: req.body.answer, answeredBy: req.user._id });
+    await question.save();
+    return res.status(200).json({
+      success: true,
+      question,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DEL /api/product/answer/remove/:id/:qid
+exports.removeAnswer = async (req, res, next) => {
+  try {
+    // Checking if the product exists
+    const product = await Product.findById(req.params.id).where("isApproved").equals(true);
+    if (!product)
+      return next(new ErrorResponse("Cannot find the product or it isn't approved", 404));
+
+    // Checking if the question exists
+    const question = await Question.findById(req.params.qid);
+    if (!question) return next(new ErrorResponse("Cannot find the question on this product", 404));
+
+    // Checking if the user already posted an answer on product
+    const index = question.answers.findIndex(
+      (answer) => answer.answeredBy.toString() === req.user._id.toString()
+    );
+    if (index === -1)
+      return next(
+        new ErrorResponse(
+          `User ${req.user.name} has not answered the question ${question.name}`,
+          404
+        )
+      );
+
+    // Removing the answer and returning it
+    question.answers.slice(index, 1);
+    await question.save();
+    return res.status(200).json({
+      success: true,
+      question,
     });
   } catch (error) {
     next(error);
@@ -75,6 +293,7 @@ exports.addProduct = async (req, res, next) => {
       brand: req.body.brand,
       category: req.body.category,
       petType: req.body.petType?.split(","),
+      keywords: req.body.keywords?.split(","),
       breedType: req.body.breedType,
       description: req.body.description,
       weight: req.body.weight,
@@ -158,6 +377,7 @@ exports.editProduct = async (req, res, next) => {
     if (req.body.brand) product.brand = req.body.brand;
     if (req.body.category) product.category = req.body.category;
     if (req.body.petType) product.petType = req.body.petType.split(",");
+    if (req.body.keywords) product.keywords = req.body.keywords.split(",");
     if (req.body.breedType) product.breedType = req.body.breedType;
     if (req.body.description) product.description = req.body.description;
     if (req.body.weight) product.weight = req.body.weight;

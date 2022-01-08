@@ -33,10 +33,10 @@ import {
 import { addInquiry } from "redux/actions/inquiry";
 
 // Helpers
-import { directoryInquiry as dirInqInitialValues } from "helpers/initialValues";
-import { directoryInquiry as dirInqValidationSchema } from "helpers/validationSchemas";
-import { directoryReview as dirRevInitialValues } from "helpers/initialValues";
-import { directoryReview as dirRevValidationSchema } from "helpers/validationSchemas";
+import { directoryInquiry as inquiryInitialValues } from "helpers/initialValues";
+import { directoryInquiry as inquiryValidationSchema } from "helpers/validationSchemas";
+import { review as reviewInitialValues } from "helpers/initialValues";
+import { review as reviewValidationSchema } from "helpers/validationSchemas";
 
 // Components
 import Ratings from "components/Ratings";
@@ -264,8 +264,8 @@ const DirectoryProfileScreen = ({ match }) => {
                     <h3>Send an inquiry to {directory.storeName}</h3>
                   </div>
                   <Formik
-                    initialValues={dirInqInitialValues}
-                    validationSchema={dirInqValidationSchema}
+                    initialValues={inquiryInitialValues}
+                    validationSchema={inquiryValidationSchema}
                     onSubmit={(values) => {
                       const data = { ...values, directory: directory._id };
                       dispatch(addInquiry(data));
@@ -375,8 +375,8 @@ const DirectoryProfileScreen = ({ match }) => {
                       </div>
                     ) : (
                       <Formik
-                        initialValues={dirRevInitialValues}
-                        validationSchema={dirRevValidationSchema}
+                        initialValues={reviewInitialValues}
+                        validationSchema={reviewValidationSchema}
                         onSubmit={(values) =>
                           dispatch(reviewDirectory(values, match.params.username))
                         }

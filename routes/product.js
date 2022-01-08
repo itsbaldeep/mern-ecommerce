@@ -13,6 +13,12 @@ const {
   getAllProducts,
   getAnyProductById,
   approveProduct,
+  reviewProduct,
+  removeReview,
+  addQuestion,
+  removeQuestion,
+  addAnswer,
+  removeAnswer,
 } = require("../controllers/product");
 const { protect, roles } = require("../middleware/auth");
 
@@ -36,6 +42,14 @@ router.route("/remove/:id").delete(protect, roles("Client", "Admin"), removeProd
 router
   .route("/edit/:id")
   .put(protect, roles("Client", "Admin"), upload.array("productImages", 7), editProduct);
+
+// Review and question routes
+router.route("/review/:id").post(protect, reviewProduct);
+router.route("/review/remove/:id").delete(protect, removeReview);
+router.route("/question/:id").post(protect, addQuestion);
+router.route("/question/remove/:id").delete(protect, removeQuestion);
+router.route("/answer/:id/:qid").post(protect, addAnswer);
+router.route("/answer/remove/:id/:qid").delete(protect, removeAnswer);
 
 // Public routes
 router.route("/").get(getProducts);
