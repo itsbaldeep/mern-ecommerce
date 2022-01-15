@@ -20,10 +20,14 @@ const {
   addAnswer,
   removeAnswer,
 } = require("../controllers/product");
-const { protect, roles } = require("../middleware/auth");
 
-// Multer middleware
+// Middlewares
+const { protect, roles } = require("../middleware/auth");
 const upload = require("../middleware/multer");
+const paginate = require("../middleware/paginate");
+
+// Models
+const Product = require("../models/Product");
 
 // Client routes
 router.route("/own").get(protect, roles("Client"), getOwnProducts);
@@ -52,7 +56,7 @@ router.route("/answer/:id/:qid").post(protect, addAnswer);
 router.route("/answer/remove/:id/:qid").delete(protect, removeAnswer);
 
 // Public routes
-router.route("/").get(getProducts);
+router.route("/").get(paginate(Product), getProducts);
 router.route("/:id").get(getProductById); // this route must be at the end
 
 module.exports = router;

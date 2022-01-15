@@ -1,4 +1,7 @@
 const Product = require("../models/Product");
+const Category = require("../models/Category");
+const Pet = require("../models/Pet");
+const Brand = require("../models/Brand");
 const Directory = require("../models/Directory");
 const Review = require("../models/Review");
 const Question = require("../models/Question");
@@ -8,16 +11,27 @@ const ErrorResponse = require("../utils/errorResponse");
  * Public routes
  */
 
-// GET /api/product/
+// GET /api/product/search?category=C&pet=P&brand=B&limit=L&page=P
+exports.search = async (req, res, next) => {
+  try {
+    const category = req.query.category;
+    const pet = req.query.pet;
+    const brand = req.query.brand;
+
+    const products = [];
+    if (category) products.push(await Category.find({ name: category }));
+    // TODO: Complete this
+  } catch (error) {
+    next(error);
+  }
+};
+
+// GET /api/product?limit=L&page=P
 exports.getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isApproved: true }).populate({
-      path: "reviews",
-      populate: { path: "reviewer" },
-    });
     return res.status(200).json({
       success: true,
-      products,
+      products: res.paginated,
     });
   } catch (error) {
     next(error);
