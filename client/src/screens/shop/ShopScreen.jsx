@@ -15,13 +15,6 @@ import { getProducts } from "redux/actions/product";
 // Custom CSS
 import "./ShopScreen.css";
 
-// Checkbox helper component
-const CheckBox = ({ label }) => (
-  <Form.Group>
-    <Form.Check type="checkbox" label={label}></Form.Check>
-  </Form.Group>
-);
-
 const SwiperSection = ({ heading, array, placeholder, clickHandler }) => {
   return (
     <section className="py-3 text-center">
@@ -39,14 +32,17 @@ const SwiperSection = ({ heading, array, placeholder, clickHandler }) => {
         }}
         autoplay={{ delay: 5000 }}
         modules={[Pagination, Autoplay]}
-        // pagination={{ clickable: true, dynamicBullets: true }}
         className="shop-swiper"
       >
         {array.map((item, index) => (
           <SwiperSlide key={index}>
             <div className="shop-swiper-container" onClick={() => clickHandler(item)}>
               <img src={item.image || item.logo || placeholder} height="200px" alt="item" />
-              <div className="shop-swiper-info py-2">{item.name}</div>
+              <div className="shop-swiper-info py-2">
+                {item.name}
+                {item.docs && ` - ${item.docs.length} products`}
+                {item.products && ` - ${item.products.length} products`}
+              </div>
             </div>
           </SwiperSlide>
         ))}
@@ -63,6 +59,9 @@ const ShopScreen = () => {
   const { brands } = useSelector((state) => state.brand);
 
   const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [petFilter, setPetFilter] = useState("");
+  const [sortFilter, setSortFilter] = useState("");
   const [showFilter, setShowFilter] = useState(window.innerWidth > 768);
 
   useEffect(() => {
@@ -71,6 +70,10 @@ const ShopScreen = () => {
     const listener = window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", listener);
   }, [dispatch]);
+
+  const handleFilter = () => {
+    console.log(categoryFilter, petFilter, sortFilter, priceRange);
+  };
 
   return (
     <>
@@ -92,22 +95,6 @@ const ShopScreen = () => {
         placeholder="/assets/placeholders/pet.png"
         clickHandler={(pet) => console.log(pet.categories)}
       />
-      {/* <Row>
-          {brands.map((brand, index) => (
-            <Col xs={12} sm={6} md={4} key={index}>
-              <p>{brand.name}</p>
-              <img src={brand.logo || brandPlaceholder} height="50px" alt="brand" />
-            </Col>
-          ))}
-        </Row>
-        <Row>
-          {pets.map((pet, index) => (
-            <Col xs={12} sm={6} md={4} key={index}>
-              <p>{pet.name}</p>
-              <img src={pet.image || petPlaceholder} height="50px" alt="pet" />
-            </Col>
-          ))}
-        </Row> */}
       <Container fluid>
         <div className="shop-screen py-2">
           <div
@@ -121,22 +108,50 @@ const ShopScreen = () => {
           <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
-              {productCategories?.map((category, index) => (
-                <CheckBox label={category.name} key={index} />
-              ))}
+              <Form.Group>
+                {productCategories?.map((category, index) => (
+                  <Form.Check
+                    type="radio"
+                    name="category"
+                    onClick={(e) => setCategoryFilter(e.target.value)}
+                    value={category.name}
+                    key={index}
+                    label={category.name}
+                  ></Form.Check>
+                ))}
+              </Form.Group>
             </div>
             <div className="pettype-section">
               <h4>Filter by Pet</h4>
-              {pets?.map((pet, index) => (
-                <CheckBox label={pet.name} key={index} />
-              ))}
+              <Form.Group>
+                {pets?.map((pet, index) => (
+                  <Form.Check
+                    type="radio"
+                    name="pet"
+                    onClick={(e) => setPetFilter(e.target.value)}
+                    value={pet.name}
+                    label={pet.name}
+                    key={index}
+                  ></Form.Check>
+                ))}
+              </Form.Group>
             </div>
             <div className="sort-section">
               <h4>Sort By</h4>
-              <CheckBox label="Newest" />
-              <CheckBox label="Best Selling" />
-              <CheckBox label="Price: High to Low" />
-              <CheckBox label="Price: Low to High" />
+              <Form.Group>
+                {["Newest", "Best Selling", "Price: High to Low", "Price: Low to High"].map(
+                  (value, index) => (
+                    <Form.Check
+                      type="radio"
+                      name="sort"
+                      onClick={(e) => setSortFilter(e.target.value)}
+                      value={value}
+                      label={value}
+                      key={index}
+                    ></Form.Check>
+                  )
+                )}
+              </Form.Group>
             </div>
             <div className="price-range">
               <h4>Price Range</h4>
@@ -174,7 +189,9 @@ const ShopScreen = () => {
                   })
                 }
               />
-              <button className="btn btn-primary">Apply Filters</button>
+              <button className="btn btn-primary" onClick={handleFilter}>
+                Apply Filters
+              </button>
             </div>
           </div>
           <div className="products">

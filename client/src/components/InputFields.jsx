@@ -68,7 +68,7 @@ export const SelectField = ({ label, options, ...props }) => {
   }`;
   return (
     <Form.Group className="mb-3">
-      <Form.Label htmlFor={field.name}>{label}</Form.Label>
+      {label && <Form.Label htmlFor={field.name}>{label}</Form.Label>}
       <select className={classes} {...field} {...props}>
         {options.map((opt, index) => (
           <option key={index} value={opt}>

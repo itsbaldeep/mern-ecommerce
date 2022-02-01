@@ -19,6 +19,7 @@ const {
   removeQuestion,
   addAnswer,
   removeAnswer,
+  search,
 } = require("../controllers/product");
 
 // Middlewares
@@ -56,6 +57,7 @@ router.route("/answer/:id/:qid").post(protect, addAnswer);
 router.route("/answer/remove/:id/:qid").delete(protect, removeAnswer);
 
 // Public routes
+router.route("/search").get(search);
 router.route("/").get(paginate(Product), getProducts);
 router.route("/:id").get(getProductById); // this route must be at the end
 

@@ -1,7 +1,4 @@
 const Product = require("../models/Product");
-const Category = require("../models/Category");
-const Pet = require("../models/Pet");
-const Brand = require("../models/Brand");
 const Directory = require("../models/Directory");
 const Review = require("../models/Review");
 const Question = require("../models/Question");
@@ -11,16 +8,54 @@ const ErrorResponse = require("../utils/errorResponse");
  * Public routes
  */
 
-// GET /api/product/search?category=C&pet=P&brand=B&limit=L&page=P
+// GET /api/product/search?q&category&brand&pet&limit&page
 exports.search = async (req, res, next) => {
   try {
-    const category = req.query.category;
-    const pet = req.query.pet;
-    const brand = req.query.brand;
+    // Getting queries
+    const page = parseInt(req.query.page) || 1;
+    const limit = Math.min(parseInt(req.query.limit) || 15, 15);
+    const query = req.query.q || "";
+    const category = req.query.category || "";
+    const brand = req.query.brand || "";
 
-    const products = [];
-    if (category) products.push(await Category.find({ name: category }));
-    // TODO: Complete this
+    // Getting start and end indices
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+
+    // Executing the query
+    const productQuery = Product.find({
+      name: { $regex: query, $options: "i" },
+      brand: { $regex: brand, $options: "i" },
+      category: { $regex: category, $options: "i" },
+    });
+    if (req.query.pet) productQuery.where("petType").in(req.query.pet);
+    const products = await productQuery.limit(limit).skip(startIndex);
+
+    // Making the results object along with some metadata
+    const results = {};
+    results.total = products.length;
+    results.pages = Math.ceil(results.total / limit);
+    results.results = products;
+
+    // Metadata for next page
+    if (endIndex < results.total) {
+      results.next = {
+        page: page + 1,
+        limit: limit,
+      };
+    }
+
+    // // Metadata for previous page
+    if (startIndex > 0) {
+      results.previous = {
+        page: page - 1,
+        limit: limit,
+      };
+    }
+    return res.status(200).json({
+      success: true,
+      results,
+    });
   } catch (error) {
     next(error);
   }

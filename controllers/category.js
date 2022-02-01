@@ -78,11 +78,16 @@ exports.getServiceCategories = async (req, res, next) => {
 // POST /api/category/add
 exports.addCategory = async (req, res, next) => {
   try {
+    for (const name of req.body.subCategories) {
+      const subCategory = await Category.findOne({ name });
+      if (!subCategory) return next(new ErrorResponse("Sub-category doesn't exist", 404));
+    }
     const category = await Category.create({
       name: req.body.name,
       type: req.body.type,
       pet: req.body.pet,
       image: req.body.image,
+      subCategories: req.body.subCategories,
       description: req.body.description,
     });
     return res.status(200).json({
@@ -99,11 +104,16 @@ exports.editCategory = async (req, res, next) => {
   try {
     const category = await Category.findById(req.params.id);
     if (!category) return next(new ErrorResponse("Category not found", 404));
+    for (const name of req.body.subCategories) {
+      const subCategory = await Category.findOne({ name });
+      if (!subCategory) return next(new ErrorResponse("Sub-category doesn't exist", 404));
+    }
     if (req.body.name !== undefined) category.name = req.body.name;
     if (req.body.description !== undefined) category.description = req.body.description;
     if (req.body.image !== undefined) category.image = req.body.image;
     if (req.body.pet !== undefined) category.pet = req.body.pet;
     if (req.body.type !== undefined) category.type = req.body.type;
+    if (req.body.subCategories !== undefined) category.subCategories = req.body.subCategories;
     await category.save();
     return res.status(200).json({
       success: true,

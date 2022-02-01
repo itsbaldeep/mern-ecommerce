@@ -3,9 +3,8 @@ const ErrorResponse = require("../utils/errorResponse");
 // This function takes a mongoose model and returns an express middleware
 const paginate = (model) => async (req, res, next) => {
   // Getting page and limit from query, otherwise using default values
-  // TODO: Add an upper bound to limit
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 15;
+  const limit = Math.min(parseInt(req.query.limit) || 15, 15);
 
   // Getting start and end indices
   const startIndex = (page - 1) * limit;

@@ -12,6 +12,15 @@ const CategorySchema = new mongoose.Schema(
       enum: ["Product", "Directory", "Service"],
       required: true,
     },
+    subCategories: {
+      type: [
+        {
+          type: String,
+          ref: "Category",
+        },
+      ],
+      default: [],
+    },
     pet: { type: [String], default: [] },
     image: { type: String, default: "" },
     description: { type: String, default: "" },

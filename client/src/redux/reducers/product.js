@@ -38,7 +38,9 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         loading: false,
         success: true,
         error: null,
-        products: action.payload,
+        products: action.payload.results,
+        total: action.payload.total,
+        pages: action.payload.pages,
       };
     case actionTypes.GET_PRODUCT_SUCCESS:
     case actionTypes.GET_OWN_PRODUCT_SUCCESS:
