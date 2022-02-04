@@ -1,6 +1,25 @@
 import * as actionTypes from "../constants/product";
 import axios from "axios";
 
+// GET /api/product/search
+export const searchProducts =
+  ({ query, category, pet, sort, min, max }) =>
+  async (dispatch) => {
+    try {
+      dispatch({ type: actionTypes.SEARCH_PRODUCTS_REQUEST });
+      const params = [`?q=${query}`];
+      if (category) params.push(`category=${category}`);
+      if (pet) params.push(`pet=${pet}`);
+      if (sort) params.push(`sort=${sort}`);
+      if (min) params.push(`min=${min}`);
+      if (max) params.push(`max=${max}`);
+      const { data } = await axios.get(`/api/product/search${params.join("&")}`);
+      dispatch({ type: actionTypes.SEARCH_PRODUCTS_SUCCESS, payload: data.results });
+    } catch (error) {
+      dispatch({ type: actionTypes.SEARCH_PRODUCTS_FAIL, payload: error.response.data.error });
+    }
+  };
+
 // GET /api/product/
 export const getProducts = () => async (dispatch) => {
   try {

@@ -10,7 +10,7 @@ import { Autoplay, Pagination } from "swiper";
 import Product from "./Product.jsx";
 
 // Actions
-import { getProducts } from "redux/actions/product";
+import { getProducts, searchProducts } from "redux/actions/product";
 
 // Custom CSS
 import "./ShopScreen.css";
@@ -58,7 +58,8 @@ const ShopScreen = () => {
   const { pets } = useSelector((state) => state.pet);
   const { brands } = useSelector((state) => state.brand);
 
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 0 });
+  const MAX_PRICE = 10000;
+  const [priceRange, setPriceRange] = useState({ min: 0, max: MAX_PRICE });
   const [categoryFilter, setCategoryFilter] = useState("");
   const [petFilter, setPetFilter] = useState("");
   const [sortFilter, setSortFilter] = useState("");
@@ -71,8 +72,48 @@ const ShopScreen = () => {
     return () => window.removeEventListener("resize", listener);
   }, [dispatch]);
 
+  const sortOptions = [
+    {
+      label: "Newest",
+      value: "newest",
+    },
+    {
+      label: "Oldest",
+      value: "oldest",
+    },
+    {
+      label: "Best Rated",
+      value: "rating",
+    },
+    {
+      label: "Least Rated",
+      value: "-rating",
+    },
+    {
+      label: "Price (High to Low)",
+      value: "price",
+    },
+    {
+      label: "Price (Low to High)",
+      value: "-price",
+    },
+  ];
+
   const handleFilter = () => {
-    console.log(categoryFilter, petFilter, sortFilter, priceRange);
+    const category = encodeURI(categoryFilter);
+    const pet = encodeURI(petFilter);
+    const sort = encodeURI(sortFilter);
+    const min = encodeURI(priceRange.min);
+    const max = encodeURI(priceRange.max);
+    const query = "";
+    dispatch(searchProducts({ query, category, pet, sort, min, max }));
+  };
+
+  const clearFilter = () => {
+    setPriceRange({ min: 0, max: MAX_PRICE });
+    setCategoryFilter("");
+    setPetFilter("");
+    setSortFilter("");
   };
 
   return (
@@ -115,6 +156,7 @@ const ShopScreen = () => {
                     name="category"
                     onClick={(e) => setCategoryFilter(e.target.value)}
                     value={category.name}
+                    checked={categoryFilter === category.name}
                     key={index}
                     label={category.name}
                   ></Form.Check>
@@ -130,6 +172,7 @@ const ShopScreen = () => {
                     name="pet"
                     onClick={(e) => setPetFilter(e.target.value)}
                     value={pet.name}
+                    checked={petFilter === pet.name}
                     label={pet.name}
                     key={index}
                   ></Form.Check>
@@ -139,18 +182,17 @@ const ShopScreen = () => {
             <div className="sort-section">
               <h4>Sort By</h4>
               <Form.Group>
-                {["Newest", "Best Selling", "Price: High to Low", "Price: Low to High"].map(
-                  (value, index) => (
-                    <Form.Check
-                      type="radio"
-                      name="sort"
-                      onClick={(e) => setSortFilter(e.target.value)}
-                      value={value}
-                      label={value}
-                      key={index}
-                    ></Form.Check>
-                  )
-                )}
+                {sortOptions.map((option, index) => (
+                  <Form.Check
+                    type="radio"
+                    name="sort"
+                    onClick={(e) => setSortFilter(e.target.value)}
+                    value={option.value}
+                    checked={sortFilter === option.value}
+                    label={option.label}
+                    key={index}
+                  ></Form.Check>
+                ))}
               </Form.Group>
             </div>
             <div className="price-range">
@@ -161,7 +203,8 @@ const ShopScreen = () => {
                 name="pricerange"
                 className="form-range"
                 min="0"
-                max="20000"
+                max={MAX_PRICE}
+                value={priceRange.min}
                 step="50"
                 onInput={(e) =>
                   setPriceRange((x) => {
@@ -178,8 +221,9 @@ const ShopScreen = () => {
                 name="pricerange"
                 className="form-range"
                 min="0"
-                max="20000"
+                max={MAX_PRICE}
                 step="50"
+                value={priceRange.max}
                 onInput={(e) =>
                   setPriceRange((x) => {
                     return {
@@ -191,6 +235,9 @@ const ShopScreen = () => {
               />
               <button className="btn btn-primary" onClick={handleFilter}>
                 Apply Filters
+              </button>
+              <button className="btn btn-danger" onClick={clearFilter}>
+                Clear Filters
               </button>
             </div>
           </div>

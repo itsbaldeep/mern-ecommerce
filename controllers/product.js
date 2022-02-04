@@ -8,7 +8,7 @@ const ErrorResponse = require("../utils/errorResponse");
  * Public routes
  */
 
-// GET /api/product/search?q&category&brand&pet&limit&page
+// GET /api/product/search?q&category&brand&pet&sort&min&max&limit&page
 exports.search = async (req, res, next) => {
   try {
     // Getting queries
@@ -17,19 +17,51 @@ exports.search = async (req, res, next) => {
     const query = req.query.q || "";
     const category = req.query.category || "";
     const brand = req.query.brand || "";
+    const pet = req.query.pet || "";
+    const sort = req.query.sort || "";
+    const min = parseInt(req.query.min) || 0;
+    const max = parseInt(req.query.max) || Number.MAX_SAFE_INTEGER;
 
     // Getting start and end indices
     const startIndex = (page - 1) * limit;
     const endIndex = page * limit;
 
-    // Executing the query
+    // Building the query
     const productQuery = Product.find({
-      name: { $regex: query, $options: "i" },
-      brand: { $regex: brand, $options: "i" },
-      category: { $regex: category, $options: "i" },
+      $and: [
+        { category: { $regex: category, $options: "i" } },
+        { petType: { $regex: pet, $options: "i" } },
+        { price: { $gte: min, $lte: max } },
+        { brand: { $regex: brand, $options: "i" } },
+        { name: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+      ],
     });
-    if (req.query.pet) productQuery.where("petType").in(req.query.pet);
-    const products = await productQuery.limit(limit).skip(startIndex);
+
+    // Selecting only approved products
+    productQuery.where("isApproved").equals(true);
+
+    // Populating reviews
+    productQuery.populate({
+      path: "reviews",
+      populate: {
+        path: "reviewer",
+      },
+    });
+
+    // Sorting the query
+    if (sort === "price") productQuery.sort({ price: -1 });
+    if (sort === "-price") productQuery.sort({ price: 1 });
+    if (sort === "rating") productQuery.sort({ averageRating: 1 });
+    if (sort === "-rating") productQuery.sort({ averageRating: -1 });
+    if (sort === "newest") productQuery.sort({ createdAt: -1 });
+    if (sort === "oldest") productQuery.sort({ createdAt: 1 });
+
+    // Pagination
+    productQuery.skip(startIndex).limit(limit);
+
+    // Executing the query
+    const products = await productQuery;
 
     // Making the results object along with some metadata
     const results = {};

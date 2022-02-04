@@ -2,6 +2,11 @@
  * Public Actions
  */
 
+// GET /api/product/search
+export const SEARCH_PRODUCTS_REQUEST = "SEARCH_PRODUCTS_REQUEST";
+export const SEARCH_PRODUCTS_SUCCESS = "SEARCH_PRODUCTS_SUCCESS";
+export const SEARCH_PRODUCTS_FAIL = "SEARCH_PRODUCTS_FAIL";
+
 // GET /api/product
 export const GET_PRODUCTS_REQUEST = "GET_PRODUCTS_REQUEST";
 export const GET_PRODUCTS_SUCCESS = "GET_PRODUCTS_SUCCESS";

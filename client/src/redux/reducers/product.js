@@ -3,6 +3,7 @@ import * as actionTypes from "../constants/product";
 export const productsReducer = (state = { products: [], product: {} }, action) => {
   switch (action.type) {
     case actionTypes.GET_PRODUCTS_REQUEST:
+    case actionTypes.SEARCH_PRODUCTS_REQUEST:
     case actionTypes.GET_OWN_PRODUCTS_REQUEST:
     case actionTypes.GET_ALL_PRODUCTS_REQUEST:
     case actionTypes.GET_OWN_PRODUCT_REQUEST:
@@ -31,6 +32,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         questionLoading: true,
       };
     case actionTypes.GET_PRODUCTS_SUCCESS:
+    case actionTypes.SEARCH_PRODUCTS_SUCCESS:
     case actionTypes.GET_OWN_PRODUCTS_SUCCESS:
     case actionTypes.GET_ALL_PRODUCTS_SUCCESS:
       return {
@@ -153,6 +155,7 @@ export const productsReducer = (state = { products: [], product: {} }, action) =
         error: action.payload,
       };
     case actionTypes.GET_PRODUCTS_FAIL:
+    case actionTypes.SEARCH_PRODUCTS_FAIL:
     case actionTypes.GET_OWN_PRODUCTS_FAIL:
     case actionTypes.GET_PRODUCT_FAIL:
     case actionTypes.GET_OWN_PRODUCT_FAIL:
