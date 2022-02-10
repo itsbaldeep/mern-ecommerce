@@ -1,3 +1,7 @@
+// Dependencies
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { Container, Row, Col } from "react-bootstrap";
 import {
   FaBuilding,
@@ -8,9 +12,21 @@ import {
   FaShippingFast,
   FaEnvelopeOpenText,
 } from "react-icons/fa";
+
+// Actions
+import { subscribe } from "redux/actions/newsletter";
+
+// CSS
 import "./HomeScreen.css";
 
 const HomeScreen = () => {
+  const [search, setSearch] = useState("");
+  const [email, setEmail] = useState("");
+  const history = useHistory();
+  const dispatch = useDispatch();
+
+  const { loading, success, newsletter, error } = useSelector((state) => state.newsletter);
+
   return (
     <div>
       <div className="landing">
@@ -19,12 +35,27 @@ const HomeScreen = () => {
           <h1 className="pb-4">Welcome to Petohub</h1>
           <h2 className="pb-4">BEST PET LOVERS COMMUNITY</h2>
           <div className="search-wrap">
-            <div className="search-box mx-auto">
-              <input type="text" className="input" placeholder="What are you looking for?" />
-              <div className="search-button px-3">
-                <FaSearch size={23} /> <span> Search</span>
+            <form>
+              <div className="search-box mx-auto">
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.currentTarget.value)}
+                  className="input"
+                  placeholder="What are you looking for?"
+                />
+                <button
+                  className="search-button px-3"
+                  type="submit"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    history.push(`/shop/search/${search}`);
+                  }}
+                >
+                  <FaSearch size={23} /> <span> Search</span>
+                </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -124,14 +155,34 @@ const HomeScreen = () => {
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Natus sed aliquam quibusdam
             neque magni magnam est laborum doloribus, facere dolores.
           </p>
-          <div className="search-wrap">
-            <div className="search-box mx-auto">
-              <input type="text" className="input" placeholder="Enter your email" />
-              <div className="search-button px-3">
-                <FaEnvelopeOpenText size={23} /> <span> Subscribe</span>
+          <div style={{ fontSize: "1.2rem" }}>
+            {success && <p>{newsletter?.email} succesfully subscribed</p>}
+            {error && <p>{error}</p>}
+          </div>
+          <form action="">
+            <div className="search-wrap">
+              <div className="search-box mx-auto">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.currentTarget.value)}
+                  className="input"
+                  placeholder="Enter your email"
+                />
+                <button
+                  className="search-button px-3"
+                  type="submit"
+                  disabled={loading || success}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    dispatch(subscribe(email));
+                  }}
+                >
+                  <FaEnvelopeOpenText size={23} /> <span> Subscribe</span>
+                </button>
               </div>
             </div>
-          </div>
+          </form>
         </Container>
       </section>
     </div>

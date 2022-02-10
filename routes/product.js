@@ -35,7 +35,7 @@ router.route("/own").get(protect, roles("Client"), getOwnProducts);
 router.route("/own/:id").get(protect, roles("Client"), getOwnProductById);
 
 // Admin routes
-router.route("/all").get(protect, roles("Admin"), getAllProducts);
+router.route("/all").get(protect, roles("Admin"), paginate(Product), getAllProducts);
 router.route("/any/:id").get(protect, roles("Admin"), getAnyProductById);
 router.route("/approve/:id").put(protect, roles("Admin"), approveProduct);
 
@@ -58,7 +58,7 @@ router.route("/answer/remove/:id/:qid").delete(protect, removeAnswer);
 
 // Public routes
 router.route("/search").get(search);
-router.route("/").get(paginate(Product), getProducts);
+router.route("/").get(paginate(Product, true), getProducts);
 router.route("/:id").get(getProductById); // this route must be at the end
 
 module.exports = router;

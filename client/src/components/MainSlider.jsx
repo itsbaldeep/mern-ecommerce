@@ -22,7 +22,7 @@ const MainSlider = () => {
       className="main-swiper"
     >
       <SwiperSlide>
-        <div className="content">
+        <div className="main-swiper-content">
           <p className="display-6">AMAZING VALUE</p>
           <p className="lead">
             There are multiple offers and discounts running all the time so make sure to keep an eye
@@ -37,7 +37,7 @@ const MainSlider = () => {
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className="content">
+        <div className="main-swiper-content">
           <p className="display-6">BEST QUALITY PRODUCTS</p>
           <p className="lead">
             Get assured quality on the best products for your beloved companion. Browse through a
@@ -52,7 +52,7 @@ const MainSlider = () => {
         </div>
       </SwiperSlide>
       <SwiperSlide>
-        <div className="content">
+        <div className="main-swiper-content">
           <p className="display-6">TOP RATED PRODUCTS</p>
           <p className="lead">
             All of our products are rated by the community itself so that you can be assure of the

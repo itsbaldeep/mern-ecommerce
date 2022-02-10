@@ -3,12 +3,13 @@ import axios from "axios";
 
 // GET /api/product/search
 export const searchProducts =
-  ({ query, category, pet, sort, min, max }) =>
+  ({ query, category, brand, pet, sort, min, max }) =>
   async (dispatch) => {
     try {
       dispatch({ type: actionTypes.SEARCH_PRODUCTS_REQUEST });
-      const params = [`?q=${query}`];
+      const params = [`?q=${query || ""}`];
       if (category) params.push(`category=${category}`);
+      if (brand) params.push(`brand=${brand}`);
       if (pet) params.push(`pet=${pet}`);
       if (sort) params.push(`sort=${sort}`);
       if (min) params.push(`min=${min}`);

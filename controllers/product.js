@@ -14,9 +14,9 @@ exports.search = async (req, res, next) => {
     // Getting queries
     const page = parseInt(req.query.page) || 1;
     const limit = Math.min(parseInt(req.query.limit) || 15, 15);
-    const query = req.query.q || "";
+    const query = decodeURI(req.query.q || "");
     const category = req.query.category || "";
-    const brand = req.query.brand || "";
+    const brand = decodeURI(req.query.brand || "");
     const pet = req.query.pet || "";
     const sort = req.query.sort || "";
     const min = parseInt(req.query.min) || 0;
@@ -29,12 +29,12 @@ exports.search = async (req, res, next) => {
     // Building the query
     const productQuery = Product.find({
       $and: [
-        { category: { $regex: category, $options: "i" } },
-        { petType: { $regex: pet, $options: "i" } },
-        { price: { $gte: min, $lte: max } },
-        { brand: { $regex: brand, $options: "i" } },
         { name: { $regex: query, $options: "i" } },
+        { category: { $regex: category, $options: "i" } },
+        { brand: { $regex: brand, $options: "i" } },
+        { petType: { $regex: pet, $options: "i" } },
         { description: { $regex: query, $options: "i" } },
+        { price: { $gte: min, $lte: max } },
       ],
     });
 
@@ -493,10 +493,9 @@ exports.editProduct = async (req, res, next) => {
 // GET /api/product/all
 exports.getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.find();
     return res.status(200).json({
       success: true,
-      products,
+      products: res.paginated,
     });
   } catch (error) {
     next(error);

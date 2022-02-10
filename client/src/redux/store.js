@@ -12,6 +12,7 @@ import { categoryReducer } from "./reducers/category";
 import { petReducer } from "./reducers/pet";
 import { brandReducer } from "./reducers/brand";
 import { inquiryReducer } from "./reducers/inquiry";
+import { newsletterReducer } from "./reducers/newsletter";
 
 // Combining reducers
 const reducer = combineReducers({
@@ -26,6 +27,7 @@ const reducer = combineReducers({
   pet: petReducer,
   brand: brandReducer,
   inquiry: inquiryReducer,
+  newsletter: newsletterReducer,
 });
 
 // Creating the store

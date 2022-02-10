@@ -21,6 +21,7 @@ mongoose
 app.use("/api/user", require("./routes/user"));
 app.use("/api/directory", require("./routes/directory"));
 app.use("/api/inquiry", require("./routes/inquiry"));
+app.use("/api/newsletter", require("./routes/newsletter"));
 app.use("/api/product", require("./routes/product"));
 app.use("/api/service", require("./routes/service"));
 app.use("/api/category", require("./routes/category"));

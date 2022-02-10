@@ -14,6 +14,7 @@ import { getProducts, searchProducts } from "redux/actions/product";
 
 // Custom CSS
 import "./ShopScreen.css";
+import { useHistory } from "react-router-dom";
 
 const SwiperSection = ({ heading, array, placeholder, clickHandler }) => {
   return (
@@ -28,6 +29,9 @@ const SwiperSection = ({ heading, array, placeholder, clickHandler }) => {
           },
           992: {
             slidesPerView: 3,
+          },
+          1360: {
+            slidesPerView: 4,
           },
         }}
         autoplay={{ delay: 5000 }}
@@ -53,6 +57,7 @@ const SwiperSection = ({ heading, array, placeholder, clickHandler }) => {
 
 const ShopScreen = () => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const { loading, products } = useSelector((state) => state.product);
   const { productCategories } = useSelector((state) => state.category);
   const { pets } = useSelector((state) => state.pet);
@@ -122,19 +127,19 @@ const ShopScreen = () => {
         heading="Shop by category"
         array={productCategories}
         placeholder="/assets/placeholders/category.png"
-        clickHandler={(category) => console.log(category.docs)}
+        clickHandler={(category) => history.push(`/shop/category/${category.name}`)}
       />
       <SwiperSection
         heading="Shop by brands"
         array={brands}
         placeholder="/assets/placeholders/brand.png"
-        clickHandler={(brand) => console.log(brand.products)}
+        clickHandler={(brand) => history.push(`/shop/brand/${brand.name}`)}
       />
       <SwiperSection
         heading="Shop by pet"
         array={pets}
         placeholder="/assets/placeholders/pet.png"
-        clickHandler={(pet) => console.log(pet.categories)}
+        clickHandler={(pet) => history.push(`/shop/pet/${pet.name}`)}
       />
       <Container fluid>
         <div className="shop-screen py-2">
@@ -146,7 +151,7 @@ const ShopScreen = () => {
           >
             <FaFilter /> Add Filters
           </div>
-          <div className={`filters ${showFilter ? "d-block" : "d-none"}`}>
+          <div className={`filters container ${showFilter ? "d-block" : "d-none"}`}>
             <div className="category-section">
               <h4>Filter by Category</h4>
               <Form.Group>
@@ -154,7 +159,7 @@ const ShopScreen = () => {
                   <Form.Check
                     type="radio"
                     name="category"
-                    onClick={(e) => setCategoryFilter(e.target.value)}
+                    onChange={(e) => setCategoryFilter(e.target.value)}
                     value={category.name}
                     checked={categoryFilter === category.name}
                     key={index}
@@ -170,7 +175,7 @@ const ShopScreen = () => {
                   <Form.Check
                     type="radio"
                     name="pet"
-                    onClick={(e) => setPetFilter(e.target.value)}
+                    onChange={(e) => setPetFilter(e.target.value)}
                     value={pet.name}
                     checked={petFilter === pet.name}
                     label={pet.name}
@@ -186,7 +191,7 @@ const ShopScreen = () => {
                   <Form.Check
                     type="radio"
                     name="sort"
-                    onClick={(e) => setSortFilter(e.target.value)}
+                    onChange={(e) => setSortFilter(e.target.value)}
                     value={option.value}
                     checked={sortFilter === option.value}
                     label={option.label}
@@ -233,10 +238,11 @@ const ShopScreen = () => {
                   })
                 }
               />
-              <button className="btn btn-primary" onClick={handleFilter}>
+              <button className="btn btn-primary m-1" onClick={handleFilter}>
                 Apply Filters
               </button>
-              <button className="btn btn-danger" onClick={clearFilter}>
+              <br />
+              <button className="btn btn-danger m-1" onClick={clearFilter}>
                 Clear Filters
               </button>
             </div>
