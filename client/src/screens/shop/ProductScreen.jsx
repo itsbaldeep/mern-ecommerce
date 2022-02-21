@@ -14,6 +14,7 @@ import {
   FaPencilAlt,
   FaExclamationTriangle,
   FaBookOpen,
+  FaArrowRight,
 } from "react-icons/fa";
 
 // Actions
@@ -30,6 +31,7 @@ import { review as reviewInitialValues } from "helpers/initialValues";
 import { review as reviewValidationSchema } from "helpers/validationSchemas";
 
 // Components
+import Ratings from "components/Ratings";
 import Review from "components/Review";
 import ReviewGraph from "components/ReviewGraph";
 import { TextField, SelectField } from "components/InputFields.jsx";
@@ -57,6 +59,13 @@ const ProductScreen = ({ match }) => {
         <h3>Loading</h3>
       ) : (
         <>
+          <div className="breadcrumbs">
+            <Link to="/">Home</Link>
+            <FaArrowRight className="mx-2" />
+            <Link to="/shop">Shop</Link>
+            <FaArrowRight className="mx-2" />
+            <Link to={`/shop/category/${product.category}`}>{product.category}</Link>
+          </div>
           <Row>
             <Col xs={12} md={6}>
               {product.productImages?.length > 0 ? (
@@ -82,12 +91,22 @@ const ProductScreen = ({ match }) => {
             </Col>
             <Col xs={12} md={6} className="pt-3">
               <h2>{product.name}</h2>
-              <div className="ratings text-primary">
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStar />
-                <FaStarHalfAlt />
+              <p>
+                Brand: <Link to={`/shop/brand/${product.brand}`}>{product.brand || "Generic"}</Link>
+              </p>
+              <div className="d-flex justify-content-start align-items-center">
+                <Ratings
+                  rating={product.averageRating}
+                  size={26}
+                  className="d-inline ratings text-primary"
+                />
+                <span className="mx-2">{product.averageRating} average rating</span>
+              </div>
+              <div className="my-2">
+                {product.reviews?.length} reviews
+                <a href="#product-page-reviews" className="mx-2">
+                  Read all reviews
+                </a>
               </div>
               <p style={{ fontSize: "1.3rem" }}>Price: ₹{product.price}</p>
               <h4>Product Details</h4>
@@ -111,7 +130,7 @@ const ProductScreen = ({ match }) => {
               )}
             </Col>
           </Row>
-          <section id="product-reviews" className="product-reviews pt-3">
+          <section id="product-page-reviews" className="product-reviews pt-3">
             <Tabs defaultActiveKey="read" className="mb-3">
               <Tab
                 eventKey="write"
