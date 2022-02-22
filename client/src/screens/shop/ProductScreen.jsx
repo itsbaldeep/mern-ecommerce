@@ -6,11 +6,9 @@ import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
 import { Navigation, Pagination } from "swiper";
 import { Link } from "react-router-dom";
 import { Formik } from "formik";
+import * as Yup from "yup";
 import {
   FaCreditCard,
-  FaShoppingBag,
-  FaStar,
-  FaStarHalfAlt,
   FaPencilAlt,
   FaExclamationTriangle,
   FaBookOpen,
@@ -29,11 +27,13 @@ import {
 // Helpers
 import { review as reviewInitialValues } from "helpers/initialValues";
 import { review as reviewValidationSchema } from "helpers/validationSchemas";
+import convertTime from "helpers/convertTime";
 
 // Components
 import Ratings from "components/Ratings";
 import Review from "components/Review";
 import ReviewGraph from "components/ReviewGraph";
+import Question from "components/Question";
 import { TextField, SelectField } from "components/InputFields.jsx";
 
 const ProductScreen = ({ match }) => {
@@ -52,6 +52,18 @@ const ProductScreen = ({ match }) => {
   const existingQuestion = product.questions?.filter(
     (question) => question?.askedBy._id.toString() === user?._id.toString()
   )?.[0];
+
+  const answeredQuestions = [];
+  const unansweredQuestions = [];
+
+  product.questions?.forEach((question) => {
+    if (question?.answers.length > 0) answeredQuestions.push(question);
+    else unansweredQuestions.push(question);
+  });
+
+  const prices = product.affiliateLinks?.map((link) => link.productPrice) || [];
+  const lowestPrice = Math.min(...prices);
+  const highestPrice = Math.max(...prices);
 
   return (
     <Container className="py-3 mt-3">
@@ -108,26 +120,82 @@ const ProductScreen = ({ match }) => {
                   Read all reviews
                 </a>
               </div>
-              <p style={{ fontSize: "1.3rem" }}>Price: ₹{product.price}</p>
-              <h4>Product Details</h4>
-              <p>{product.description}</p>
-              <p>Category: {product.category}</p>
-              <p>Suitable for: {product.petType?.join(", ")}</p>
-              <p>Weighs: {product.weight} grams</p>
-              <p>
-                Dimensions: {product.size?.length}cm x {product.size?.height}cm x{" "}
-                {product.size?.width}cm
+              <div className="mb-2">
+                {answeredQuestions?.length} answered questions, {unansweredQuestions?.length}{" "}
+                unanswered questions{" "}
+                <a href="#product-page-questions" className="d-block">
+                  Read all questions
+                </a>
+              </div>
+              <p style={{ fontSize: "1.3rem" }}>
+                Price: ₹{lowestPrice} - {highestPrice}
               </p>
-              {product.link && (
-                <div className="d-flex justify-content-around">
-                  <Link to={{ pathname: product.link }} target="_blank" className="btn btn-primary">
-                    <FaCreditCard /> Buy Now
-                  </Link>
-                  <Button>
-                    <FaShoppingBag /> Add to Cart
-                  </Button>
+              <div className="buying-options p-3">
+                <h4>Buying Options</h4>
+                <div className="w-100">
+                  {product.affiliateLinks?.map((link, index) => (
+                    <a href={link.productLink} target="_blank" rel="noopener noreferrer">
+                      <div
+                        key={index}
+                        className="px-4 py-3 d-sm-flex align-items-center justify-content-between text-center"
+                      >
+                        {link.productProvider.toLowerCase() === "amazon" ? (
+                          <img src="/assets/icons/amazon.svg" height="35px" />
+                        ) : link.productProvider.toLowerCase() === "flipkart" ? (
+                          <img src="/assets/icons/flipkart.svg" height="35px" />
+                        ) : (
+                          <FaCreditCard className="mx-2" />
+                        )}
+                        <div className="w-sm-50 mt-sm-0 mt-2">
+                          <p className="m-0">Buy now on {link.productProvider}</p>
+                          <p className="m-0"> @ ₹{link.productPrice}</p>
+                        </div>
+                      </div>
+                    </a>
+                  ))}
                 </div>
-              )}
+              </div>
+            </Col>
+          </Row>
+          <Row className="mt-3">
+            <Col xs={12} md={6}>
+              <div className="p-3 product-page-details">
+                <h3>Product Specifications</h3>
+                <div>
+                  <span>Weight</span>
+                  <span>{product.weight} Kg</span>
+                </div>
+                <div>
+                  <span>Length</span>
+                  <span>{product.size?.length || "N/A"} Cm</span>
+                </div>
+                <div>
+                  <span>Height</span>
+                  <span>{product.size?.height || "N/A"} Cm</span>
+                </div>
+                <div>
+                  <span>Width</span>
+                  <span>{product.size?.width || "N/A"} Cm</span>
+                </div>
+                <div>
+                  <span>Brand</span>
+                  <span>{product.brand}</span>
+                </div>
+                <div>
+                  <span>Added on</span>
+                  <span>{convertTime(product.createdAt)}</span>
+                </div>
+                <div>
+                  <span>Category</span>
+                  <span>{product.category}</span>
+                </div>
+              </div>
+            </Col>
+            <Col xs={12} md={6}>
+              <div className="p-3 mt-3 mt-md-0 product-page-description">
+                <h3>Product Description</h3>
+                <p>{product.description}</p>
+              </div>
             </Col>
           </Row>
           <section id="product-page-reviews" className="product-reviews pt-3">
@@ -219,9 +287,97 @@ const ProductScreen = ({ match }) => {
                     average={product.averageRating}
                     total={product.reviews?.length}
                   />
-                  {product.reviews?.map((review, index) => (
-                    <Review key={index} review={review} />
-                  ))}
+                  {product.reviews?.length === 0 ? (
+                    <h5 className="text-center my-4">No reviews yet!</h5>
+                  ) : (
+                    product.reviews?.map((review, index) => <Review key={index} review={review} />)
+                  )}
+                </>
+              </Tab>
+            </Tabs>
+          </section>
+          <section id="product-page-qna" className="product-qna pt-3">
+            <Tabs defaultActiveKey="read" className="mb-3">
+              <Tab
+                eventKey="write"
+                title={
+                  <>
+                    <FaPencilAlt className="mx-2" />
+                    Write Question
+                  </>
+                }
+              >
+                {isAuthenticated ? (
+                  existingQuestion ? (
+                    <div>
+                      <p>Your question on {product.name}</p>
+                      <Question question={existingQuestion} />
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        onClick={() => dispatch(removeQuestion(match.params.productId))}
+                      >
+                        Delete Question
+                      </Button>
+                    </div>
+                  ) : (
+                    <Formik
+                      initialValues={{ question: "" }}
+                      validationSchema={{ question: Yup.string().required("Question is required") }}
+                      onSubmit={(values) => dispatch(addQuestion(values, match.params.productId))}
+                    >
+                      {({ handleSubmit }) => (
+                        <Form>
+                          <TextField
+                            name="question"
+                            label="Question"
+                            placeholder="Enter question here"
+                          />
+                          <div className="text-center">
+                            <Button
+                              variant="primary"
+                              type="submit"
+                              onClick={handleSubmit}
+                              className="w-100"
+                            >
+                              Post question
+                            </Button>
+                            <Form.Text>
+                              Your question will be posted publicly as {user.name}
+                            </Form.Text>
+                          </div>
+                        </Form>
+                      )}
+                    </Formik>
+                  )
+                ) : (
+                  <div className="px-1">
+                    <p className="text-danger mb-0">
+                      <FaExclamationTriangle /> You need to be logged in to write a question!
+                    </p>
+                    <Link to="/register">Sign up here</Link>
+                    <br />
+                    <Link to="/login">Already have an account? Login here</Link>
+                  </div>
+                )}
+              </Tab>
+              <Tab
+                eventKey="read"
+                title={
+                  <>
+                    <FaBookOpen className="mx-2" />
+                    Read Questions
+                  </>
+                }
+              >
+                <>
+                  {!product.questions ? (
+                    <h5 className="text-center my-4">No questions yet!</h5>
+                  ) : (
+                    product.questions?.map((question, index) => (
+                      <Question key={index} question={question} />
+                    ))
+                  )}
                 </>
               </Tab>
             </Tabs>

@@ -34,6 +34,35 @@
   font-size: 1.1rem;
 }
 
+.buying-options,
+.product-page-details,
+.product-page-description {
+  background-color: #e8e8e8;
+  border-radius: 6px;
+}
+
+.buying-options div a:nth-child(odd) div {
+  background-color: #f5f5f5;
+}
+
+.product-page-details div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 6px;
+}
+
+.product-page-details div:nth-child(odd) {
+  background-color: #f5f5f5;
+}
+
+.product-page-description p {
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 6px;
+}
+
 @media (max-width: 768px) {
   .collapse-button {
     display: block;
