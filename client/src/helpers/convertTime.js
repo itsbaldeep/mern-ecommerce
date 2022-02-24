@@ -11,7 +11,7 @@ export default function convertTime(time) {
 
   // Getting day, month and year
   const day = date.getDate();
-  const month = date.getMonth();
+  const month = date.getMonth() + 1;
   const year = date.getFullYear();
 
   // Getting hours and converting to 12h
@@ -26,5 +26,7 @@ export default function convertTime(time) {
   let seconds = date.getSeconds();
   if (seconds < 10) seconds = `0${seconds}`;
 
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds} ${isPM ? "PM" : "AM"}`;
+  return `${day}/${month > 9 ? month : `0${month}`}/${year} ${hours}:${minutes}:${seconds} ${
+    isPM ? "PM" : "AM"
+  }`;
 }

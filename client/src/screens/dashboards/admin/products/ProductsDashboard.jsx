@@ -6,6 +6,7 @@ import {
   FaCopy,
   FaDotCircle,
   FaExternalLinkAlt,
+  FaGlasses,
   FaPencilAlt,
   FaTimes,
 } from "react-icons/fa";
@@ -16,6 +17,7 @@ import AddProduct from "./AddProduct.jsx";
 import ApproveProduct from "./ApproveProduct.jsx";
 import EditProduct from "./EditProduct.jsx";
 import RemoveProduct from "./RemoveProduct.jsx";
+import ProductHistory from "./ProductHistory.jsx";
 
 // Helpers
 import convertTime from "helpers/convertTime";
@@ -85,6 +87,7 @@ const ProductsDashboard = () => {
               <th>Size</th>
               <th>Age Range</th>
               <th>Vegetarian</th>
+              <th>Last Edit By</th>
               <th>Date of Approval</th>
               <th>Date of Creation</th>
               <th>Date of Updation</th>
@@ -111,12 +114,15 @@ const ProductRow = ({ product, index }) => {
   const [approveDialog, setApproveDialog] = useState(false);
   const [editDialog, setEditDialog] = useState(false);
   const [removeDialog, setRemoveDialog] = useState(false);
+  const [historyDialog, setHistoryDialog] = useState(false);
   const showApproveDialog = () => setApproveDialog(true);
   const showEditDialog = () => setEditDialog(true);
   const showRemoveDialog = () => setRemoveDialog(true);
+  const showHistoryDialog = () => setHistoryDialog(true);
   const hideApproveDialog = () => setApproveDialog(false);
   const hideEditDialog = () => setEditDialog(false);
   const hideRemoveDialog = () => setRemoveDialog(false);
+  const hideHistoryDialog = () => setHistoryDialog(false);
 
   return (
     <tr>
@@ -228,6 +234,23 @@ const ProductRow = ({ product, index }) => {
           <FaDotCircle className="text-success" />
         ) : (
           <FaDotCircle className="text-danger" />
+        )}
+      </td>
+      <td style={{ minWidth: "150px" }}>
+        {product.lastEdit && (
+          <div className="text-center">
+            <img
+              src={product.lastEdit?.user?.profileImage || "/assets/placeholders/portrait.png"}
+              width="30px"
+              style={{ borderRadius: "100%" }}
+            />
+            <p className="mb-0">{product.lastEdit?.user?.name}</p>
+            <p>{convertTime(product.lastEdit?.date)}</p>
+            <p className="text-success" style={{ cursor: "pointer" }} onClick={showHistoryDialog}>
+              <FaGlasses /> View History
+            </p>
+            <ProductHistory show={historyDialog} onHide={hideHistoryDialog} edits={product.edits} />
+          </div>
         )}
       </td>
       <td>{convertTime(product.approvedAt)}</td>

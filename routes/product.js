@@ -35,7 +35,7 @@ router.route("/own").get(protect, roles("Client"), getOwnProducts);
 router.route("/own/:id").get(protect, roles("Client"), getOwnProductById);
 
 // Admin routes
-router.route("/all").get(protect, roles("Admin"), paginate(Product), getAllProducts);
+router.route("/all").get(protect, roles("Admin"), paginate(Product, false, true), getAllProducts);
 router.route("/any/:id").get(protect, roles("Admin"), getAnyProductById);
 router.route("/approve/:id").put(protect, roles("Admin"), approveProduct);
 

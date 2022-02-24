@@ -3,6 +3,9 @@ const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs");
 
+// Models
+const Edit = require("./Edit");
+
 const ProductSchema = new mongoose.Schema(
   {
     name: {
@@ -128,6 +131,22 @@ const ProductSchema = new mongoose.Schema(
         },
       ],
       default: [],
+    },
+    edits: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Edit",
+        },
+      ],
+      default: [],
+      select: false,
+    },
+    lastEdit: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Edit",
+      default: null,
+      select: false,
     },
     isApproved: {
       type: Boolean,

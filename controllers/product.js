@@ -1,4 +1,5 @@
 const Product = require("../models/Product");
+const Edit = require("../models/Edit");
 const Directory = require("../models/Directory");
 const Review = require("../models/Review");
 const Question = require("../models/Question");
@@ -114,6 +115,10 @@ exports.getProductById = async (req, res, next) => {
       .populate({
         path: "reviews",
         populate: { path: "reviewer" },
+      })
+      .populate({
+        path: "questions",
+        populate: { path: "askedBy" },
       });
     if (!product) return next(new ErrorResponse("Product not found", 404));
     return res.status(200).json({
@@ -407,7 +412,7 @@ exports.removeProduct = async (req, res, next) => {
     // Check if the product exists
     if (!product) return next(new ErrorResponse("Product not found", 404));
 
-    // Check if the current user is editing a non-seller product
+    // Check if the current user is removing a non-seller product
     if (req.user.role !== "Admin" && !product.seller)
       return next(new ErrorResponse("Unable to remove product", 403));
 
@@ -429,20 +434,26 @@ exports.removeProduct = async (req, res, next) => {
 // PUT /api/product/edit/:id
 exports.editProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).select("+edits");
     // Check if the product exists
     if (!product) return next(new ErrorResponse("Product not found", 404));
 
+    // Check if the request is sent by a customer
+    if (req.user.role === "Customer") return next(new ErrorResponse("Unable to edit product", 401));
+
     // Check if the current user is editing a non-seller product
-    if (req.user.role !== "Admin" && !product.seller)
+    if (req.user.role === "Client" && !product.seller)
       return next(new ErrorResponse("Unable to edit product", 401));
 
-    // Check if the current user is the seller of that product or an admin
-    if (req.user.role !== "Admin" && product.seller.toString() !== req.user._id.toString())
+    // Check if the current user is the seller of that product
+    if (req.user.role === "Client" && product.seller.toString() !== req.user._id.toString())
       return next(new ErrorResponse("Unable to edit product", 401));
 
     // Check if the seller ref is passed
-    if (req.user.role === "Admin" && req.body.seller !== undefined) {
+    if (
+      (req.user.role === "Admin" || req.user.role === "Product Admin") &&
+      req.body.seller !== undefined
+    ) {
       // To remove the seller ref
       if (req.body.seller === "") product.seller = null;
       // To add or update the seller ref
@@ -474,6 +485,16 @@ exports.editProduct = async (req, res, next) => {
     }
     if (req.body.productImages) product.productImages = req.body.productImages.split(",");
     if (req.body.productImages === "") product.productImages = [];
+
+    // Tracking edits
+    const edit = await Edit.create({
+      user: req.user._id,
+      product: product._id,
+      date: Date.now(),
+      changes: req.body,
+    });
+    product.lastEdit = edit._id;
+    product.edits.unshift(edit._id);
     await product.save();
 
     // Returning the updated product

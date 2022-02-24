@@ -1,5 +1,5 @@
 // Dependencies
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Button, Tabs, Tab, Form } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Swiper, SwiperSlide } from "swiper/react/swiper-react";
@@ -7,6 +7,7 @@ import { Navigation, Pagination } from "swiper";
 import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import axios from "axios";
 import {
   FaCreditCard,
   FaPencilAlt,
@@ -30,6 +31,7 @@ import { review as reviewValidationSchema } from "helpers/validationSchemas";
 import convertTime from "helpers/convertTime";
 
 // Components
+import Product from "./Product";
 import Ratings from "components/Ratings";
 import Review from "components/Review";
 import ReviewGraph from "components/ReviewGraph";
@@ -45,12 +47,26 @@ const ProductScreen = ({ match }) => {
     dispatch(getProduct(match.params.productId));
   }, [dispatch, match.params.productId]);
 
+  const [brandProducts, setBrandProducts] = useState([]);
+  const [categoryProducts, setCategoryProducts] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(`/api/product/search?brand=${product.brand}`)
+      .then((res) => setBrandProducts(res.data.results.results))
+      .catch((_) => setBrandProducts([]));
+    axios
+      .get(`/api/product/search?category=${product.category}`)
+      .then((res) => setCategoryProducts(res.data.results.results))
+      .catch((_) => setCategoryProducts([]));
+  }, [product.category, product.brand]);
+
   const existingReview = product.reviews?.filter(
-    (review) => review?.reviewer._id.toString() === user?._id.toString()
+    (review) => review?.reviewer?._id?.toString() === user?._id?.toString()
   )?.[0];
 
   const existingQuestion = product.questions?.filter(
-    (question) => question?.askedBy._id.toString() === user?._id.toString()
+    (question) => question?.askedBy?._id?.toString() === user?._id?.toString()
   )?.[0];
 
   const answeredQuestions = [];
@@ -123,7 +139,7 @@ const ProductScreen = ({ match }) => {
               <div className="mb-2">
                 {answeredQuestions?.length} answered questions, {unansweredQuestions?.length}{" "}
                 unanswered questions{" "}
-                <a href="#product-page-questions" className="d-block">
+                <a href="#product-page-qna" className="d-block">
                   Read all questions
                 </a>
               </div>
@@ -287,7 +303,7 @@ const ProductScreen = ({ match }) => {
                     average={product.averageRating}
                     total={product.reviews?.length}
                   />
-                  {product.reviews?.length === 0 ? (
+                  {!product.reviews || product.reviews.length === 0 ? (
                     <h5 className="text-center my-4">No reviews yet!</h5>
                   ) : (
                     product.reviews?.map((review, index) => <Review key={index} review={review} />)
@@ -323,7 +339,9 @@ const ProductScreen = ({ match }) => {
                   ) : (
                     <Formik
                       initialValues={{ question: "" }}
-                      validationSchema={{ question: Yup.string().required("Question is required") }}
+                      validationSchema={Yup.object({
+                        question: Yup.string().required("Question is required"),
+                      })}
                       onSubmit={(values) => dispatch(addQuestion(values, match.params.productId))}
                     >
                       {({ handleSubmit }) => (
@@ -371,7 +389,7 @@ const ProductScreen = ({ match }) => {
                 }
               >
                 <>
-                  {!product.questions ? (
+                  {!product.questions || product.questions.length === 0 ? (
                     <h5 className="text-center my-4">No questions yet!</h5>
                   ) : (
                     product.questions?.map((question, index) => (
@@ -382,6 +400,61 @@ const ProductScreen = ({ match }) => {
               </Tab>
             </Tabs>
           </section>
+          {brandProducts.length > 0 && (
+            <section id="product-page-brand" className="product-brand pt-3">
+              <h3>
+                Other products from <span className="text-primary">{product.brand}</span>{" "}
+              </h3>
+              <Swiper
+                slidesPerView={1}
+                breakpoints={{
+                  576: {
+                    slidesPerView: 2,
+                  },
+                  992: {
+                    slidesPerView: 3,
+                  },
+                }}
+                modules={[Pagination]}
+                pagination={{ clickable: true, dynamicBullets: true }}
+                className="product-page-brand-swiper"
+              >
+                {brandProducts.map((product, index) => (
+                  <SwiperSlide key={index}>
+                    <Product product={product} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </section>
+          )}
+          {categoryProducts.length > 0 && (
+            <section id="product-page-category" className="product-category pt-3">
+              <h3>
+                Other products under <span className="text-primary">{product.category}</span>{" "}
+                category
+              </h3>
+              <Swiper
+                slidesPerView={1}
+                breakpoints={{
+                  576: {
+                    slidesPerView: 2,
+                  },
+                  992: {
+                    slidesPerView: 3,
+                  },
+                }}
+                modules={[Pagination]}
+                pagination={{ clickable: true, dynamicBullets: true }}
+                className="product-page-category-swiper"
+              >
+                {categoryProducts.map((product, index) => (
+                  <SwiperSlide key={index}>
+                    <Product product={product} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            </section>
+          )}
         </>
       )}
     </Container>

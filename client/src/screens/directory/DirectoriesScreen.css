@@ -131,18 +131,6 @@
   padding: 0px;
 }
 
-.dir-review-image img {
-  border-radius: 100%;
-}
-
-.dir-review-content {
-  width: 100%;
-}
-
-.dir-review-content p {
-  margin-bottom: 0;
-}
-
 .dir-business-info div {
   max-width: 100%;
   word-wrap: break-word;

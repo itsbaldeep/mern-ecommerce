@@ -2,7 +2,7 @@ const ErrorResponse = require("../utils/errorResponse");
 
 // This function takes a mongoose model and returns an express middleware
 const paginate =
-  (model, approved = false) =>
+  (model, approved = false, admin = false) =>
   async (req, res, next) => {
     // Getting page and limit from query, otherwise using default values
     const page = parseInt(req.query.page) || 1;
@@ -38,6 +38,21 @@ const paginate =
       // Searching only relevent documents
       const query = model.find();
       if (approved) query.where("approved").equals(true);
+      if (admin)
+        query
+          .select("+edits +lastEdit")
+          .populate({
+            path: "edits",
+            populate: {
+              path: "user",
+            },
+          })
+          .populate({
+            path: "lastEdit",
+            populate: {
+              path: "user",
+            },
+          });
       results.results = await query.limit(limit).skip(startIndex).exec();
       res.paginated = results;
       next();
