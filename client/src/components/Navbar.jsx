@@ -115,11 +115,16 @@ const PetohubNavbar = () => {
                   <Link to="/directories" className="header-nav-link" onClick={menuToggleHandler}>
                     <FaMapPin /> Directories
                   </Link>
-                  <Link to="/admin" className="header-nav-link" onClick={menuToggleHandler}>
-                    <FaCogs /> Dashboard
-                  </Link>
                 </>
               )}
+              {user.isAuthenticated &&
+                (user.user.role === "Admin" || user.user.role === "Product Admin") && (
+                  <>
+                    <Link to="/admin" className="header-nav-link" onClick={menuToggleHandler}>
+                      <FaCogs /> Dashboard
+                    </Link>
+                  </>
+                )}
               {user.isAuthenticated ? (
                 <>
                   <Link to="/account" className="header-nav-link" onClick={menuToggleHandler}>

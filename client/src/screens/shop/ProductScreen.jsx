@@ -327,14 +327,7 @@ const ProductScreen = ({ match }) => {
                   existingQuestion ? (
                     <div>
                       <p>Your question on {product.name}</p>
-                      <Question question={existingQuestion} />
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => dispatch(removeQuestion(match.params.productId))}
-                      >
-                        Delete Question
-                      </Button>
+                      <Question question={existingQuestion} existingQuestion={true} />
                     </div>
                   ) : (
                     <Formik
@@ -393,7 +386,12 @@ const ProductScreen = ({ match }) => {
                     <h5 className="text-center my-4">No questions yet!</h5>
                   ) : (
                     product.questions?.map((question, index) => (
-                      <Question key={index} question={question} />
+                      <Question
+                        key={index}
+                        question={question}
+                        productId={product._id}
+                        existingQuestion={question._id === existingQuestion?._id}
+                      />
                     ))
                   )}
                 </>

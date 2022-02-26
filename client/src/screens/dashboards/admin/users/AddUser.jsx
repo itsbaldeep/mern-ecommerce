@@ -55,7 +55,7 @@ const AddUser = ({ show, onHide }) => {
                   <SelectField
                     name="role"
                     label="Role"
-                    options={["Customer", "Client", "Admin"]}
+                    options={["Customer", "Client", "Admin", "Product Admin"]}
                     defaultValue="Customer"
                   />
                 </Col>

@@ -16,6 +16,7 @@ import { getBrands } from "redux/actions/brand.js";
 
 // Components
 import PrivateRoute from "components/PrivateRoute.jsx";
+import ScrollToTop from "components/ScrollToTop.jsx";
 import Navbar from "components/Navbar.jsx";
 import Footer from "components/Footer.jsx";
 
@@ -59,7 +60,7 @@ import AdminDashboard from "screens/dashboards/admin/AdminDashboard.jsx";
 import UnsubscribeScreen from "screens/misc/UnsubscribeScreen.jsx";
 
 function App() {
-  // Checking for user token
+  // Checking for user token and loading public data from API
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getDirectoryCategories());
@@ -68,12 +69,14 @@ function App() {
     dispatch(getCategories());
     dispatch(getPets());
     dispatch(getBrands());
-    const listener = window.addEventListener("storage", (() => dispatch(loadUser()))());
+    if (localStorage.getItem("petohubAuthToken")) dispatch(loadUser());
+    const listener = window.addEventListener("storage", () => dispatch(loadUser()));
     return () => window.removeEventListener("storage", listener);
   }, [dispatch]);
 
   return (
     <Router>
+      <ScrollToTop />
       <Navbar />
       <Switch>
         {/* Main Routes */}

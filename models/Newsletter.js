@@ -10,6 +10,7 @@ const NewsletterSchema = mongoose.Schema(
         /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
         "Please provide a valid email",
       ],
+      required: [true, "Please provide an email"],
     },
     subscriptions: {
       type: [String],

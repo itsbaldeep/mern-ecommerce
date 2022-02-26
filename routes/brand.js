@@ -15,9 +15,9 @@ const {
 const { protect, roles } = require("../middleware/auth");
 
 // Admin routes
-router.route("/add").post(protect, roles("Admin"), addBrand);
-router.route("/edit/:id").put(protect, roles("Admin"), editBrand);
-router.route("/remove/:id").delete(protect, roles("Admin"), removeBrand);
+router.route("/add").post(protect, roles("Admin", "Product Admin"), addBrand);
+router.route("/edit/:id").put(protect, roles("Admin", "Product Admin"), editBrand);
+router.route("/remove/:id").delete(protect, roles("Admin", "Product Admin"), removeBrand);
 
 // Public routes
 router.route("/").get(getBrands);

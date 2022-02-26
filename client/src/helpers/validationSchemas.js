@@ -90,12 +90,12 @@ export const directoryAdditional = Yup.object({
         .max(32, "This product name is too long")
     ),
   services: Yup.array()
-    .max(25, "You can only have a maximum of 25 products")
+    .max(25, "You can only have a maximum of 25 services")
     .of(
       Yup.string()
         .required("This is a required field")
-        .min(4, "This product name is too short")
-        .max(32, "This product name is too long")
+        .min(4, "This service name is too short")
+        .max(32, "This service name is too long")
     ),
   location: Yup.object({
     lat: Yup.number(),
@@ -145,12 +145,8 @@ export const product = Yup.object({
     .max(1024, "Product description is too long")
     .required("Please provide a product description"),
   category: Yup.string().required("Pick atleast one category"),
-  price: Yup.number()
-    .positive("Price must be a positive number")
-    .required("Please provide a price"),
-  countInStock: Yup.number()
-    .min(0, "Please provide a positive count")
-    .required("Please provide a count in stock"),
+  price: Yup.number().positive("Price must be a positive number"),
+  countInStock: Yup.number().positive("Please provide a positive count"),
   petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
   keywords: Yup.array()
     .max(32, "Too many keywords")
@@ -182,12 +178,12 @@ export const product = Yup.object({
 
 export const service = Yup.object({
   name: Yup.string()
-    .min(5, "Product name is too short")
-    .max(32, "Product name is too long")
+    .min(5, "Service name is too short")
+    .max(32, "Service name is too long")
     .required("Please provide a product name"),
   description: Yup.string()
-    .min(8, "Product description is too short")
-    .max(1024, "Product description is too long")
+    .min(8, "Service description is too short")
+    .max(1024, "Service description is too long")
     .required("Please provide a product description"),
   category: Yup.string().required("Pick atleast one category"),
   price: Yup.number()
@@ -207,11 +203,6 @@ export const service = Yup.object({
   }),
   days: Yup.array().min(1, "Please pick atleast one day when this service is provided"),
   petType: Yup.array().min(1, "Please provide a pet type").of(Yup.string()),
-  breedType: Yup.string(),
-  ageRange: Yup.object({
-    min: Yup.number().min(0, "Minimum age should be atleast 0"),
-    max: Yup.number().min(0, "Maximum age should be atleast 0"),
-  }),
 });
 
 export const directoryInquiry = Yup.object({

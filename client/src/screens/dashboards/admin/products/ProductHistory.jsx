@@ -8,7 +8,7 @@ const ProductHistory = ({ show, onHide, edits }) => {
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header>
-        <Modal.Title>Product history</Modal.Title>
+        <Modal.Title>Product edit history</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         {edits?.map((edit, index) => {
@@ -27,10 +27,17 @@ const ProductHistory = ({ show, onHide, edits }) => {
                 />
                 <p className="d-inline mx-2">{edit.user.name}</p>
                 <p className="mt-2">{convertTime(edit.date)}</p>
-                <div className="p-2" style={{ borderRadius: "4px", backgroundColor: "#e5e5e5" }}>
+                <div
+                  className="p-2"
+                  style={{
+                    borderRadius: "4px",
+                    backgroundColor: "#e5e5e5",
+                    wordWrap: "break-word",
+                  }}
+                >
                   {changesInfo.length === 0 ? (
                     <p className="mb-0" style={{ fontSize: 12 }}>
-                      Not changed
+                      Nothing changed
                     </p>
                   ) : (
                     changesInfo.map((change, index) => (

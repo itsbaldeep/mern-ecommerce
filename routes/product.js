@@ -35,18 +35,32 @@ router.route("/own").get(protect, roles("Client"), getOwnProducts);
 router.route("/own/:id").get(protect, roles("Client"), getOwnProductById);
 
 // Admin routes
-router.route("/all").get(protect, roles("Admin"), paginate(Product, false, true), getAllProducts);
-router.route("/any/:id").get(protect, roles("Admin"), getAnyProductById);
-router.route("/approve/:id").put(protect, roles("Admin"), approveProduct);
+router
+  .route("/all")
+  .get(protect, roles("Admin", "Product Admin"), paginate(Product, false, true), getAllProducts);
+router.route("/any/:id").get(protect, roles("Admin", "Product Admin"), getAnyProductById);
+router.route("/approve/:id").put(protect, roles("Admin", "Product Admin"), approveProduct);
 
 // Alternation routes shared by both admin and client
 router
   .route("/add")
-  .post(protect, roles("Client", "Admin"), upload.array("productImages", 7), addProduct);
-router.route("/remove/:id").delete(protect, roles("Client", "Admin"), removeProduct);
+  .post(
+    protect,
+    roles("Client", "Admin", "Product Admin"),
+    upload.array("productImages", 7),
+    addProduct
+  );
+router
+  .route("/remove/:id")
+  .delete(protect, roles("Client", "Admin", "Product Admin"), removeProduct);
 router
   .route("/edit/:id")
-  .put(protect, roles("Client", "Admin"), upload.array("productImages", 7), editProduct);
+  .put(
+    protect,
+    roles("Client", "Admin", "Product Admin"),
+    upload.array("productImages", 7),
+    editProduct
+  );
 
 // Review and question routes
 router.route("/review/:id").post(protect, reviewProduct);

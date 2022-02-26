@@ -477,8 +477,15 @@ exports.addUser = async (req, res, next) => {
       directory.user = user._id;
       directory.save();
     }
-    // Customer registration
-    else user = await User.create({ name, email, password });
+    // Other roles registration
+    else
+      user = await User.create({
+        name,
+        email,
+        password,
+        number: req.body?.number,
+        role: req.body?.role,
+      });
 
     res.status(200).json({
       success: true,

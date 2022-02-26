@@ -163,6 +163,8 @@ const HomeScreen = () => {
             <div className="search-wrap">
               <div className="search-box mx-auto">
                 <input
+                  name="email"
+                  required
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.currentTarget.value)}

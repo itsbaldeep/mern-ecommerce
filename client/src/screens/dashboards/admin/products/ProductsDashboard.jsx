@@ -246,7 +246,7 @@ const ProductRow = ({ product, index }) => {
             />
             <p className="mb-0">{product.lastEdit?.user?.name}</p>
             <p>{convertTime(product.lastEdit?.date)}</p>
-            <p className="text-success" style={{ cursor: "pointer" }} onClick={showHistoryDialog}>
+            <p className="text-secondary" style={{ cursor: "pointer" }} onClick={showHistoryDialog}>
               <FaGlasses /> View History
             </p>
             <ProductHistory show={historyDialog} onHide={hideHistoryDialog} edits={product.edits} />

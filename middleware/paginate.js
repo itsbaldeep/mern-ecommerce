@@ -37,7 +37,7 @@ const paginate =
     try {
       // Searching only relevent documents
       const query = model.find();
-      if (approved) query.where("approved").equals(true);
+      if (approved) query.where("isApproved").equals(true);
       if (admin)
         query
           .select("+edits +lastEdit")

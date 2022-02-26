@@ -1,7 +1,8 @@
 import convertTime from "helpers/convertTime";
+import { useState } from "react";
 
 const Question = ({ question }) => {
-  const isAnswered = question.answer && question.answer.length > 0;
+  const isAnswered = question.answers && question.answers.length > 0;
   return (
     <div className="d-flex py-2">
       <div className="px-2">
@@ -22,7 +23,7 @@ const Question = ({ question }) => {
         <h5 className="mt-0">
           {question.question}
           {isAnswered ? (
-            <span className="mx-2 badge bg-primary">Answered</span>
+            <span className="mx-2 badge bg-success">Answered</span>
           ) : (
             <span className="mx-2 badge bg-danger">Not Answered</span>
           )}
@@ -31,7 +32,16 @@ const Question = ({ question }) => {
           <p>No answers yet!</p>
         ) : (
           <div className="product-question-answer">
-            <p>{question.answers[0].answer}</p>
+            {question.answers.map((answer, index) => {
+              return (
+                <div key={index}>
+                  <p className="mb-0">{answer.answer}</p>
+                  <p style={{ fontSize: 14 }}>
+                    Answered at {convertTime(answer.answeredAt)} by {answer.answeredBy.name}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>

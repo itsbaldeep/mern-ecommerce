@@ -89,8 +89,8 @@ const ProductSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
-      min: [1, "Price can't be lower than 1"],
-      required: [true, "Please provide a price"],
+      default: 0,
+      min: [0, "Price can't be lower than 0"],
     },
     isVeg: {
       type: Boolean,

@@ -114,11 +114,11 @@ exports.getProductById = async (req, res, next) => {
       .equals(true)
       .populate({
         path: "reviews",
-        populate: { path: "reviewer" },
+        populate: { path: "reviewer", select: "name profileImage" },
       })
       .populate({
         path: "questions",
-        populate: { path: "askedBy" },
+        populate: { path: "askedBy answers.answeredBy", select: "name profileImage" },
       });
     if (!product) return next(new ErrorResponse("Product not found", 404));
     return res.status(200).json({
@@ -228,6 +228,7 @@ exports.addQuestion = async (req, res, next) => {
       product: product._id,
       question: req.body.question,
     });
+    await question.populate("askedBy");
     return res.status(200).json({
       success: true,
       question,
@@ -279,6 +280,10 @@ exports.addAnswer = async (req, res, next) => {
     const question = await Question.findById(req.params.qid);
     if (!question) return next(new ErrorResponse("Cannot find the question on this product", 404));
 
+    // Checking if the user is the asker
+    if (question.askedBy.toString() === req.user._id.toString())
+      return next(new ErrorResponse(`You cannot answer a question that you asked yourself`, 400));
+
     // Checking if the user already posted an answer on product
     for (const answer of question.answers)
       if (answer.answeredBy.toString() === req.user._id.toString())
@@ -291,6 +296,8 @@ exports.addAnswer = async (req, res, next) => {
 
     // Adding the answer and sending back the question
     question.answers.push({ answer: req.body.answer, answeredBy: req.user._id });
+    await question.populate("askedBy");
+    await question.populate("answers.answeredBy").execPopulate();
     await question.save();
     return res.status(200).json({
       success: true,
@@ -379,7 +386,7 @@ exports.addProduct = async (req, res, next) => {
       brand: req.body.brand,
       category: req.body.category,
       petType: req.body.petType?.split(","),
-      keywords: req.body.keywords?.split(","),
+      keywords: req.body.keywords ? req.body.keywords?.split(",") : [],
       breedType: req.body.breedType,
       description: req.body.description,
       weight: req.body.weight,
@@ -391,6 +398,24 @@ exports.addProduct = async (req, res, next) => {
       affiliateLinks: JSON.parse(req.body.affiliateLinks || "{}"),
       productImages: req.body.productImages?.split(","),
     });
+
+    // Tracking edits
+    const edit = await Edit.create({
+      user: req.user._id,
+      product: product._id,
+      date: Date.now(),
+      changes: req.body,
+    });
+    product.lastEdit = edit._id;
+    product.edits.unshift(edit._id);
+    await product.save();
+
+    // Manually populating edits and lastEdit
+    if (req.user.role === "Admin" || req.user.role === "Product Admin") {
+      product.lastEdit = await Edit.findById(product.lastEdit).populate("user");
+      product.edits = await Edit.find({ product: product._id }).sort({ date: -1 }).populate("user");
+    }
+
     if (req.files) {
       const newImages = req.files.map((image) => `/uploads/${image.filename}`);
       product.productImages = product.productImages.concat(newImages);
@@ -413,11 +438,15 @@ exports.removeProduct = async (req, res, next) => {
     if (!product) return next(new ErrorResponse("Product not found", 404));
 
     // Check if the current user is removing a non-seller product
-    if (req.user.role !== "Admin" && !product.seller)
+    if (req.user.role !== "Admin" && req.user.role !== "Product Admin" && !product.seller)
       return next(new ErrorResponse("Unable to remove product", 403));
 
     // Check if the current user is the seller of that product or an admin
-    if (req.user.role !== "Admin" && product.seller.toString() != req.user._id.toString())
+    if (
+      req.user.role !== "Admin" &&
+      req.user.role !== "Product Admin" &&
+      product.seller.toString() != req.user._id.toString()
+    )
       return next(new ErrorResponse("Unable to remove product", 403));
 
     // Delete the product
@@ -497,6 +526,12 @@ exports.editProduct = async (req, res, next) => {
     product.edits.unshift(edit._id);
     await product.save();
 
+    // Manually populating edits and lastEdit
+    if (req.user.role === "Admin" || req.user.role === "Product Admin") {
+      product.lastEdit = await Edit.findById(product.lastEdit).populate("user");
+      product.edits = await Edit.find({ product: product._id }).sort({ date: -1 }).populate("user");
+    }
+
     // Returning the updated product
     return res.status(200).json({
       success: true,
@@ -541,8 +576,14 @@ exports.getAnyProductById = async (req, res, next) => {
 // PUT /api/product/approve/:id
 exports.approveProduct = async (req, res, next) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const product = await Product.findById(req.params.id).select("+edits +lastEdit");
     if (!product) return next(new ErrorResponse("Product not found", 404));
+
+    // Manually populating edits and lastEdit
+    if (req.user.role === "Admin" || req.user.role === "Product Admin") {
+      product.lastEdit = await Edit.findById(product.lastEdit).populate("user");
+      product.edits = await Edit.find({ product: product._id }).sort({ date: -1 }).populate("user");
+    }
 
     product.isApproved = true;
     product.approvedAt = Date.now();

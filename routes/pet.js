@@ -9,9 +9,9 @@ const { getPets, getPetById, addPet, removePet, editPet } = require("../controll
 const { protect, roles } = require("../middleware/auth");
 
 // Admin routes
-router.route("/add").post(protect, roles("Admin"), addPet);
-router.route("/edit/:id").put(protect, roles("Admin"), editPet);
-router.route("/remove/:id").delete(protect, roles("Admin"), removePet);
+router.route("/add").post(protect, roles("Admin", "Product Admin"), addPet);
+router.route("/edit/:id").put(protect, roles("Admin", "Product Admin"), editPet);
+router.route("/remove/:id").delete(protect, roles("Admin", "Product Admin"), removePet);
 
 // Public routes
 router.route("/").get(getPets);
