@@ -98,7 +98,7 @@ export const product = (
     name: "",
     description: "",
     category: "",
-    seller: "",
+    seller: null,
     price: 0,
     countInStock: 0,
     petType: [],
