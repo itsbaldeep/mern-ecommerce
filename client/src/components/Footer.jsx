@@ -1,11 +1,11 @@
-import { Container, Row, Col } from "react-bootstrap";
+import { Col, Container, Row } from "react-bootstrap";
+import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { FaTwitter, FaFacebook, FaInstagram } from "react-icons/fa";
 import "./Footer.css";
 
 const Footer = () => {
   return (
-    <div className="bg-secondary py-1 text-light sticky-bottom">
+    <div className="bg-secondary py-1 text-light">
       <Container>
         <Row className="footer-section text-center text-light pt-3">
           <Col lg={3} sm={6} xs={12} className="footer-first px-2">

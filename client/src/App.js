@@ -1,60 +1,60 @@
 // Libraries
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 // Actions
-import { loadUser } from "redux/actions/user.js";
+import { getBrands } from "redux/actions/brand.js";
 import {
+  getCategories,
   getDirectoryCategories,
   getProductCategories,
   getServiceCategories,
-  getCategories,
 } from "redux/actions/category.js";
 import { getPets } from "redux/actions/pet.js";
-import { getBrands } from "redux/actions/brand.js";
+import { loadUser } from "redux/actions/user.js";
 
 // Components
+import Footer from "components/Footer.jsx";
+import Navbar from "components/Navbar.jsx";
 import PrivateRoute from "components/PrivateRoute.jsx";
 import ScrollToTop from "components/ScrollToTop.jsx";
-import Navbar from "components/Navbar.jsx";
-import Footer from "components/Footer.jsx";
 
 // Main Screens
-import HomeScreen from "screens/HomeScreen.jsx";
-import ServicesScreen from "screens/services/ServicesScreen.jsx";
-import ServiceScreen from "screens/services/ServiceScreen.jsx";
 import AboutScreen from "screens/AboutScreen.jsx";
 import ContactScreen from "screens/ContactScreen.jsx";
+import HomeScreen from "screens/HomeScreen.jsx";
+import ServiceScreen from "screens/services/ServiceScreen.jsx";
+import ServicesScreen from "screens/services/ServicesScreen.jsx";
 
 // Shop Screens
-import ShopScreen from "screens/shop/ShopScreen.jsx";
-import ProductScreen from "screens/shop/ProductScreen.jsx";
-import CategoryScreen from "screens/shop/CategoryScreen.jsx";
 import BrandScreen from "screens/shop/BrandScreen.jsx";
+import CategoryScreen from "screens/shop/CategoryScreen.jsx";
 import PetScreen from "screens/shop/PetScreen.jsx";
+import ProductScreen from "screens/shop/ProductScreen.jsx";
 import SearchResultsScreen from "screens/shop/SearchResultsScreen.jsx";
+import ShopScreen from "screens/shop/ShopScreen.jsx";
 
 // Directory Screens
 import DirectoriesScreen from "screens/directory/DirectoriesScreen.jsx";
 import DirectoryProfileScreen from "screens/directory/DirectoryProfileScreen.jsx";
 
 // Auth Screens
-import LoginScreen from "screens/auth/LoginScreen.jsx";
-import RegisterScreen from "screens/auth/RegisterScreen.jsx";
-import RegisterMemberScreen from "screens/auth/RegisterMemberScreen.jsx";
-import VerifyAccountScreen from "screens/auth/VerifyAccountScreen.jsx";
 import ForgotPasswordScreen from "screens/auth/ForgotPasswordScreen.jsx";
+import LoginScreen from "screens/auth/LoginScreen.jsx";
+import RegisterMemberScreen from "screens/auth/RegisterMemberScreen.jsx";
+import RegisterScreen from "screens/auth/RegisterScreen.jsx";
 import ResetPasswordScreen from "screens/auth/ResetPasswordScreen.jsx";
+import VerifyAccountScreen from "screens/auth/VerifyAccountScreen.jsx";
 
 // Account Screens
 import AccountScreen from "screens/AccountScreen.jsx";
 import ProfileScreen from "screens/profile/ProfileScreen.jsx";
 
 // Dashboard Screens
+import AdminDashboard from "screens/dashboards/admin/AdminDashboard.jsx";
 import ProductDashboard from "screens/dashboards/products/ProductDashboard.jsx";
 import ServiceDashboard from "screens/dashboards/services/ServiceDashboard.jsx";
-import AdminDashboard from "screens/dashboards/admin/AdminDashboard.jsx";
 
 // Miscallenous Screens
 import UnsubscribeScreen from "screens/misc/UnsubscribeScreen.jsx";
@@ -69,7 +69,7 @@ function App() {
     dispatch(getCategories());
     dispatch(getPets());
     dispatch(getBrands());
-    if (localStorage.getItem("petohubAuthToken")) dispatch(loadUser());
+    if (localStorage.getItem("authToken")) dispatch(loadUser());
     const listener = window.addEventListener("storage", () => dispatch(loadUser()));
     return () => window.removeEventListener("storage", listener);
   }, [dispatch]);

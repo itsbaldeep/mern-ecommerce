@@ -1,12 +1,12 @@
-import * as actionTypes from "../constants/user";
 import axios from "axios";
+import * as actionTypes from "../constants/user";
 
 // POST /api/user/login
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.LOGIN_REQUEST });
     const { data } = await axios.post("/api/user/login", { email, password });
-    localStorage.setItem(process.env.REACT_APP_TOKEN_NAME, data.token);
+    localStorage.setItem("authToken", data.token);
     axios.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
     dispatch({ type: actionTypes.LOGIN_SUCCESS, payload: data.user });
   } catch (error) {
@@ -17,7 +17,7 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   try {
     delete axios.defaults.headers.common["Authorization"];
-    localStorage.removeItem(process.env.REACT_APP_TOKEN_NAME);
+    localStorage.removeItem("authToken");
     dispatch({ type: actionTypes.LOGOUT_SUCCESS });
   } catch (error) {
     dispatch({ type: actionTypes.LOGOUT_FAIL, payload: "Logout failed" });
@@ -40,7 +40,7 @@ export const verify = (token) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.VERIFY_REQUEST });
     const { data } = await axios.get(`/api/user/verify/${token}`);
-    localStorage.setItem(process.env.REACT_APP_TOKEN_NAME, data.token);
+    localStorage.setItem("authToken", data.token);
     dispatch({ type: actionTypes.VERIFY_SUCCESS, payload: data.user });
   } catch (error) {
     dispatch({ type: actionTypes.VERIFY_FAIL, payload: error.response.data.error });
@@ -73,12 +73,12 @@ export const resetPassword = (token, password) => async (dispatch) => {
 export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.LOAD_REQUEST });
-    const token = localStorage.getItem(process.env.REACT_APP_TOKEN_NAME);
+    const token = localStorage.getItem("authToken");
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
     const { data } = await axios.get("/api/user/me");
     dispatch({ type: actionTypes.LOAD_SUCCESS, payload: data.user });
   } catch (error) {
-    localStorage.removeItem(process.env.REACT_APP_TOKEN_NAME);
+    localStorage.removeItem("authToken");
     delete axios.defaults.headers.common["Authorization"];
     dispatch({ type: actionTypes.LOAD_FAIL, payload: error.response.data.error });
   }
@@ -101,7 +101,7 @@ export const updatePassword = (passwords) => async (dispatch) => {
   try {
     dispatch({ type: actionTypes.UPDATE_PASSWORD_REQUEST });
     const { data } = await axios.put("/api/user/updatepassword", passwords);
-    localStorage.setItem(process.env.REACT_APP_TOKEN_NAME, data.token);
+    localStorage.setItem("authToken", data.token);
     dispatch({ type: actionTypes.UPDATE_PASSWORD_SUCCESS, payload: data.user });
   } catch (error) {
     dispatch({ type: actionTypes.UPDATE_PASSWORD_FAIL, payload: error.response.data.error });

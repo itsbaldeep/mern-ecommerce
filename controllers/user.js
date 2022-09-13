@@ -70,7 +70,7 @@ exports.register = async (req, res, next) => {
     // Generating a verification url and message
     const verifyUrl = `${process.env.SITE_URL}/verify/${verificationToken}`;
     const message = `
-            <h1>Petohub account verification</h1>
+            <h1>Account verification</h1>
             <p>Please go to this link to verify your account</p>
             <a href=${verifyUrl} clicktracking=off>${verifyUrl}</a>
         `;
@@ -79,7 +79,7 @@ exports.register = async (req, res, next) => {
     try {
       await sendEmail({
         to: user.email,
-        subject: "Petohub Account Verification",
+        subject: "Account Verification",
         text: message,
       });
       return res.status(200).json({
@@ -185,7 +185,7 @@ exports.forgotPassword = async (req, res, next) => {
     try {
       await sendEmail({
         to: user.email,
-        subject: "Petohub Password Reset Request",
+        subject: "Password Reset Request",
         text: message,
       });
       res.status(200).json({

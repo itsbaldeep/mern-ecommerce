@@ -1,7 +1,7 @@
 {
-  "name": "petohub",
+  "name": "mern-ecommerce",
   "version": "1.0.0",
-  "description": "Petohub's official website",
+  "description": "A MERN stack e-commerce app",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
